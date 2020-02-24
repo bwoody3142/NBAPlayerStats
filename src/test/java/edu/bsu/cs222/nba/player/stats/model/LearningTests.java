@@ -1,4 +1,4 @@
-package edu.bsu.cs222.NBAPlayerStats;
+package edu.bsu.cs222.nba.player.stats.model;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
 public class LearningTests {
 
     private Object playerListDoc;
