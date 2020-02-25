@@ -12,7 +12,6 @@ public class URLFactory {
         String search = "http://data.nba.net/data/10s/prod/v1/" + encodedSearch + "/players.json";
         URL url = new URL(search);
         URLConnection connection = url.openConnection();
-        System.out.println(connection);
         return connection.getInputStream();
     }
 
@@ -22,7 +21,6 @@ public class URLFactory {
         String search = "http://data.nba.net/data/10s/prod/v1/" + encodedYearSearch + "/players/" + encodedIdSearch + "_profile.json";
         URL url = new URL(search);
         URLConnection connection = url.openConnection();
-        System.out.println(connection);
         return connection.getInputStream();
     }
 
