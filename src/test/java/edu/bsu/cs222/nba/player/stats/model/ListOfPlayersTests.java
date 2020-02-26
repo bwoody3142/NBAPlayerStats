@@ -14,4 +14,5 @@ public class ListOfPlayersTests {
         System.out.println(playerMap);
         Assertions.assertNotNull(playerMap);
     }
+
 }

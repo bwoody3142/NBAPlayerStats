@@ -74,6 +74,7 @@ public class LearningTests {
             String playerID = object.toString();
             playerMap.put(fullName, playerID);
         }
+        System.out.println(playerMap);
         Assertions.assertEquals(499, playerMap.size());
     }
 
