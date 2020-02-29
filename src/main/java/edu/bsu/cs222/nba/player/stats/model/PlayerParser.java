@@ -16,6 +16,7 @@ public class PlayerParser {
         float pointsPerGame = Float.parseFloat(pointsPerGameArray.get(0).toString());
         float assistsPerGame = Float.parseFloat(assistsPerGameArray.get(0).toString());
         float reboundsPerGame = Float.parseFloat(reboundsPerGameArray.get(0).toString());
-        return new PlayerStats(pointsPerGame, assistsPerGame, reboundsPerGame);
+        return PlayerStats.withPointsPerGame(pointsPerGame)
+                .andAssistsPerGame(assistsPerGame).andReboundsPerGame(reboundsPerGame);
     }
 }

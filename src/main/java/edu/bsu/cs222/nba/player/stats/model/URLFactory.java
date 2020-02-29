@@ -7,8 +7,6 @@ import java.net.URLEncoder;
 
 public class URLFactory {
 
-    private URLFactory(){}
-
     public InputStream createPlayerListUrl(String year) throws Exception {
         String encodedSearch = URLEncoder.encode(year,"UTF-8");
         String search = "http://data.nba.net/data/10s/prod/v1/" + encodedSearch + "/players.json";
