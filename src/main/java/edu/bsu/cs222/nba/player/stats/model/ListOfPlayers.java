@@ -22,7 +22,7 @@ public class ListOfPlayers {
             @SuppressWarnings("unchecked") Map<String, JSONObject> map = (Map<String, JSONObject>) unCastedMap;
             Object firstName = map.get("firstName");
             Object lastName = map.get("lastName");
-            String fullName = firstName.toString() + lastName.toString();
+            String fullName = firstName.toString() + " " + lastName.toString();
             Object object = map.get("personId");
             String playerID = object.toString();
             playerMap.put(fullName, playerID);
