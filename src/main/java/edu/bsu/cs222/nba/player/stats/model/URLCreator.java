@@ -11,21 +11,26 @@ public class URLCreator {
         return new URLCreator();
     }
 
-    public InputStream createPlayerListUrl(Integer year) throws Exception {
+    public URL setupPlayerListUrl(Integer year) throws Exception {
         String encodedYear = URLEncoder.encode(year.toString(),"UTF-8");
         String search = "http://data.nba.net/data/10s/prod/v1/" + encodedYear + "/players.json";
-        URL url = new URL(search);
-        return url.openConnection().getInputStream();
+        return new URL(search);
     }
 
-    public InputStream createPlayerProfileUrl (URLFactory.URLFactoryBuilder urlFactoryBuilder) throws Exception {
-        //URLFactory urlFactory = new URLFactory(new URLFactory.URLFactoryBuilder());
+    public InputStream createPlayerListUrl(Integer year) throws Exception {
+        return setupPlayerListUrl(year).openConnection().getInputStream();
+    }
+
+    public URL setupPlayerProfileUrl(URLFactory.URLFactoryBuilder urlFactoryBuilder) throws Exception {
         Integer year = urlFactoryBuilder.getYear();
         String personID = urlFactoryBuilder.getPersonID();
         String encodedYear = URLEncoder.encode(urlFactoryBuilder.setYear(year).toString(),"UTF-8");
         String encodedPersonID = URLEncoder.encode(urlFactoryBuilder.setPersonID(personID),"UTF-8");
         String search = "http://data.nba.net/data/10s/prod/v1/" + encodedYear + "/players/" + encodedPersonID + "_profile.json";
-        URL url = new URL(search);
-        return url.openConnection().getInputStream();
+        return new URL(search);
+    }
+
+    public InputStream createPlayerProfileUrl (URLFactory.URLFactoryBuilder urlFactoryBuilder) throws Exception {
+        return setupPlayerProfileUrl(urlFactoryBuilder).openConnection().getInputStream();
     }
 }

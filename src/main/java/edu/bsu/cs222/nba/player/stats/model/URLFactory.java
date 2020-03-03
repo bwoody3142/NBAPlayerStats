@@ -24,20 +24,4 @@ public class URLFactory {
             return personID;
         }
     }
-
-    private Integer year;
-    private String personID;
-
-    public URLFactory(URLFactoryBuilder URLFactoryBuilder) {
-        this.year = URLFactoryBuilder.year;
-        this.personID = URLFactoryBuilder.personID;
-    }
-
-    /*public Integer getYear() {
-        return URLFactory.year;
-    }
-
-    public String getPersonID() {
-        return personID;
-    }*/
 }
