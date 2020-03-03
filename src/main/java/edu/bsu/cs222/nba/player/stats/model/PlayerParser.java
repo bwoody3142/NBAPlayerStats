@@ -7,6 +7,7 @@ import net.minidev.json.JSONArray;
 import java.io.InputStream;
 
 public class PlayerParser {
+    private PlayerParser() {}
 
     public PlayerStats parse(InputStream stream){
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
@@ -18,5 +19,8 @@ public class PlayerParser {
         float reboundsPerGame = Float.parseFloat(reboundsPerGameArray.get(0).toString());
         return PlayerStats.withPointsPerGame(pointsPerGame)
                 .andAssistsPerGame(assistsPerGame).andReboundsPerGame(reboundsPerGame);
+    }
+    public static PlayerParser createEmptyPlayerParserObject(){
+        return new PlayerParser();
     }
 }

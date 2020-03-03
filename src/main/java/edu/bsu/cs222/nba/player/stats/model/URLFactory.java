@@ -1,30 +1,43 @@
 package edu.bsu.cs222.nba.player.stats.model;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-
 public class URLFactory {
 
-    public InputStream createPlayerListUrl(String year) throws Exception {
-        String encodedSearch = URLEncoder.encode(year,"UTF-8");
-        String search = "http://data.nba.net/data/10s/prod/v1/" + encodedSearch + "/players.json";
-        URL url = new URL(search);
-        URLConnection connection = url.openConnection();
-        return connection.getInputStream();
+    public static final class URLFactoryBuilder {
+        private Integer year;
+        private String personID;
+
+        public Integer setYear(Integer year){
+            this.year = year;
+            return this.year;
+        }
+
+        public String setPersonID(String personID) {
+            this.personID = personID;
+            return this.personID;
+        }
+
+        public Integer getYear() {
+            return year;
+        }
+
+        public String getPersonID() {
+            return personID;
+        }
     }
 
-    public InputStream createPlayerProfileUrl (String year, String personID) throws Exception {
-        String encodedYearSearch = URLEncoder.encode(year,"UTF-8");
-        String encodedIdSearch = URLEncoder.encode(personID,"UTF-8");
-        String search = "http://data.nba.net/data/10s/prod/v1/" + encodedYearSearch + "/players/" + encodedIdSearch + "_profile.json";
-        URL url = new URL(search);
-        URLConnection connection = url.openConnection();
-        return connection.getInputStream();
+    private Integer year;
+    private String personID;
+
+    public URLFactory(URLFactoryBuilder URLFactoryBuilder) {
+        this.year = URLFactoryBuilder.year;
+        this.personID = URLFactoryBuilder.personID;
     }
 
-    public static URLFactory createEmptyURLFactory(){
-        return new URLFactory();
+    /*public Integer getYear() {
+        return URLFactory.year;
     }
+
+    public String getPersonID() {
+        return personID;
+    }*/
 }

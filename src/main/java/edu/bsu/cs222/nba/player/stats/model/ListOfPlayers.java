@@ -10,10 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ListOfPlayers {
+    private ListOfPlayers() {}
 
-    public Map<String, String> createFullListOfPlayers(String year) throws Exception {
-        URLFactory urlFactory = URLFactory.createEmptyURLFactory();
-        InputStream stream = urlFactory.createPlayerListUrl(year);
+    public Map<String, String> createFullListOfPlayers(Integer year) throws Exception {
+        URLCreator urlCreator = URLCreator.createEmptyUrl();
+        InputStream stream = urlCreator.createPlayerListUrl(year);
         Object playerListDoc = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
         Map<String, String> playerMap = new HashMap<>();
         JSONArray array = JsonPath.read(playerListDoc, "$..standard.*");
