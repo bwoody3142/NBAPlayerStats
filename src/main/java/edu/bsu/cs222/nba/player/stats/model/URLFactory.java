@@ -4,14 +4,14 @@ public class URLFactory {
 
     public static final class URLFactoryBuilder {
         private Integer year;
-        private String personID;
+        private Integer personID;
 
         public Integer setYear(Integer year){
             this.year = year;
             return this.year;
         }
 
-        public String setPersonID(String personID) {
+        public Integer setPersonID(Integer personID) {
             this.personID = personID;
             return this.personID;
         }
@@ -20,7 +20,7 @@ public class URLFactory {
             return year;
         }
 
-        public String getPersonID() {
+        public Integer getPersonID() {
             return personID;
         }
     }
