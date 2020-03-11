@@ -11,7 +11,7 @@ javafx {
 
 }
 application{
-    mainClassName = 'edu.bsu.cs222.NBAPlayerStats.NBAPlayerStatsApp'
+    mainClassName = 'edu.bsu.cs222.nba.player.stats.view.NBAPlayerStatsApp'
 }
 test {
     useJUnitPlatform()

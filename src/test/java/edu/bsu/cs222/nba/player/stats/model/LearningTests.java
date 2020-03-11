@@ -98,5 +98,4 @@ public class LearningTests {
         String rpg = object.toString();
         Assertions.assertEquals("8.5", rpg);
     }
-
 }

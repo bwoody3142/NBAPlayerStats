@@ -17,7 +17,7 @@ public class ListOfPlayers {
 
     private JSONArray getPlayerListArray(Integer year) throws Exception {
         URLCreator urlCreator = URLCreator.createEmptyUrl();
-        InputStream stream = urlCreator.createPlayerListUrl(year);
+        InputStream stream = urlCreator.createPlayerListStream(year);
         Object playerListDoc = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
         return JsonPath.read(playerListDoc, "$..standard.*");
     }

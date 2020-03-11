@@ -44,7 +44,12 @@ public class PlayerStats {
         return assistsPerGame;
     }
 
-    public float getReboundsPerGame() {
-        return reboundsPerGame;
+    public float getReboundsPerGame() { return reboundsPerGame; }
+
+    @Override
+    public String toString() {
+        return  "PPG: " + pointsPerGame + "\n" +
+                "APG: " + assistsPerGame + "\n" +
+                "RPG: " + reboundsPerGame;
     }
 }

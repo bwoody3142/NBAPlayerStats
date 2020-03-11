@@ -17,7 +17,7 @@ public class URLCreator {
         return new URL(search);
     }
 
-    public InputStream createPlayerListUrl(Integer year) throws Exception {
+    public InputStream createPlayerListStream(Integer year) throws Exception {
         return getPlayerListUrl(year).openConnection().getInputStream();
     }
 
@@ -30,7 +30,7 @@ public class URLCreator {
         return new URL(search);
     }
 
-    public InputStream createPlayerProfileUrl (URLFactory.URLFactoryBuilder urlFactoryBuilder) throws Exception {
+    public InputStream createPlayerProfileStream(URLFactory.URLFactoryBuilder urlFactoryBuilder) throws Exception {
         return getPlayerProfileUrl(urlFactoryBuilder).openConnection().getInputStream();
     }
 }

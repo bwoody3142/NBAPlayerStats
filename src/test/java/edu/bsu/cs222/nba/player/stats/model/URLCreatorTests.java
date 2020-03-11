@@ -17,14 +17,14 @@ public class URLCreatorTests {
     @Test
     public void testCreatePlayerListStream() throws Exception {
         URLCreator urlCreator = URLCreator.createEmptyUrl();
-        InputStream stream = urlCreator.createPlayerListUrl(2018);
+        InputStream stream = urlCreator.createPlayerListStream(2018);
         Assertions.assertNotNull(stream);
     }
 
     @Test
     public void testCreatePlayerProfileStream() throws Exception {
         URLCreator urlCreator = URLCreator.createEmptyUrl();
-        InputStream stream = urlCreator.createPlayerProfileUrl(createLebronProfile_2018());
+        InputStream stream = urlCreator.createPlayerProfileStream(createLebronProfile_2018());
         Assertions.assertNotNull(stream);
     }
 
