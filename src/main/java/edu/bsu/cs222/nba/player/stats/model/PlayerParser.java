@@ -44,7 +44,4 @@ public class PlayerParser {
         return PlayerStats.withPointsPerGame(pointsPerGame)
                 .andAssistsPerGame(assistsPerGame).andReboundsPerGame(reboundsPerGame);
     }
-
-
-
 }
