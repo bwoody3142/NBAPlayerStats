@@ -33,4 +33,24 @@ public class URLCreator {
     public InputStream createPlayerProfileStream(URLFactory.URLFactoryBuilder urlFactoryBuilder) throws Exception {
         return getPlayerProfileUrl(urlFactoryBuilder).openConnection().getInputStream();
     }
+
+    public URL getTeamListUrl(Integer year) throws Exception {
+        String encodedYear = URLEncoder.encode(year.toString(),"UTF-8");
+        String search = "http://data.nba.net/data/10s/prod/v1/" + encodedYear + "/teams.json";
+        return new URL(search);
+    }
+
+    public InputStream createTeamListStream(Integer year) throws Exception {
+        return getTeamListUrl(year).openConnection().getInputStream();
+    }
+
+    public URL getTeamRosterUrl(String team) throws Exception {
+        String encodedTeam = URLEncoder.encode(team,"UTF-8");
+        String search = "http://data.nba.net/data/10s/prod/v1/2019/teams/" + encodedTeam +  "/roster.json";
+        return new URL(search);
+    }
+
+    public InputStream createTeamRosterStream(String team) throws Exception {
+        return getTeamRosterUrl(team).openConnection().getInputStream();
+    }
 }
