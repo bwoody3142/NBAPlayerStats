@@ -23,6 +23,7 @@ public class NBAPlayerStatsApp extends Application{
     private final URLCreator url = URLCreator.createEmptyUrl();
     private InputStream stream;
 
+
     public NBAPlayerStatsApp() {
     }
 
@@ -33,7 +34,7 @@ public class NBAPlayerStatsApp extends Application{
         stage.setTitle("NBA Player Stats");
         Label teamLabel = new Label("Team ");
         Label nameLabel = new Label("Player");
-        Label yearLabel = new Label("Year ");
+        Label yearLabel = new Label("Active Seasons ");
         teams = new ComboBox<>(FXCollections.observableList(getValidTeams()));
         teams.setPromptText("Select a Team");
         Button rosterButton = new Button("Get Roster");
@@ -53,7 +54,6 @@ public class NBAPlayerStatsApp extends Application{
             year.setPromptText("Select a season");
             try {
                 fullPlayerList = playerList.createFullListOfPlayers();
-                stream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
                 year.setItems(FXCollections.observableArrayList(getVaildSeasons()));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -61,6 +61,7 @@ public class NBAPlayerStatsApp extends Application{
         });
         statsButton.setOnAction(event -> {
             try {
+                stream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
                 PlayerStats playerStats = PlayerParser.withStream(stream).andYear(year.getValue()).parse();
                 statsArea.setText(playerStats.toString());
             } catch (Exception e) {
@@ -96,8 +97,8 @@ public class NBAPlayerStatsApp extends Application{
         return FXCollections.observableArrayList(collection);
     }
 
-    private List<Integer> getVaildSeasons(){
+    private List<Integer> getVaildSeasons() throws Exception {
+        stream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
         return SeasonGenerator.create().getYearsAsList(stream);
-
     }
 }

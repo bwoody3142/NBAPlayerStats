@@ -47,7 +47,7 @@ public class URLCreatorTests {
     public void testPlayerProfileUrl() throws Exception {
         URLCreator urlCreator = URLCreator.createEmptyUrl();
         URL expected = urlCreator.getPlayerProfileUrl(2544);
-        Assertions.assertEquals("http://data.nba.net/data/10s/prod/v1/2018/players/2544_profile.json",
+        Assertions.assertEquals("http://data.nba.net/data/10s/prod/v1/2019/players/2544_profile.json",
                 expected.toString());
     }
 
