@@ -21,17 +21,17 @@ public class URLCreator {
         return getPlayerListUrl(year).openConnection().getInputStream();
     }
 
-    public URL getPlayerProfileUrl(URLFactory.URLFactoryBuilder urlFactoryBuilder) throws Exception {
-        Integer year = urlFactoryBuilder.getYear();
-        Integer personID = urlFactoryBuilder.getPersonID();
-        String encodedYear = URLEncoder.encode(urlFactoryBuilder.setYear(year).toString(),"UTF-8");
-        String encodedPersonID = URLEncoder.encode(urlFactoryBuilder.setPersonID(personID).toString(),"UTF-8");
+    public URL getPlayerProfileUrl(Integer personID) throws Exception {
+        URLFactory factory = URLFactory.withYear(2019).andPersonID(personID);
+        String encodedYear = URLEncoder.encode(factory.getYear().toString(),"UTF-8");
+        String encodedPersonID = URLEncoder.encode(factory.getPersonID().toString(),"UTF-8");
         String search = "http://data.nba.net/data/10s/prod/v1/" + encodedYear + "/players/" + encodedPersonID + "_profile.json";
+        System.out.println(search);
         return new URL(search);
     }
 
-    public InputStream createPlayerProfileStream(URLFactory.URLFactoryBuilder urlFactoryBuilder) throws Exception {
-        return getPlayerProfileUrl(urlFactoryBuilder).openConnection().getInputStream();
+    public InputStream createPlayerProfileStream(Integer personID) throws Exception {
+        return getPlayerProfileUrl(personID).openConnection().getInputStream();
     }
 
     public URL getTeamListUrl(Integer year) throws Exception {

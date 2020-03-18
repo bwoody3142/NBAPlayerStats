@@ -2,26 +2,42 @@ package edu.bsu.cs222.nba.player.stats.model;
 
 public class URLFactory {
 
+    public static URLFactoryBuilder withYear(Integer year){
+        return new URLFactoryBuilder(year);
+    }
+
     public static final class URLFactoryBuilder {
         private Integer year;
         private Integer personID;
 
-        public Integer setYear(Integer year){
+        public URLFactoryBuilder(Integer year){
             this.year = year;
-            return this.year;
         }
 
-        public Integer setPersonID(Integer personID) {
+        public URLFactory andPersonID(Integer personID) {
             this.personID = personID;
-            return this.personID;
-        }
-
-        public Integer getYear() {
-            return year;
-        }
-
-        public Integer getPersonID() {
-            return personID;
+            return create(this);
         }
     }
+
+    private Integer year;
+    private Integer personID;
+
+    private URLFactory(URLFactoryBuilder builder){
+        this.year = builder.year;
+        this.personID = builder.personID;
+    }
+
+    public static URLFactory create(URLFactoryBuilder builder){
+        return new URLFactory(builder);
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public Integer getPersonID() {
+        return personID;
+    }
+
 }
