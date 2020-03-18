@@ -14,13 +14,17 @@ import java.util.*;
 
 public class NBAPlayerStatsApp extends Application{
 
-    private ChoiceBox<String> teams;
-    private ChoiceBox<String> player = new ChoiceBox<>();
-    private final ChoiceBox<String> year = new ChoiceBox<>(FXCollections.observableArrayList("2019"));
+    private ComboBox<String> teams;
+    private ComboBox<String> player = new ComboBox<>();
+    private ComboBox<Integer> year = new ComboBox<>();
     private final TextArea statsArea = new TextArea();
     private final ListOfPlayers playerList = ListOfPlayers.createEmptyListOfPlayers();
+    private Map<String, String> fullPlayerList = new HashMap<>();
     private final URLCreator url = URLCreator.createEmptyUrl();
-    private URLFactory.URLFactoryBuilder builder;
+    private InputStream stream;
+
+    public NBAPlayerStatsApp() {
+    }
 
     public static void main(String[] args) { launch(args); }
 
@@ -30,23 +34,34 @@ public class NBAPlayerStatsApp extends Application{
         Label teamLabel = new Label("Team ");
         Label nameLabel = new Label("Player");
         Label yearLabel = new Label("Year ");
-        teams = new ChoiceBox<>(FXCollections.observableList(getValidTeams()));
-        Button rosterButton = new Button("Get roster");
+        teams = new ComboBox<>(FXCollections.observableList(getValidTeams()));
+        teams.setPromptText("Select a Team");
+        Button rosterButton = new Button("Get Roster");
+        Button seasonButton = new Button("Get Seasons");
         Button statsButton = new Button("Get Stats");
         statsArea.setEditable(false);
 
         rosterButton.setOnAction(event -> {
+            player.setPromptText("Select a Player!");
             try {
                 player.setItems(FXCollections.observableList(getValidRoster()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
+        seasonButton.setOnAction(event -> {
+            year.setPromptText("Select a season");
+            try {
+                fullPlayerList = playerList.createFullListOfPlayers();
+                stream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
+                year.setItems(FXCollections.observableArrayList(getVaildSeasons()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
         statsButton.setOnAction(event -> {
             try {
-                builder = buildUrlFactory(new URLFactory.URLFactoryBuilder());
-                InputStream stream = url.createPlayerProfileStream(builder);
-                PlayerStats playerStats = PlayerParser.withStream(stream).andYear(getAsInt(year)).parse();
+                PlayerStats playerStats = PlayerParser.withStream(stream).andYear(year.getValue()).parse();
                 statsArea.setText(playerStats.toString());
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -61,7 +76,7 @@ public class NBAPlayerStatsApp extends Application{
         });
 
         HBox teamBox = new HBox(teamLabel,teams,rosterButton);
-        HBox nameBox = new HBox(nameLabel,player);
+        HBox nameBox = new HBox(nameLabel,player, seasonButton);
         HBox yearBox = new HBox(yearLabel, year);
         HBox output = new HBox(statsArea);
         VBox parent = new VBox(teamBox, nameBox, yearBox, output, statsButton);
@@ -70,26 +85,19 @@ public class NBAPlayerStatsApp extends Application{
         stage.show();
     }
 
-    private URLFactory.URLFactoryBuilder buildUrlFactory(URLFactory.URLFactoryBuilder builder) throws Exception {
-        Map<String, String> listOfPlayers = playerList.createFullListOfPlayers();
-        builder.setYear(getAsInt(year));
-        builder.setPersonID(Integer.parseInt(listOfPlayers.get(player.getValue())));
-        return builder;
-    }
-
-    public List<String> getValidTeams() throws Exception {
+    private List<String> getValidTeams() throws Exception {
         ListOfTeams teamList = ListOfTeams.getNewListOfTeams();
         return teamList.createFullListOfTeams(2019);
     }
 
-    public ObservableList<String> getValidRoster() throws Exception {
+    private ObservableList<String> getValidRoster() throws Exception {
         TeamRoster roster = TeamRoster.createTeamRoster(teams.getValue());
         Collection<String> collection = Collections.checkedCollection(roster.createRoster().values(), String.class);
         return FXCollections.observableArrayList(collection);
     }
 
+    private List<Integer> getVaildSeasons(){
+        return SeasonGenerator.create().getYearsAsList(stream);
 
-    private Integer getAsInt(ChoiceBox<String> box){
-        return Integer.parseInt(box.getValue());
     }
 }
