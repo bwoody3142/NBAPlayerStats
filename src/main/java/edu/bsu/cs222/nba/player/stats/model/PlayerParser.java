@@ -5,6 +5,7 @@ import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
 
 import java.io.InputStream;
+import java.util.List;
 
 public class PlayerParser {
 
@@ -27,22 +28,30 @@ public class PlayerParser {
     }
     private InputStream stream;
     private Integer year;
+    private JSONArray array = new JSONArray();
 
     public PlayerParser(PlayerParserBuilder builder) {
         this.stream = builder.stream;
         this.year = builder.year;
     }
-    private float getFloat(JSONArray array){
-        return Float.parseFloat(array.get(0).toString());
-    }
 
     public PlayerStats parse(){
+        List<String> statList = Stat.create().getAllStats();
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
-        JSONArray pointsPerGameArray = JsonPath.read(document, "$..season[?(@.seasonYear==" + year + ")].total.ppg");
-        JSONArray assistsPerGameArray = JsonPath.read(document, "$..season[?(@.seasonYear==" + year + ")].total.apg");
-        JSONArray reboundsPerGameArray = JsonPath.read(document, "$..season[?(@.seasonYear==" + year + ")].total.rpg");
-        return PlayerStats.withPointsPerGame(getFloat(pointsPerGameArray))
-                          .andAssistsPerGame(getFloat(assistsPerGameArray))
-                          .andReboundsPerGame(getFloat(reboundsPerGameArray));
+        for (String stat : statList) {
+            array.add(JsonPath.read(document, makeQuery(stat)));
+        }
+        return PlayerStats.withPointsPerGame(getFloat(Stat.PPG)).andAssistsPerGame(getFloat(Stat.APG))
+                .andReboundsPerGame(getFloat(Stat.RPG)).andTurnOversPerGame(getFloat(Stat.TOPG)).andStealsPerGame(getFloat(Stat.SPG))
+                .andBlocksPerGame(getFloat(Stat.BPG)).andFieldGoalPercentage(getFloat(Stat.FGP))
+                .andFreeThrowPercentage(getFloat(Stat.FTP)).andThreePointPercentage(getFloat(Stat.TPP));
+    }
+
+    private String makeQuery(String stat){
+        return "$..season[?(@.seasonYear==" + year + ")].total." + stat;
+    }
+
+    private float getFloat(Integer index){
+        return Float.parseFloat(((JSONArray) array.get(index)).get(0).toString());
     }
 }

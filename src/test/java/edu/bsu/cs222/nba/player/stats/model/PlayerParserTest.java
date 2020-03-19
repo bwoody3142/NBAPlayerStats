@@ -28,4 +28,34 @@ public class PlayerParserTest {
     public void testParse_reboundsPerGame(){
         Assertions.assertEquals(8.5f, getPlayerStats().getReboundsPerGame(),.001);
     }
+
+    @Test
+    public void testParse_turnOversPerGame() {
+        Assertions.assertEquals(3.6f, getPlayerStats().getTurnOversPerGame(),.001);
+    }
+
+    @Test
+    public void testParse_stealsPerGame(){
+        Assertions.assertEquals(1.3f, getPlayerStats().getStealsPerGame(),.001);
+    }
+
+    @Test
+    public void testParse_blocksPerGame(){
+        Assertions.assertEquals(0.6f, getPlayerStats().getBlocksPerGame(),.001);
+    }
+
+    @Test
+    public void testParse_fieldGoalPercentage() {
+        Assertions.assertEquals(51f, getPlayerStats().getFieldGoalPercentage(),.001);
+    }
+
+    @Test
+    public void testParse_freeThrowPercentage(){
+        Assertions.assertEquals(66.5f, getPlayerStats().getFreeThrowPercentage(),.001);
+    }
+
+    @Test
+    public void testParse_threePointPercentage(){
+        Assertions.assertEquals(33.9f, getPlayerStats().getThreePointPercentage(),.001);
+    }
 }

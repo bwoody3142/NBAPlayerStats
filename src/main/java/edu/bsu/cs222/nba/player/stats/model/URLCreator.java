@@ -26,7 +26,6 @@ public class URLCreator {
         String encodedYear = URLEncoder.encode(factory.getYear().toString(),"UTF-8");
         String encodedPersonID = URLEncoder.encode(factory.getPersonID().toString(),"UTF-8");
         String search = "http://data.nba.net/data/10s/prod/v1/" + encodedYear + "/players/" + encodedPersonID + "_profile.json";
-        System.out.println(search);
         return new URL(search);
     }
 
