@@ -36,15 +36,18 @@ public class PlayerParser {
     }
 
     public PlayerStats parse(){
-        List<String> statList = Stat.create().getAllStats();
+        List<String> statList = Stat.createObject().getAllStats();
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
         for (String stat : statList) {
             array.add(JsonPath.read(document, makeQuery(stat)));
         }
-        return PlayerStats.withPointsPerGame(getFloat(Stat.PPG)).andAssistsPerGame(getFloat(Stat.APG))
-                .andReboundsPerGame(getFloat(Stat.RPG)).andTurnOversPerGame(getFloat(Stat.TOPG)).andStealsPerGame(getFloat(Stat.SPG))
-                .andBlocksPerGame(getFloat(Stat.BPG)).andFieldGoalPercentage(getFloat(Stat.FGP))
-                .andFreeThrowPercentage(getFloat(Stat.FTP)).andThreePointPercentage(getFloat(Stat.TPP));
+        return build();
+    }
+    private PlayerStats build() {
+        return PlayerStats.withPoints(getFloat(Stat.PPG)).assists(getFloat(Stat.APG)).rebounds(getFloat(Stat.RPG))
+                .turnovers(getFloat(Stat.TOPG)).steals(getFloat(Stat.SPG)).blocks(getFloat(Stat.BPG))
+                .fieldGoalPercentage(getFloat(Stat.FGP)).freeThrowPercentage(getFloat(Stat.FTP))
+                .andThreePointers(getFloat(Stat.TPM));
     }
 
     private String makeQuery(String stat){

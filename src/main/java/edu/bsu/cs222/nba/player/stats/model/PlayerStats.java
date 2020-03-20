@@ -1,8 +1,11 @@
 package edu.bsu.cs222.nba.player.stats.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class PlayerStats {
 
-    public static PlayerStatsBuilder withPointsPerGame(float pointsPerGame) {
+    public static PlayerStatsBuilder withPoints(float pointsPerGame) {
         return new PlayerStatsBuilder(pointsPerGame);
     }
 
@@ -15,49 +18,49 @@ public class PlayerStats {
         private float blocksPerGame;
         private float fieldGoalPercentage;
         private float freeThrowPercentage;
-        private float threePointPercentage;
+        private float threePointers;
 
         public PlayerStatsBuilder(float pointsPerGame){
             this.pointsPerGame = pointsPerGame;
         }
 
-        public PlayerStatsBuilder andAssistsPerGame(float assistsPerGame) {
+        public PlayerStatsBuilder assists(float assistsPerGame) {
             this.assistsPerGame = assistsPerGame;
             return this;
         }
 
-        public PlayerStatsBuilder andReboundsPerGame(float reboundsPerGame) {
+        public PlayerStatsBuilder rebounds(float reboundsPerGame) {
             this.reboundsPerGame = reboundsPerGame;
             return this;
         }
 
-        public PlayerStatsBuilder andTurnOversPerGame(float turnOversPerGame) {
+        public PlayerStatsBuilder turnovers(float turnOversPerGame) {
             this.turnOversPerGame = turnOversPerGame;
             return this;
         }
 
-        public PlayerStatsBuilder andStealsPerGame(float stealsPerGame) {
+        public PlayerStatsBuilder steals(float stealsPerGame) {
             this.stealsPerGame = stealsPerGame;
             return this;
         }
 
-        public PlayerStatsBuilder andBlocksPerGame(float blocksPerGame) {
+        public PlayerStatsBuilder blocks(float blocksPerGame) {
             this.blocksPerGame = blocksPerGame;
             return this;
         }
 
-        public PlayerStatsBuilder andFieldGoalPercentage(float fieldGoalPercentage) {
+        public PlayerStatsBuilder fieldGoalPercentage(float fieldGoalPercentage) {
             this.fieldGoalPercentage = fieldGoalPercentage;
             return this;
         }
 
-        public PlayerStatsBuilder andFreeThrowPercentage(float freeThrowPercentage) {
+        public PlayerStatsBuilder freeThrowPercentage(float freeThrowPercentage) {
             this.freeThrowPercentage = freeThrowPercentage;
             return this;
         }
 
-        public PlayerStats andThreePointPercentage(float threePointPercentage) {
-            this.threePointPercentage = threePointPercentage;
+        public PlayerStats andThreePointers(float threePointers) {
+            this.threePointers = threePointers;
             return create(this);
         }
     }
@@ -70,7 +73,7 @@ public class PlayerStats {
     private float blocksPerGame;
     private float fieldGoalPercentage;
     private float freeThrowPercentage;
-    private float threePointPercentage;
+    private float threePointers;
 
     private PlayerStats (PlayerStatsBuilder builder){
         this.pointsPerGame = builder.pointsPerGame;
@@ -81,11 +84,17 @@ public class PlayerStats {
         this.blocksPerGame = builder.blocksPerGame;
         this.fieldGoalPercentage = builder.fieldGoalPercentage;
         this.freeThrowPercentage = builder.freeThrowPercentage;
-        this.threePointPercentage = builder.threePointPercentage;
+        this.threePointers = builder.threePointers;
     }
 
     public static PlayerStats create(PlayerStatsBuilder builder){
         return new PlayerStats(builder);
+    }
+
+    public List<Stat> getListOfStats(){
+        return Arrays.asList(Stat.createStat(getPointsPerGame()), Stat.createStat(getAssistsPerGame()), Stat.createStat(getReboundsPerGame()),
+                Stat.createStat(getTurnOversPerGame()), Stat.createStat(getStealsPerGame()), Stat.createStat(getBlocksPerGame()),
+                Stat.createStat(getFieldGoalPercentage()), Stat.createStat(getFreeThrowPercentage()), Stat.createStat(getThreePointers()));
     }
 
     public float getPointsPerGame() {
@@ -118,8 +127,8 @@ public class PlayerStats {
         return freeThrowPercentage;
     }
 
-    public float getThreePointPercentage() {
-        return threePointPercentage;
+    public float getThreePointers() {
+        return threePointers;
     }
 
     @Override
@@ -132,6 +141,6 @@ public class PlayerStats {
                 "BPG: " + blocksPerGame + "\n" +
                 "FGP: " + fieldGoalPercentage + "%\n" +
                 "FTP: " + freeThrowPercentage + "%\n" +
-                "TPP: " + threePointPercentage  + "%";
+                "TPM: " + threePointers;
     }
 }
