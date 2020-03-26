@@ -5,7 +5,6 @@ import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
 
 import java.io.InputStream;
-import java.util.List;
 
 public class PlayerParser {
 
@@ -36,18 +35,22 @@ public class PlayerParser {
     }
 
     public PlayerStats parse(){
-        List<String> statList = Stat.createObject().getAllStats();
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
-        for (String stat : statList) {
-            array.add(JsonPath.read(document, makeQuery(stat)));
+        for (Stat stat : Stat.values()) {
+            array.add(JsonPath.read(document, makeQuery(stat.getDataSourceKey())));
         }
         return build();
     }
     private PlayerStats build() {
-        return PlayerStats.withPoints(getFloat(Stat.PPG)).assists(getFloat(Stat.APG)).rebounds(getFloat(Stat.RPG))
-                .turnovers(getFloat(Stat.TOPG)).steals(getFloat(Stat.SPG)).blocks(getFloat(Stat.BPG))
-                .fieldGoalPercentage(getFloat(Stat.FGP)).freeThrowPercentage(getFloat(Stat.FTP))
-                .andThreePointers(getFloat(Stat.TPM));
+        return PlayerStats.withPoints(getFloat(Stat.PPG.getIndex()))
+                .assists(getFloat(Stat.APG.getIndex()))
+                .rebounds(getFloat(Stat.RPG.getIndex()))
+                .turnovers(getFloat(Stat.TOPG.getIndex()))
+                .steals(getFloat(Stat.SPG.getIndex()))
+                .blocks(getFloat(Stat.BPG.getIndex()))
+                .fieldGoalPercentage(getFloat(Stat.FGP.getIndex()))
+                .freeThrowPercentage(getFloat(Stat.FTP.getIndex()))
+                .andThreePointers(getFloat(Stat.TPM.getIndex()));
     }
 
     private String makeQuery(String stat){

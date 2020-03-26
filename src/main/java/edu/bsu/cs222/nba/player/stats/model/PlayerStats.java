@@ -91,10 +91,16 @@ public class PlayerStats {
         return new PlayerStats(builder);
     }
 
-    public List<Stat> getListOfStats(){
-        return Arrays.asList(Stat.createStat(getPointsPerGame()), Stat.createStat(getAssistsPerGame()), Stat.createStat(getReboundsPerGame()),
-                Stat.createStat(getTurnOversPerGame()), Stat.createStat(getStealsPerGame()), Stat.createStat(getBlocksPerGame()),
-                Stat.createStat(getFieldGoalPercentage()), Stat.createStat(getFreeThrowPercentage()), Stat.createStat(getThreePointers()));
+    public List<Float> getListOfStats(){
+        return Arrays.asList(getPointsPerGame(),
+                getAssistsPerGame(),
+                getReboundsPerGame(),
+                getTurnOversPerGame(),
+                getStealsPerGame(),
+                getBlocksPerGame(),
+                getFieldGoalPercentage(),
+                getFreeThrowPercentage(),
+                getThreePointers());
     }
 
     public float getPointsPerGame() {

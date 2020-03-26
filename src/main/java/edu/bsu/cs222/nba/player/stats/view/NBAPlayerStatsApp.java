@@ -37,24 +37,30 @@ public class NBAPlayerStatsApp extends Application{
         Label yearLabel = new Label("Active Seasons ");
         teams = new ComboBox<>(FXCollections.observableList(getValidTeams()));
         teams.setPromptText("Select a Team");
+        player.setPromptText("Select a Player");
+        year.setPromptText("Select a season");
         Button rosterButton = new Button("Get Roster");
         Button seasonButton = new Button("Get Seasons");
         Button statsButton = new Button("Get Stats");
+        player.setEditable(false);
+        year.setEditable(false);
         statsArea.setEditable(false);
+        seasonButton.setDisable(true);
+        statsButton.setDisable(true);
 
         rosterButton.setOnAction(event -> {
-            player.setPromptText("Select a Player!");
             try {
                 player.setItems(FXCollections.observableList(getValidRoster()));
+                seasonButton.setDisable(false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
         seasonButton.setOnAction(event -> {
-            year.setPromptText("Select a season");
             try {
                 fullPlayerList = playerList.createFullListOfPlayers();
                 year.setItems(FXCollections.observableArrayList(getVaildSeasons()));
+                statsButton.setDisable(false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -76,8 +82,8 @@ public class NBAPlayerStatsApp extends Application{
             }
         });
 
-        HBox teamBox = new HBox(teamLabel,teams,rosterButton);
-        HBox nameBox = new HBox(nameLabel,player, seasonButton);
+        HBox teamBox = new HBox(teamLabel, teams,rosterButton);
+        HBox nameBox = new HBox(nameLabel, player, seasonButton);
         HBox yearBox = new HBox(yearLabel, year);
         HBox output = new HBox(statsArea);
         VBox parent = new VBox(teamBox, nameBox, yearBox, output, statsButton);
