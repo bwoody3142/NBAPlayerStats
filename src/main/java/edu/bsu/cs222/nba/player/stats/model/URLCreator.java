@@ -52,4 +52,14 @@ public class URLCreator {
     public InputStream createTeamRosterStream(String team) throws Exception {
         return getTeamRosterUrl(team).openConnection().getInputStream();
     }
+
+    public URL getHeadshotUrl(Integer personID) throws Exception {
+        String encodedTeam = URLEncoder.encode(personID.toString(),"UTF-8");
+        String search = "https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/" + encodedTeam + ".png";
+        return new URL(search);
+    }
+
+    public InputStream createHeadshotStream(Integer personID) throws Exception {
+        return getHeadshotUrl(personID).openConnection().getInputStream();
+    }
 }

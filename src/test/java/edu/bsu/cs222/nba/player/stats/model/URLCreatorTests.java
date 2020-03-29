@@ -10,59 +10,64 @@ public class URLCreatorTests {
 
     @Test
     public void testCreatePlayerListStream() throws Exception {
-        URLCreator urlCreator = URLCreator.createEmptyUrl();
-        InputStream stream = urlCreator.createPlayerListStream(2018);
+        InputStream stream = URLCreator.createEmptyUrl().createPlayerListStream(2018);
         Assertions.assertNotNull(stream);
     }
 
     @Test
     public void testCreatePlayerProfileStream() throws Exception {
-        URLCreator urlCreator = URLCreator.createEmptyUrl();
-        InputStream stream = urlCreator.createPlayerProfileStream(2544);
+        InputStream stream = URLCreator.createEmptyUrl().createPlayerProfileStream(2544);
         Assertions.assertNotNull(stream);
     }
 
     @Test
     public void testCreateTeamListStream() throws Exception {
-        URLCreator urlCreator = URLCreator.createEmptyUrl();
-        InputStream stream = urlCreator.createTeamListStream(2018);
+        InputStream stream = URLCreator.createEmptyUrl().createTeamListStream(2018);
         Assertions.assertNotNull(stream);
     }
 
     @Test
     public void testCreateRosterStream() throws Exception {
-        URLCreator urlCreator = URLCreator.createEmptyUrl();
-        InputStream stream = urlCreator.createTeamRosterStream("lakers");
+        InputStream stream = URLCreator.createEmptyUrl().createTeamRosterStream("lakers");
         Assertions.assertNotNull(stream);
     }
 
     @Test
     public void testPlayerListUrl() throws Exception {
-        URLCreator urlCreator = URLCreator.createEmptyUrl();
-        URL expected = urlCreator.getPlayerListUrl(2018);
+        URL expected = URLCreator.createEmptyUrl().getPlayerListUrl(2018);
         Assertions.assertEquals("http://data.nba.net/data/10s/prod/v1/2018/players.json", expected.toString());
     }
 
     @Test
     public void testPlayerProfileUrl() throws Exception {
-        URLCreator urlCreator = URLCreator.createEmptyUrl();
-        URL expected = urlCreator.getPlayerProfileUrl(2544);
+        URL expected = URLCreator.createEmptyUrl().getPlayerProfileUrl(2544);
         Assertions.assertEquals("http://data.nba.net/data/10s/prod/v1/2019/players/2544_profile.json",
                 expected.toString());
     }
 
     @Test
     public void testTeamListUrl() throws Exception {
-        URLCreator urlCreator = URLCreator.createEmptyUrl();
-        URL expected = urlCreator.getTeamListUrl(2018);
+        URL expected = URLCreator.createEmptyUrl().getTeamListUrl(2018);
         Assertions.assertEquals("http://data.nba.net/data/10s/prod/v1/2018/teams.json", expected.toString());
     }
 
     @Test
     public void testRosterUrl() throws Exception {
-        URLCreator urlCreator = URLCreator.createEmptyUrl();
-        URL expected = urlCreator.getTeamRosterUrl("lakers");
+        URL expected = URLCreator.createEmptyUrl().getTeamRosterUrl("lakers");
         Assertions.assertEquals("http://data.nba.net/data/10s/prod/v1/2019/teams/lakers/roster.json",
                 expected.toString());
+    }
+
+    @Test
+    public void testHeadshotUrl() throws Exception {
+        URL expected = URLCreator.createEmptyUrl().getHeadshotUrl(2544);
+        Assertions.assertEquals("https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/2544.png",
+                expected.toString());
+    }
+
+    @Test
+    public void testHeadshotStream() throws Exception {
+        InputStream stream = URLCreator.createEmptyUrl().createHeadshotStream(2544);
+        Assertions.assertNotNull(stream);
     }
 }
