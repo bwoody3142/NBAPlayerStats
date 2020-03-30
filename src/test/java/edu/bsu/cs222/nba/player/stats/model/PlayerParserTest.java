@@ -23,7 +23,6 @@ public class PlayerParserTest {
 
     @Test
     public void testParse(){
-        System.out.println(getStatsList());
         Assertions.assertEquals(getActualList().toString(), getStatsList().toString());
     }
 }

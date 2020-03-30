@@ -10,8 +10,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
 import java.io.InputStream;
 import java.util.*;
 
@@ -29,8 +29,6 @@ public class NBAPlayerStatsApp extends Application{
     private Map<String, String> fullPlayerList = new HashMap<>();
     private final URLCreator url = URLCreator.createEmptyUrl();
     private InputStream playerStream;
-    private InputStream headshotStream;
-    private Image headshot;
     private ImageView headshotView = new ImageView();
     private Button rosterButton;
     private Button seasonButton;
@@ -119,8 +117,8 @@ public class NBAPlayerStatsApp extends Application{
     }
 
     private void getHeadshot() throws Exception {
-        headshotStream = url.createHeadshotStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
-        headshot = new Image(headshotStream);
+        InputStream headshotStream = url.createHeadshotStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
+        Image headshot = new Image(headshotStream);
         headshotView.setImage(headshot);
     }
 
