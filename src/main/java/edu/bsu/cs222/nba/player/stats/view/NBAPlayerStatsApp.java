@@ -30,6 +30,7 @@ public class NBAPlayerStatsApp extends Application{
     private final URLCreator url = URLCreator.createEmptyUrl();
     private InputStream playerStream;
     private ImageView headshotView = new ImageView();
+    private ImageView logoView = new ImageView();
     private Button rosterButton;
     private Button seasonButton;
     private Button statsButton;
@@ -70,6 +71,7 @@ public class NBAPlayerStatsApp extends Application{
             try {
                 setStats();
                 getHeadshot();
+                getLogo();
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Alert");
@@ -87,11 +89,19 @@ public class NBAPlayerStatsApp extends Application{
         HBox yearBox = new HBox(yearLabel, year);
         VBox inputBox = new VBox(teamBox, nameBox, yearBox, statsButton);
 
-        HBox resultBox = new HBox(headshotView, statsArea);
+        HBox resultBox = new HBox(headshotView, logoView, statsArea);
         Scene inputScene = new Scene(inputBox);
         outputScene = new Scene(resultBox);
         stage.setScene(inputScene);
         stage.show();
+    }
+
+    private void getLogo() throws Exception {
+        TeamParser parser = TeamParser.withStream(url.createTeamListStream(2019)).andFullName(teams.getValue());
+        Team team = parser.parse();
+        InputStream logoStream = url.createLogoStream(team.getAbbreviation());
+        Image logo = new Image(logoStream);
+        logoView.setImage(logo);
     }
 
     private List<String> getValidTeams() throws Exception {
@@ -100,7 +110,9 @@ public class NBAPlayerStatsApp extends Application{
     }
 
     private ObservableList<String> getValidRoster() throws Exception {
-        TeamRoster roster = TeamRoster.createTeamRoster(teams.getValue());
+        TeamParser parser = TeamParser.withStream(url.createTeamListStream(2019)).andFullName(teams.getValue());
+        Team team = parser.parse();
+        TeamRoster roster = TeamRoster.createTeamRoster(team.getUrlName());
         Collection<String> collection = Collections.checkedCollection(roster.createRoster().values(), String.class);
         return FXCollections.observableArrayList(collection);
     }

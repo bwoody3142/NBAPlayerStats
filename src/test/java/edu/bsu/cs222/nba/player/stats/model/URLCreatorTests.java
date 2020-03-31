@@ -33,6 +33,12 @@ public class URLCreatorTests {
     }
 
     @Test
+    public void testCreateLogoStream() throws Exception {
+        InputStream stream = URLCreator.createEmptyUrl().createLogoStream("lal");
+        Assertions.assertNotNull(stream);
+    }
+
+    @Test
     public void testPlayerListUrl() throws Exception {
         URL expected = URLCreator.createEmptyUrl().getPlayerListUrl(2018);
         Assertions.assertEquals("http://data.nba.net/data/10s/prod/v1/2018/players.json", expected.toString());
@@ -69,5 +75,12 @@ public class URLCreatorTests {
     public void testHeadshotStream() throws Exception {
         InputStream stream = URLCreator.createEmptyUrl().createHeadshotStream(2544);
         Assertions.assertNotNull(stream);
+    }
+
+    @Test
+    public void testLogoUrl() throws Exception {
+        URL expected = URLCreator.createEmptyUrl().getLogoUrl("lal");
+        Assertions.assertEquals("https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/lal.png",
+                expected.toString());
     }
 }

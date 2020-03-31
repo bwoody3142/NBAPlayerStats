@@ -43,9 +43,9 @@ public class URLCreator {
         return getTeamListUrl(year).openConnection().getInputStream();
     }
 
-    public URL getTeamRosterUrl(String team) throws Exception {
-        String encodedTeam = URLEncoder.encode(team,"UTF-8");
-        String search = "http://data.nba.net/data/10s/prod/v1/2019/teams/" + encodedTeam +  "/roster.json";
+    public URL getTeamRosterUrl(String urlName) throws Exception {
+        String encodedUrlName = URLEncoder.encode(urlName,"UTF-8");
+        String search = "http://data.nba.net/data/10s/prod/v1/2019/teams/" + encodedUrlName +  "/roster.json";
         return new URL(search);
     }
 
@@ -54,12 +54,22 @@ public class URLCreator {
     }
 
     public URL getHeadshotUrl(Integer personID) throws Exception {
-        String encodedTeam = URLEncoder.encode(personID.toString(),"UTF-8");
-        String search = "https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/" + encodedTeam + ".png";
+        String encodedPersonID = URLEncoder.encode(personID.toString(),"UTF-8");
+        String search = "https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/" + encodedPersonID + ".png";
         return new URL(search);
     }
 
     public InputStream createHeadshotStream(Integer personID) throws Exception {
         return getHeadshotUrl(personID).openConnection().getInputStream();
+    }
+
+    public URL getLogoUrl(String team) throws Exception {
+        String encodedTeam = URLEncoder.encode(team,"UTF-8");
+        String search = "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/" + encodedTeam + ".png";
+        return new URL(search);
+    }
+
+    public InputStream createLogoStream(String team) throws Exception {
+        return getLogoUrl(team).openConnection().getInputStream();
     }
 }

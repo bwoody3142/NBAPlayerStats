@@ -19,7 +19,7 @@ public class ListOfTeams {
     private JSONArray getTeamListArray(Integer year) throws Exception {
         InputStream stream = URLCreator.createEmptyUrl().createTeamListStream(year);
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
-        return JsonPath.read(document, "$..standard[?(@.isNBAFranchise==true)].urlName");
+        return JsonPath.read(document, "$..standard[?(@.isNBAFranchise==true)].fullName");
     }
 
     public List<String> createFullListOfTeams(Integer year) throws Exception {
