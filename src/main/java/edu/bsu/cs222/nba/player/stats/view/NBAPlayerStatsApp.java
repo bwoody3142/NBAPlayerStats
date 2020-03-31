@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.InputStream;
 import java.util.*;
 
@@ -20,7 +19,6 @@ public class NBAPlayerStatsApp extends Application{
     private Label teamLabel;
     private Label nameLabel;
     private Label yearLabel;
-    private Scene outputScene;
     private ComboBox<String> teams = new ComboBox<>();
     private ComboBox<String> player = new ComboBox<>();
     private ComboBox<Integer> year = new ComboBox<>();
@@ -67,7 +65,6 @@ public class NBAPlayerStatsApp extends Application{
             }
         });
         statsButton.setOnAction(event -> {
-            stage.setScene(outputScene);
             try {
                 setStats();
                 getHeadshot();
@@ -75,25 +72,24 @@ public class NBAPlayerStatsApp extends Application{
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Alert");
-                alert.setHeaderText("You have entered an invalid name or year \n" +
-                        "Examples for a name: 'LeBron James', 'Dennis Smith Jr.', 'Glenn Robinson III'\n" +
-                        "Example for year: '2019' (for the whole 2019-2020 regular season)");
-                alert.setContentText(player.getValue());
+                alert.setHeaderText("Error");
                 alert.setResizable(true);
                 alert.showAndWait();
             }
         });
 
+        HBox resultBox = new HBox(headshotView, logoView, statsArea);
+        VBox parent = new VBox(createInputBox(), resultBox);
+        Scene scene = new Scene(parent);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private VBox createInputBox() {
         HBox teamBox = new HBox(teamLabel, teams, rosterButton);
         HBox nameBox = new HBox(nameLabel, player, seasonButton);
         HBox yearBox = new HBox(yearLabel, year);
-        VBox inputBox = new VBox(teamBox, nameBox, yearBox, statsButton);
-
-        HBox resultBox = new HBox(headshotView, logoView, statsArea);
-        Scene inputScene = new Scene(inputBox);
-        outputScene = new Scene(resultBox);
-        stage.setScene(inputScene);
-        stage.show();
+        return new VBox(teamBox, nameBox, yearBox, statsButton);
     }
 
     private void getLogo() throws Exception {
@@ -101,6 +97,8 @@ public class NBAPlayerStatsApp extends Application{
         Team team = parser.parse();
         InputStream logoStream = url.createLogoStream(team.getAbbreviation());
         Image logo = new Image(logoStream);
+        logoView.setFitHeight(200);
+        logoView.setFitWidth(200);
         logoView.setImage(logo);
     }
 
