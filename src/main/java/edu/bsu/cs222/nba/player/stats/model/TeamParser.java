@@ -36,8 +36,12 @@ public class TeamParser {
 
     public Team parse(){
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
-        JSONArray abbreviationArray = JsonPath.read(document, "$..standard[?(@.fullName==" + fullName + ")].tricode");
-        JSONArray urlNameArray = JsonPath.read(document, "$..standard[?(@.fullName==" + fullName + ")].urlName");
-        return Team.create(urlNameArray.get(0).toString(), abbreviationArray.get(0).toString());
+        JSONArray abbreviation = JsonPath.read(document, "$..standard[?(@.fullName==" + fullName + ")].tricode");
+        JSONArray urlName = JsonPath.read(document, "$..standard[?(@.fullName==" + fullName + ")].urlName");
+        return Team.withUrlName(getArrayAsString(urlName)).andAbbreviation(getArrayAsString(abbreviation));
+    }
+
+    private String getArrayAsString(JSONArray array){
+        return array.get(0).toString();
     }
 }
