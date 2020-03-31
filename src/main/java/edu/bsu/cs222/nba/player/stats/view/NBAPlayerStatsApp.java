@@ -59,7 +59,7 @@ public class NBAPlayerStatsApp extends Application{
         seasonButton.setOnAction(event -> {
             try {
                 fullPlayerList = playerList.createFullListOfPlayers();
-                year.setItems(FXCollections.observableArrayList(getVaildSeasons()));
+                year.setItems(FXCollections.observableArrayList(getValidSeasons()));
                 statsButton.setDisable(false);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -105,7 +105,7 @@ public class NBAPlayerStatsApp extends Application{
         return FXCollections.observableArrayList(collection);
     }
 
-    private List<Integer> getVaildSeasons() throws Exception {
+    private List<Integer> getValidSeasons() throws Exception {
         playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
         return SeasonGenerator.create().getYearsAsList(playerStream);
     }
