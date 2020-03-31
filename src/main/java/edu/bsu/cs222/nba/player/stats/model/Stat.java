@@ -27,6 +27,5 @@ public enum Stat {
     String getDataSourceKey(){
         return dataSourceKey;
     }
-
 }
 

@@ -38,7 +38,7 @@ public class ListOfPlayers {
 
     public Map<String, String> createFullListOfPlayers() throws Exception {
         for (Object unCastedMap : getPlayerListArray()) {
-            //Had to suppress due to the api
+            //Had to suppress because the API returns a raw object, instead we want a Map<String, JSONObject>.
             @SuppressWarnings("unchecked") Map<String, JSONObject> map = (Map<String, JSONObject>) unCastedMap;
             playerMap.put(getFullName(map), getPersonID(map));
         }
