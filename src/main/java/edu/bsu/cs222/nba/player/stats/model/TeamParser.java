@@ -28,17 +28,22 @@ public class TeamParser {
 
     private InputStream stream;
     private String fullName;
+    private Object document;
 
     public TeamParser(TeamParserBuilder builder) {
         this.stream = builder.stream;
         this.fullName = builder.fullName;
+        document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
     }
 
     public Team parse(){
-        Object document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
-        JSONArray abbreviation = JsonPath.read(document, "$..standard[?(@.fullName==" + fullName + ")].tricode");
-        JSONArray urlName = JsonPath.read(document, "$..standard[?(@.fullName==" + fullName + ")].urlName");
+        JSONArray abbreviation = makeQuery("tricode");
+        JSONArray urlName = makeQuery("urlName");
         return Team.withUrlName(getArrayAsString(urlName)).andAbbreviation(getArrayAsString(abbreviation));
+    }
+
+    private JSONArray makeQuery(String query){
+        return JsonPath.read(document, "$..standard[?(@.fullName==" + fullName + ")]." + query);
     }
 
     private String getArrayAsString(JSONArray array){
