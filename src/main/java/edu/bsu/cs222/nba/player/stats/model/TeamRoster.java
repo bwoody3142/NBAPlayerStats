@@ -14,6 +14,7 @@ import static edu.bsu.cs222.nba.player.stats.model.ListOfPlayers.createEmptyList
 
 public class TeamRoster {
 
+
     private Map<String, String> map = createEmptyListOfPlayers().createFullListOfPlayers();
     private BiMap<String, String> invertedMap = HashBiMap.create(map).inverse();
     private Map<String, String> roster = new HashMap<>();

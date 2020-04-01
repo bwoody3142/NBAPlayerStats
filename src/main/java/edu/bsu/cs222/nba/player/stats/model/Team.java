@@ -15,8 +15,8 @@ public class Team {
         }
 
         public Team andAbbreviation(String abbreviation) {
-            this.abbreviation = abbreviation;
-            return new Team(this);
+            this.abbreviation = abbreviation.toLowerCase();
+            return create(this);
         }
     }
 
@@ -37,6 +37,6 @@ public class Team {
     }
 
     public String getAbbreviation() {
-        return abbreviation.toLowerCase();
+        return abbreviation;
     }
 }
