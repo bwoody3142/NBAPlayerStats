@@ -21,15 +21,6 @@ public class NBAPlayerStatsApp extends Application{
     private Label teamLabel;
     private Label nameLabel;
     private Label yearLabel;
-    private Label ppgLabel;
-    private Label apgLabel;
-    private Label rpgLabel;
-    private Label topgLabel;
-    private Label spgLabel;
-    private Label bpgLabel;
-    private Label fgpLabel;
-    private Label ftpLabel;
-    private Label tpmLabel;
     private ComboBox<String> teams = new ComboBox<>();
     private ComboBox<String> player = new ComboBox<>();
     private ComboBox<Integer> year = new ComboBox<>();
@@ -81,20 +72,10 @@ public class NBAPlayerStatsApp extends Application{
             statsPane.getChildren().clear();
             try {
                 setStats();
-                createStatsLabels();
-                setStatsPaneConstraints();
-                statsPane.getChildren().addAll(ppgLabel, apgLabel, rpgLabel, topgLabel,
-                        spgLabel, bpgLabel, fgpLabel, ftpLabel, tpmLabel);
+                StatView statView = new StatView(playerStats);
+                statsPane.getChildren().add(statView);
                 getHeadshot();
                 getLogo();
-
-                // Dr. G. slush space here!
-
-                // First, clear the results area
-                //statsPane.getChildren().clear();
-
-               // statsPane.getChildren().add(new PlayerStatsView(playerStats));
-                // end
 
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -119,7 +100,7 @@ public class NBAPlayerStatsApp extends Application{
         statsPane.setHgap(10);
 
         VBox parent = new VBox(createInputBox(), pane);
-        Scene scene = new Scene(parent);
+        Scene scene = new Scene(parent, 700, 450);
         stage.setScene(scene);
         stage.show();
     }
@@ -193,29 +174,5 @@ public class NBAPlayerStatsApp extends Application{
         teamLabel = new Label("Team ");
         nameLabel = new Label("Player");
         yearLabel = new Label("Active Seasons ");
-    }
-
-    private void createStatsLabels(){
-        ppgLabel = new Label("PPG:  " + playerStats.getPointsPerGame());
-        apgLabel = new Label("APG:  " + playerStats.getAssistsPerGame());
-        rpgLabel = new Label("RPG:  " + playerStats.getReboundsPerGame());
-        topgLabel = new Label("TOPG:  " + playerStats.getTurnOversPerGame());
-        spgLabel = new Label("SPG:  " + playerStats.getStealsPerGame());
-        bpgLabel = new Label("BPG:  " + playerStats.getBlocksPerGame());
-        fgpLabel = new Label("FGP:  " + playerStats.getFieldGoalPercentage());
-        ftpLabel = new Label("FTP:  " + playerStats.getFreeThrowPercentage());
-        tpmLabel = new Label("TPM:  " + playerStats.getThreePointers());
-    }
-
-    private void setStatsPaneConstraints(){
-        GridPane.setConstraints(ppgLabel,0,0);
-        GridPane.setConstraints(apgLabel,0,1);
-        GridPane.setConstraints(rpgLabel,0,2);
-        GridPane.setConstraints(topgLabel,0,3);
-        GridPane.setConstraints(spgLabel,0,4);
-        GridPane.setConstraints(bpgLabel,0,5);
-        GridPane.setConstraints(fgpLabel,0,6);
-        GridPane.setConstraints(ftpLabel,0,7);
-        GridPane.setConstraints(tpmLabel,0,8);
     }
 }
