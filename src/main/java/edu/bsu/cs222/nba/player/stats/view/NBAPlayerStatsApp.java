@@ -76,7 +76,6 @@ public class NBAPlayerStatsApp extends Application{
                 statsPane.getChildren().add(statView);
                 getHeadshot();
                 getLogo();
-
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Alert");
@@ -172,7 +171,7 @@ public class NBAPlayerStatsApp extends Application{
 
     private void createInputLabels() {
         teamLabel = new Label("Team ");
-        nameLabel = new Label("Player");
+        nameLabel = new Label("Player ");
         yearLabel = new Label("Active Seasons ");
     }
 }
