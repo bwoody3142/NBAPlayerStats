@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -25,10 +26,11 @@ public class NBAPlayerStatsApp extends Application {
     private Label teamLabel;
     private Label nameLabel;
     private Label yearLabel;
+    private Button button;
     private ComboBox<String> teams = new ComboBox<>();
     private ComboBox<String> player = new ComboBox<>();
     private ComboBox<Integer> year = new ComboBox<>();
-    private GridPane pane = new GridPane();
+    private GridPane parentPane = new GridPane();
     private GridPane statsPane = new GridPane();
     private final ListOfPlayers playerList = ListOfPlayers.createEmptyListOfPlayers();
     private Map<String, String> fullPlayerList = new HashMap<>();
@@ -36,7 +38,8 @@ public class NBAPlayerStatsApp extends Application {
     private InputStream playerStream;
     private ImageView headshotView = new ImageView();
     private ImageView logoView = new ImageView();
-    private PlayerStats playerStats;
+    private PlayerStats playerSeasonStats;
+    private PlayerStats playerCareerStats;
 
     public NBAPlayerStatsApp() {
     }
@@ -46,6 +49,7 @@ public class NBAPlayerStatsApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         stage.setTitle("NBA Player Stats");
+        button = new Button("Get Stats!");
         createInputLabels();
         setAllPromptText();
         player.setDisable(true);
@@ -69,12 +73,16 @@ public class NBAPlayerStatsApp extends Application {
                 e.printStackTrace();
             }
         });
-        year.setOnAction(event -> {
+        button.setOnAction(event -> {
             statsPane.getChildren().clear();
             try {
-                setStats();
-                StatView statView = new StatView(playerStats);
-                statsPane.getChildren().add(statView);
+                parseSeasonStats();
+                parseCareerStats();
+                StatView seasonStatView = new StatView(playerSeasonStats);
+                StatView careerStatView = new StatView(playerCareerStats);
+                GridPane.setConstraints(seasonStatView, 0, 0);
+                GridPane.setConstraints(careerStatView, 1, 0);
+                statsPane.getChildren().addAll(seasonStatView, careerStatView);
                 getHeadshot();
                 getLogo();
             } catch (IOException e) {
@@ -86,20 +94,20 @@ public class NBAPlayerStatsApp extends Application {
             }
         });
 
-        pane.setPadding(new Insets(20,20,20,20));
-        pane.setVgap(10);
-        pane.setHgap(10);
+        parentPane.setPadding(new Insets(20,20,20,20));
+        parentPane.setVgap(10);
+        parentPane.setHgap(10);
 
         GridPane.setConstraints(headshotView,0,0);
         GridPane.setConstraints(logoView,1,0);
         GridPane.setConstraints(statsPane,2,0);
-        pane.getChildren().addAll(logoView, headshotView, statsPane);
+        parentPane.getChildren().addAll(logoView, headshotView, statsPane);
 
         statsPane.setPadding(new Insets(20,20,20,20));
         statsPane.setVgap(10);
         statsPane.setHgap(10);
 
-        VBox parent = new VBox(createInputBox(), pane);
+        VBox parent = new VBox(createInputBox(), parentPane);
         Scene scene = new Scene(parent, 700, 450);
         stage.setScene(scene);
         stage.show();
@@ -108,7 +116,7 @@ public class NBAPlayerStatsApp extends Application {
     private VBox createInputBox() {
         HBox teamBox = new HBox(teamLabel, teams);
         HBox nameBox = new HBox(nameLabel, player);
-        HBox yearBox = new HBox(yearLabel, year);
+        HBox yearBox = new HBox(yearLabel, year, button);
         return new VBox(teamBox, nameBox, yearBox);
     }
 
@@ -137,12 +145,17 @@ public class NBAPlayerStatsApp extends Application {
 
     private List<Integer> getValidSeasons() throws IOException {
         playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
-        return SeasonGenerator.create().getYearsAsList(playerStream);
+        return ListOfActiveSeasons.create().getYearsAsList(playerStream);
     }
 
-    private void setStats() throws IOException {
+    private void parseSeasonStats() throws IOException {
         playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
-        playerStats = PlayerParser.withStream(playerStream).andYear(year.getValue()).parseForSeasonStats();
+        playerSeasonStats = PlayerParser.withStream(playerStream).andYear(year.getValue()).parseForSeasonStats();
+    }
+
+    private void parseCareerStats() throws IOException {
+        playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
+        playerCareerStats = PlayerParser.withStream(playerStream).andYear(year.getValue()).parseForCareerStats();
     }
 
     private void getHeadshot() throws IOException {

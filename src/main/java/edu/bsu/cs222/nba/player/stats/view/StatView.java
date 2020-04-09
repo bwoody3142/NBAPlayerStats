@@ -21,6 +21,13 @@ public class StatView extends GridPane {
     private Label tpmLabel;
 
     public StatView(PlayerStats playerStats) {
+        createLabels(playerStats);
+        changeFont();
+        getChildren().addAll(getListOfLabels());
+        setStatsPaneConstraints();
+    }
+
+    private void createLabels(PlayerStats playerStats) {
         ppgLabel = new Label("PPG: " + playerStats.getPointsPerGame());
         apgLabel = new Label("APG:  " + playerStats.getAssistsPerGame());
         rpgLabel = new Label("RPG:  " + playerStats.getReboundsPerGame());
@@ -30,9 +37,6 @@ public class StatView extends GridPane {
         fgpLabel = new Label("FGP:  " + playerStats.getFieldGoalPercentage());
         ftpLabel = new Label("FTP:  " + playerStats.getFreeThrowPercentage());
         tpmLabel = new Label("TPM:  " + playerStats.getThreePointers());
-        changeFont();
-        getChildren().addAll(getListOfLabels());
-        setStatsPaneConstraints();
     }
 
     private ObservableList<Label> getListOfLabels(){
@@ -40,7 +44,7 @@ public class StatView extends GridPane {
                 spgLabel, bpgLabel, fgpLabel, ftpLabel, tpmLabel);
     }
 
-    public void setStatsPaneConstraints(){
+    private void setStatsPaneConstraints(){
         for (int i = 0; i < getListOfLabels().size(); i++){
             GridPane.setConstraints(getListOfLabels().get(i),0,i);
         }

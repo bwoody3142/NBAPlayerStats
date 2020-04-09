@@ -5,19 +5,19 @@ import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 
-public class SeasonGeneratorTest {
+public class ListOfActiveSeasonsTest {
 
     @Test
     public void testParse_parseYears(){
         InputStream lebronInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("LeBronJamesStats2018.json");
-        SeasonGenerator generator = SeasonGenerator.create();
+        ListOfActiveSeasons generator = ListOfActiveSeasons.create();
         Assertions.assertNotNull(generator.parseYears(lebronInputStream));
     }
 
     @Test
     public void testParse_getNumberOfActiveSeasons(){
         InputStream lebronInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("LeBronJamesStats2018.json");
-        SeasonGenerator generator = SeasonGenerator.create();
+        ListOfActiveSeasons generator = ListOfActiveSeasons.create();
         Assertions.assertEquals(16, generator.getNumberOfActiveSeasons(lebronInputStream));
     }
 }

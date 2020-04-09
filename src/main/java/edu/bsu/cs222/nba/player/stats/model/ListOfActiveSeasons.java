@@ -8,12 +8,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SeasonGenerator {
+public class ListOfActiveSeasons {
 
-    private SeasonGenerator(){}
+    private ListOfActiveSeasons(){}
 
-    public static SeasonGenerator create(){
-        return new SeasonGenerator();
+    public static ListOfActiveSeasons create(){
+        return new ListOfActiveSeasons();
     }
 
     public JSONArray parseYears(InputStream stream){
