@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 
-public class TeamParserTests {
+public class TeamParserTest {
 
 
     private Team getLakers(){

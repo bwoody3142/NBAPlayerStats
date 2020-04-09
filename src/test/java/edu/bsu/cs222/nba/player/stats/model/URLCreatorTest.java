@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.net.URL;
 
-public class URLCreatorTests {
+public class URLCreatorTest {
 
     @Test
     public void testCreatePlayerListStream() throws Exception {

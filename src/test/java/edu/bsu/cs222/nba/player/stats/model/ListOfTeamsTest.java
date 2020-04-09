@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class ListOfTeamsTests {
+public class ListOfTeamsTest {
 
     @Test
     public void testCreateFullListOfTeams() throws Exception {

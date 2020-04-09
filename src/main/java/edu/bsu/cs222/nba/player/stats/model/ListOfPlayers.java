@@ -5,6 +5,7 @@ import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class ListOfPlayers {
         return new ListOfPlayers();
     }
 
-    private JSONArray getPlayerListArray() throws Exception {
+    private JSONArray getPlayerListArray() throws IOException {
         InputStream stream = URLCreator.createEmptyUrl().createPlayerListStream(2019);
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
         return JsonPath.read(document, "$..standard.*");
@@ -36,7 +37,7 @@ public class ListOfPlayers {
         return object.toString();
     }
 
-    public Map<String, String> createFullListOfPlayers() throws Exception {
+    public Map<String, String> createFullListOfPlayers() throws IOException {
         for (Object unCastedMap : getPlayerListArray()) {
             //Had to suppress because the API returns a raw object, instead we want a Map<String, JSONObject>.
             @SuppressWarnings("unchecked") Map<String, JSONObject> map = (Map<String, JSONObject>) unCastedMap;

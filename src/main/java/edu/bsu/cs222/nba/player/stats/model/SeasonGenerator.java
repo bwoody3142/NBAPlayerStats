@@ -29,4 +29,7 @@ public class SeasonGenerator {
         }
         return list;
     }
+    public int getNumberOfActiveSeasons(InputStream stream){
+        return parseYears(stream).size();
+    }
 }

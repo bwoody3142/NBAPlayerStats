@@ -6,17 +6,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-public class NBAPlayerStatsApp extends Application{
+public class NBAPlayerStatsApp extends Application {
 
     private Label teamLabel;
     private Label nameLabel;
@@ -28,15 +32,11 @@ public class NBAPlayerStatsApp extends Application{
     private GridPane statsPane = new GridPane();
     private final ListOfPlayers playerList = ListOfPlayers.createEmptyListOfPlayers();
     private Map<String, String> fullPlayerList = new HashMap<>();
-    private final URLCreator url = URLCreator.createEmptyUrl();
+    private URLCreator url = URLCreator.createEmptyUrl();
     private InputStream playerStream;
     private ImageView headshotView = new ImageView();
     private ImageView logoView = new ImageView();
-    private Button rosterButton;
-    private Button seasonButton;
-    private Button statsButton;
     private PlayerStats playerStats;
-
 
     public NBAPlayerStatsApp() {
     }
@@ -44,31 +44,32 @@ public class NBAPlayerStatsApp extends Application{
     public static void main(String[] args) { launch(args); }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) throws IOException {
         stage.setTitle("NBA Player Stats");
         createInputLabels();
         setAllPromptText();
-        createButtons();
-        setUneditable();
+        player.setDisable(true);
+        year.setDisable(true);
         teams.setItems(FXCollections.observableList(getValidTeams()));
-        rosterButton.setOnAction(event -> {
+        teams.setOnAction(event -> {
+
             try {
+                player.setDisable(false);
                 player.setItems(FXCollections.observableList(getValidRoster()));
-                seasonButton.setDisable(false);
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-        seasonButton.setOnAction(event -> {
+        player.setOnAction(event -> {
             try {
+                year.setDisable(false);
                 fullPlayerList = playerList.createFullListOfPlayers();
                 year.setItems(FXCollections.observableArrayList(getValidSeasons()));
-                statsButton.setDisable(false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-        statsButton.setOnAction(event -> {
+        year.setOnAction(event -> {
             statsPane.getChildren().clear();
             try {
                 setStats();
@@ -76,7 +77,7 @@ public class NBAPlayerStatsApp extends Application{
                 statsPane.getChildren().add(statView);
                 getHeadshot();
                 getLogo();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Alert");
                 alert.setHeaderText("Error");
@@ -105,13 +106,13 @@ public class NBAPlayerStatsApp extends Application{
     }
 
     private VBox createInputBox() {
-        HBox teamBox = new HBox(teamLabel, teams, rosterButton);
-        HBox nameBox = new HBox(nameLabel, player, seasonButton);
+        HBox teamBox = new HBox(teamLabel, teams);
+        HBox nameBox = new HBox(nameLabel, player);
         HBox yearBox = new HBox(yearLabel, year);
-        return new VBox(teamBox, nameBox, yearBox, statsButton);
+        return new VBox(teamBox, nameBox, yearBox);
     }
 
-    private void getLogo() throws Exception {
+    private void getLogo() throws IOException {
         TeamParser parser = TeamParser.withStream(url.createTeamListStream(2019)).andFullName(teams.getValue());
         Team team = parser.parse();
         InputStream logoStream = url.createLogoStream(team.getAbbreviation());
@@ -121,12 +122,12 @@ public class NBAPlayerStatsApp extends Application{
         logoView.setImage(logo);
     }
 
-    private List<String> getValidTeams() throws Exception {
+    private List<String> getValidTeams() throws IOException {
         ListOfTeams teamList = ListOfTeams.getNewListOfTeams();
         return teamList.createFullListOfTeams(2019);
     }
 
-    private ObservableList<String> getValidRoster() throws Exception {
+    private ObservableList<String> getValidRoster() throws IOException {
         TeamParser parser = TeamParser.withStream(url.createTeamListStream(2019)).andFullName(teams.getValue());
         Team team = parser.parse();
         TeamRoster roster = TeamRoster.createTeamRoster(team.getUrlName());
@@ -134,33 +135,20 @@ public class NBAPlayerStatsApp extends Application{
         return FXCollections.observableArrayList(collection);
     }
 
-    private List<Integer> getValidSeasons() throws Exception {
+    private List<Integer> getValidSeasons() throws IOException {
         playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
         return SeasonGenerator.create().getYearsAsList(playerStream);
     }
 
-    private void setStats() throws Exception {
+    private void setStats() throws IOException {
         playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
-        playerStats = PlayerParser.withStream(playerStream).andYear(year.getValue()).parse();
+        playerStats = PlayerParser.withStream(playerStream).andYear(year.getValue()).parseForSeasonStats();
     }
 
-    private void getHeadshot() throws Exception {
+    private void getHeadshot() throws IOException {
         InputStream headshotStream = url.createHeadshotStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
         Image headshot = new Image(headshotStream);
         headshotView.setImage(headshot);
-    }
-
-    private void setUneditable() {
-        player.setEditable(false);
-        year.setEditable(false);
-        seasonButton.setDisable(true);
-        statsButton.setDisable(true);
-    }
-
-    private void createButtons() {
-        rosterButton = new Button("Get Roster");
-        seasonButton = new Button("Get Seasons");
-        statsButton = new Button("Get Stats");
     }
 
     private void setAllPromptText() {

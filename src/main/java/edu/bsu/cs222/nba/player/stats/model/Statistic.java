@@ -1,21 +1,23 @@
 package edu.bsu.cs222.nba.player.stats.model;
 
 
-public enum Stat {
+public enum Statistic {
     PPG(0, "ppg"),
     APG(1, "apg"),
     RPG(2, "rpg"),
-    TOPG(3, "topg"),
-    SPG(4, "spg"),
-    BPG(5, "bpg"),
-    FGP(6, "fgp"),
-    FTP(7, "ftp"),
-    TPM(8, "tpm");
+    GAMES_PLAYED(3, "gamesPlayed"),
+    CAREER_TURNOVERS(4, "turnovers"),
+    SPG(5, "spg"),
+    BPG(6, "bpg"),
+    FGP(7, "fgp"),
+    FTP(8, "ftp"),
+    TPM(9, "tpm"),
+    SEASON_TOPG(10, "topg");
 
     public final int index;
     public final String dataSourceKey;
 
-    Stat(int index, String dataSourceKey) {
+    Statistic(int index, String dataSourceKey) {
         this.index = index;
         this.dataSourceKey = dataSourceKey;
     }

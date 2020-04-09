@@ -34,27 +34,54 @@ public class PlayerParser {
         this.year = builder.year;
     }
 
-    public PlayerStats parse(){
+    public PlayerStats parseForSeasonStats(){
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
-        for (Stat stat : Stat.values()) {
-            array.add(JsonPath.read(document, makeQuery(stat.getDataSourceKey())));
+        for (Statistic statistic : Statistic.values()) {
+            array.add(JsonPath.read(document, makeSeasonStatsQuery(statistic.getDataSourceKey())));
         }
-        return build();
-    }
-    private PlayerStats build() {
-        return PlayerStats.withPoints(getFloat(Stat.PPG.getIndex()))
-                .assists(getFloat(Stat.APG.getIndex()))
-                .rebounds(getFloat(Stat.RPG.getIndex()))
-                .turnovers(getFloat(Stat.TOPG.getIndex()))
-                .steals(getFloat(Stat.SPG.getIndex()))
-                .blocks(getFloat(Stat.BPG.getIndex()))
-                .fieldGoalPercentage(getFloat(Stat.FGP.getIndex()))
-                .freeThrowPercentage(getFloat(Stat.FTP.getIndex()))
-                .andThreePointers(getFloat(Stat.TPM.getIndex()));
+        return buildSeasonStats();
     }
 
-    private String makeQuery(String stat){
+    public PlayerStats parseForCareerStats(){
+        Object document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
+        for (Statistic statistic : Statistic.values()) {
+            if(!statistic.getDataSourceKey().equals("topg")){
+                array.add(JsonPath.read(document, makeCareerStatsQuery(statistic.getDataSourceKey())));
+            }
+        }
+        return buildCareerStats();
+    }
+
+    private PlayerStats buildSeasonStats() {
+        return PlayerStats.withPoints(getFloat(Statistic.PPG.getIndex()))
+                .assists(getFloat(Statistic.APG.getIndex()))
+                .rebounds(getFloat(Statistic.RPG.getIndex()))
+                .seasonTurnovers(getFloat(Statistic.SEASON_TOPG.getIndex()))
+                .steals(getFloat(Statistic.SPG.getIndex()))
+                .blocks(getFloat(Statistic.BPG.getIndex()))
+                .fieldGoalPercentage(getFloat(Statistic.FGP.getIndex()))
+                .freeThrowPercentage(getFloat(Statistic.FTP.getIndex()))
+                .andThreePointers(getFloat(Statistic.TPM.getIndex()) / getFloat(Statistic.GAMES_PLAYED.getIndex()));
+    }
+
+    private PlayerStats buildCareerStats() {
+        return PlayerStats.withPoints(getFloat(Statistic.PPG.getIndex()))
+                .assists(getFloat(Statistic.APG.getIndex()))
+                .rebounds(getFloat(Statistic.RPG.getIndex()))
+                .careerTurnovers(getFloat(Statistic.CAREER_TURNOVERS.getIndex()) / getFloat(Statistic.GAMES_PLAYED.getIndex()))
+                .steals(getFloat(Statistic.SPG.getIndex()))
+                .blocks(getFloat(Statistic.BPG.getIndex()))
+                .fieldGoalPercentage(getFloat(Statistic.FGP.getIndex()))
+                .freeThrowPercentage(getFloat(Statistic.FTP.getIndex()))
+                .andThreePointers(getFloat(Statistic.TPM.getIndex()) / getFloat(Statistic.GAMES_PLAYED.getIndex()));
+    }
+
+    private String makeSeasonStatsQuery(String stat){
         return "$..season[?(@.seasonYear==" + year + ")].total." + stat;
+    }
+
+    private String makeCareerStatsQuery(String stat){
+        return "$..careerSummary." + stat;
     }
 
     private float getFloat(Integer index){

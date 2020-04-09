@@ -6,6 +6,7 @@ import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,21 +21,21 @@ public class TeamRoster {
     private Map<String, String> roster = new HashMap<>();
     private String team;
 
-    private TeamRoster(String team) throws Exception {
+    private TeamRoster(String team) throws IOException {
         this.team = team;
     }
 
-    public static TeamRoster createTeamRoster(String team) throws Exception {
+    public static TeamRoster createTeamRoster(String team) throws IOException {
         return new TeamRoster(team);
     }
 
-    public JSONArray getPersonIdArray() throws Exception {
+    public JSONArray getPersonIdArray() throws IOException {
         InputStream stream = URLCreator.createEmptyUrl().createTeamRosterStream(team);
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
         return JsonPath.read(document, "$..standard.players.*.personId");
     }
 
-    public Map<String, String> createRoster() throws Exception {
+    public Map<String, String> createRoster() throws IOException {
         for(int i = 0; i < getPersonIdArray().size(); i++){
             if (invertedMap.containsKey(String.valueOf(getPersonIdArray().get(i)))) {
                 roster.put(getPersonIdArray().get(i).toString(), invertedMap.get(getPersonIdArray().get(i).toString()));

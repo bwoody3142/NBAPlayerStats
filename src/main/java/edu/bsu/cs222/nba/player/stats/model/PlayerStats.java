@@ -1,5 +1,6 @@
 package edu.bsu.cs222.nba.player.stats.model;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,12 +14,15 @@ public class PlayerStats {
         private float pointsPerGame;
         private float assistsPerGame;
         private float reboundsPerGame;
-        private float turnOversPerGame;
+        private float seasonTurnOversPerGame;
+        private float careerTurnOversPerGame;
         private float stealsPerGame;
         private float blocksPerGame;
         private float fieldGoalPercentage;
         private float freeThrowPercentage;
         private float threePointers;
+
+        private boolean turnoversSpecified = false;
 
         public PlayerStatsBuilder(float pointsPerGame){
             this.pointsPerGame = pointsPerGame;
@@ -34,8 +38,21 @@ public class PlayerStats {
             return this;
         }
 
-        public PlayerStatsBuilder turnovers(float turnOversPerGame) {
-            this.turnOversPerGame = turnOversPerGame;
+        public PlayerStatsBuilder seasonTurnovers(float turnOversPerGame) {
+            if (turnoversSpecified) {
+                throw new IllegalStateException("Cannot specify both season and lifetime turnovers");
+            }
+            this.seasonTurnOversPerGame = turnOversPerGame;
+            turnoversSpecified = true;
+            return this;
+        }
+
+        public PlayerStatsBuilder careerTurnovers(float turnOversPerGame) {
+            if (turnoversSpecified) {
+                throw new IllegalStateException("Cannot specify both season and lifetime turnovers");
+            }
+            this.careerTurnOversPerGame = roundFloat(turnOversPerGame);
+            turnoversSpecified = true;
             return this;
         }
 
@@ -60,15 +77,22 @@ public class PlayerStats {
         }
 
         public PlayerStats andThreePointers(float threePointers) {
-            this.threePointers = threePointers;
+            this.threePointers = roundFloat(threePointers);
             return create(this);
         }
+
+        private float roundFloat(float stat){
+            DecimalFormat decimalFormat = new DecimalFormat("0.0");
+            return Float.parseFloat(decimalFormat.format(stat));
+        }
+
     }
 
     private float pointsPerGame;
     private float assistsPerGame;
     private float reboundsPerGame;
-    private float turnOversPerGame;
+    private float seasonTurnOversPerGame;
+    private float careerTurnOversPerGame;
     private float stealsPerGame;
     private float blocksPerGame;
     private float fieldGoalPercentage;
@@ -79,7 +103,8 @@ public class PlayerStats {
         this.pointsPerGame = builder.pointsPerGame;
         this.assistsPerGame = builder.assistsPerGame;
         this.reboundsPerGame = builder.reboundsPerGame;
-        this.turnOversPerGame = builder.turnOversPerGame;
+        this.seasonTurnOversPerGame = builder.seasonTurnOversPerGame;
+        this.careerTurnOversPerGame = builder.careerTurnOversPerGame;
         this.stealsPerGame = builder.stealsPerGame;
         this.blocksPerGame = builder.blocksPerGame;
         this.fieldGoalPercentage = builder.fieldGoalPercentage;
@@ -91,11 +116,23 @@ public class PlayerStats {
         return new PlayerStats(builder);
     }
 
-    public List<Float> getListOfStats(){
+    public List<Float> getSeasonStatsList(){
         return Arrays.asList(getPointsPerGame(),
                 getAssistsPerGame(),
                 getReboundsPerGame(),
-                getTurnOversPerGame(),
+                getSeasonTurnOversPerGame(),
+                getStealsPerGame(),
+                getBlocksPerGame(),
+                getFieldGoalPercentage(),
+                getFreeThrowPercentage(),
+                getThreePointers());
+    }
+
+    public List<Float> getCareerStatsList(){
+        return Arrays.asList(getPointsPerGame(),
+                getAssistsPerGame(),
+                getReboundsPerGame(),
+                getCareerTurnOversPerGame(),
                 getStealsPerGame(),
                 getBlocksPerGame(),
                 getFieldGoalPercentage(),
@@ -111,10 +148,16 @@ public class PlayerStats {
         return assistsPerGame;
     }
 
-    public float getReboundsPerGame() { return reboundsPerGame; }
+    public float getReboundsPerGame() {
+        return reboundsPerGame;
+    }
 
-    public float getTurnOversPerGame() {
-        return turnOversPerGame;
+    public float getSeasonTurnOversPerGame() {
+        return seasonTurnOversPerGame;
+    }
+
+    public float getCareerTurnOversPerGame() {
+        return careerTurnOversPerGame;
     }
 
     public float getStealsPerGame() {
@@ -135,18 +178,5 @@ public class PlayerStats {
 
     public float getThreePointers() {
         return threePointers;
-    }
-
-    @Override
-    public String toString() {
-        return  "PPG: " + pointsPerGame + "\n" +
-                "APG: " + assistsPerGame + "\n" +
-                "RPG: " + reboundsPerGame + "\n" +
-                "TOPG: " + turnOversPerGame + "\n" +
-                "SPG: " + stealsPerGame + "\n" +
-                "BPG: " + blocksPerGame + "\n" +
-                "FGP: " + fieldGoalPercentage + "%\n" +
-                "FTP: " + freeThrowPercentage + "%\n" +
-                "TPM: " + threePointers;
     }
 }

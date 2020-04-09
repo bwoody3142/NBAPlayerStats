@@ -24,7 +24,7 @@ public class StatView extends GridPane {
         ppgLabel = new Label("PPG: " + playerStats.getPointsPerGame());
         apgLabel = new Label("APG:  " + playerStats.getAssistsPerGame());
         rpgLabel = new Label("RPG:  " + playerStats.getReboundsPerGame());
-        topgLabel = new Label("TOPG:  " + playerStats.getTurnOversPerGame());
+        topgLabel = new Label("TOPG:  " + playerStats.getSeasonTurnOversPerGame());
         spgLabel = new Label("SPG:  " + playerStats.getStealsPerGame());
         bpgLabel = new Label("BPG:  " + playerStats.getBlocksPerGame());
         fgpLabel = new Label("FGP:  " + playerStats.getFieldGoalPercentage());
@@ -51,5 +51,4 @@ public class StatView extends GridPane {
             getListOfLabels().get(i).setFont(Font.font("Times New Roman", FontWeight.BOLD, 18));
         }
     }
-
 }

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-public class TeamRosterTests {
+public class TeamRosterTest {
 
     private JSONArray lakers() throws Exception {
         return TeamRoster.createTeamRoster("lakers").getPersonIdArray();
