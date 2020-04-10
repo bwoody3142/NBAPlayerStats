@@ -65,13 +65,18 @@ public class URLCreator {
         return getHeadshotUrl(personID).openConnection().getInputStream();
     }
 
-    public URL getLogoUrl(String team) throws IOException {
-        String encodedTeam = URLEncoder.encode(team,"UTF-8");
-        String search = "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/" + encodedTeam + ".png";
+    public URL getLogoUrl(String abbreviation) throws IOException {
+        /*  **Special Case** API abbreviation returns "nop" as abbreviation for New Orleans Pelicans,
+         while the URL takes "no" as the parameter*/
+        if(abbreviation.equals("nop")){
+            abbreviation = "no";
+        }
+        String encodedAbbreviation = URLEncoder.encode(abbreviation,"UTF-8");
+        String search = "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/" + encodedAbbreviation + ".png";
         return new URL(search);
     }
 
-    public InputStream createLogoStream(String team) throws IOException {
-        return getLogoUrl(team).openConnection().getInputStream();
+    public InputStream createLogoStream(String abbreviation) throws IOException {
+        return getLogoUrl(abbreviation).openConnection().getInputStream();
     }
 }

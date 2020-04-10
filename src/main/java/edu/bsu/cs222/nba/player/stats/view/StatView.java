@@ -21,17 +21,37 @@ public class StatView extends GridPane {
     private Label tpmLabel;
 
     public StatView(PlayerStats playerStats) {
-        createLabels(playerStats);
+        getStats(playerStats);
         changeFont();
         getChildren().addAll(getListOfLabels());
         setStatsPaneConstraints();
     }
 
-    private void createLabels(PlayerStats playerStats) {
+    private void getStats(PlayerStats playerStats){
+        if(playerStats.getSeasonTurnOversPerGame() == 0){
+            createCareerStatLabels(playerStats);
+        } else {
+            createSeasonStatLabels(playerStats);
+        }
+    }
+
+    private void createSeasonStatLabels(PlayerStats playerStats) {
         ppgLabel = new Label("PPG: " + playerStats.getPointsPerGame());
         apgLabel = new Label("APG:  " + playerStats.getAssistsPerGame());
         rpgLabel = new Label("RPG:  " + playerStats.getReboundsPerGame());
         topgLabel = new Label("TOPG:  " + playerStats.getSeasonTurnOversPerGame());
+        spgLabel = new Label("SPG:  " + playerStats.getStealsPerGame());
+        bpgLabel = new Label("BPG:  " + playerStats.getBlocksPerGame());
+        fgpLabel = new Label("FGP:  " + playerStats.getFieldGoalPercentage());
+        ftpLabel = new Label("FTP:  " + playerStats.getFreeThrowPercentage());
+        tpmLabel = new Label("TPM:  " + playerStats.getThreePointers());
+    }
+
+    private void createCareerStatLabels(PlayerStats playerStats) {
+        ppgLabel = new Label("PPG: " + playerStats.getPointsPerGame());
+        apgLabel = new Label("APG:  " + playerStats.getAssistsPerGame());
+        rpgLabel = new Label("RPG:  " + playerStats.getReboundsPerGame());
+        topgLabel = new Label("TOPG:  " + playerStats.getCareerTurnOversPerGame());
         spgLabel = new Label("SPG:  " + playerStats.getStealsPerGame());
         bpgLabel = new Label("BPG:  " + playerStats.getBlocksPerGame());
         fgpLabel = new Label("FGP:  " + playerStats.getFieldGoalPercentage());
