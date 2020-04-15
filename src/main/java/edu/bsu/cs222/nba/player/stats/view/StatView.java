@@ -21,13 +21,13 @@ public class StatView extends GridPane {
     private Label tpmLabel;
 
     public StatView(PlayerStats playerStats) {
-        getStats(playerStats);
+        checkForSeasonOrCareerStats(playerStats);
         changeFont();
         getChildren().addAll(getListOfLabels());
         setStatsPaneConstraints();
     }
 
-    private void getStats(PlayerStats playerStats){
+    private void checkForSeasonOrCareerStats(PlayerStats playerStats){
         if(playerStats.getSeasonTurnOversPerGame() == 0){
             createCareerStatLabels(playerStats);
         } else {

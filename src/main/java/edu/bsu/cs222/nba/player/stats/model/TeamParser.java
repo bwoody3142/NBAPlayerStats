@@ -20,7 +20,7 @@ public class TeamParser {
             this.stream = stream;
         }
 
-        public TeamParser andFullName(String fullName) {
+        public TeamParser andFullTeamName(String fullName) {
             this.fullName = fullName;
             return new TeamParser(this);
         }

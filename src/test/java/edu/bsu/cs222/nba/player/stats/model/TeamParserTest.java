@@ -10,7 +10,7 @@ public class TeamParserTest {
 
     private Team getLakers(){
         InputStream teamListStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("TeamList2018.json");
-        TeamParser parser = TeamParser.withStream(teamListStream).andFullName("Los Angeles Lakers");
+        TeamParser parser = TeamParser.withStream(teamListStream).andFullTeamName("Los Angeles Lakers");
         return parser.parse();
     }
 

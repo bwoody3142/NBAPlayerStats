@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.google.guava', name: 'guava',  version: '14.0'
+    compile group: 'com.google.guava', name: 'guava', version: '29.0-jre'
     implementation 'com.google.code.gson:gson:2.8.6'
     compile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.0.0'
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
