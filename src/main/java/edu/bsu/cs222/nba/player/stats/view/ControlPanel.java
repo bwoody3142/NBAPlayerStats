@@ -8,17 +8,19 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class ControlPanel extends VBox {
 
     public interface PlayerStatsProductionListener {
-        void onPlayerStatsProduced(PlayerStatsGenerationEvent generationEvent) throws IOException;
+        void onPlayerStatsProduced(PlayerStatsGenerationEvent generationEvent);
     }
 
-    private Button getStatsButton = new Button();
     public final ComboBox<String> teams = new ComboBox<>();
     public final ComboBox<String> player = new ComboBox<>();
     private final ComboBox<Integer> season = new ComboBox<>();
@@ -28,19 +30,15 @@ public class ControlPanel extends VBox {
     private URLCreator url = URLCreator.createEmptyUrl();
     private InputStream playerStream;
     private List<PlayerStatsProductionListener> listeners = new ArrayList<>();
+    private PlayerStatsGenerationEvent generationEvent;
+    private Executor executor = Executors.newCachedThreadPool();
 
     public ControlPanel() throws IOException {
         player.setDisable(true);
         season.setDisable(true);
-        makeControlPanel();
-        getChildren().add(createParentBox());
-    }
-
-    private void makeControlPanel() throws IOException {
         generateTeams();
-        teams.setOnAction(event -> generateRoster());
-        player.setOnAction(event -> generateSeasons());
-        getStatsButton.setOnAction(event -> fireEvent());
+        VBox parent = createParentBox();
+        getChildren().add(parent);
     }
 
     public void addListeners(PlayerStatsProductionListener listener){
@@ -48,15 +46,13 @@ public class ControlPanel extends VBox {
     }
 
     public void fireEvent() {
-        try {
-            PlayerStatsGenerationEvent generationEvent = generatePlayerStats();
+        executor.execute(() -> {
+            generationEvent = generatePlayerStats();
             for (PlayerStatsProductionListener listener : listeners) {
                 listener.onPlayerStatsProduced(generationEvent);
             }
-        } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
+        });
+    }
 
     public void generateTeams() throws IOException {
         teams.setItems(FXCollections.observableList(getValidTeams()));
@@ -101,19 +97,22 @@ public class ControlPanel extends VBox {
     private HBox createTeamBox(){
         Label teamLabel = new Label("Team ");
         teams.setPromptText("Select a Team");
+        teams.setOnAction(event -> generateRoster());
         return new HBox(teamLabel, teams);
     }
 
     private HBox createPlayerBox(){
         Label playerLabel = new Label("Player ");
         player.setPromptText("Select a Player");
+        player.setOnAction(event -> generateSeasons());
         return new HBox(playerLabel, player);
     }
 
     private HBox createSeasonBox(){
-        getStatsButton = new Button("Get Stats!");
+        Button getStatsButton = new Button("Get Stats!");
         Label seasonLabel = new Label("Active Seasons ");
         season.setPromptText("Select a season");
+        getStatsButton.setOnAction(event -> fireEvent());
         return new HBox(seasonLabel, season, getStatsButton);
     }
 
