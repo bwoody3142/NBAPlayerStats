@@ -23,14 +23,14 @@ public class NBAPlayerStatsApp extends Application {
     public static void main(String[] args) { launch(args); }
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         stage.setTitle("NBA Player Stats");
         Parent ui = createUI();
         stage.setScene(new Scene(ui, 900, 650));
         stage.show();
     }
 
-    private VBox createUI() throws IOException {
+    private VBox createUI() {
         controlPanel = new ControlPanel();
         HBox playerInfoArea = new HBox();
         VBox container = new VBox(controlPanel, playerInfoArea);
@@ -46,8 +46,10 @@ public class NBAPlayerStatsApp extends Application {
 
     private void getHeadshotLogoView() {
         try {
-            headshotLogoView = HeadshotLogoView.withTeam(controlPanel.teams.getValue())
-                    .andPlayerName(controlPanel.player.getValue());
+            headshotLogoView = HeadshotLogoView.withTeam(controlPanel.getTeam())
+                    .andPlayerName(controlPanel.getPlayer());
+            headshotLogoView.generateHeadshot();
+            headshotLogoView.generateLogo();
         } catch (IOException e) {
             e.printStackTrace();
         }

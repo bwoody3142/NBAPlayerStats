@@ -27,7 +27,7 @@ public class HeadshotLogoView extends GridPane {
             this.team = team;
         }
 
-        public HeadshotLogoView andPlayerName(String player) throws IOException {
+        public HeadshotLogoView andPlayerName(String player) {
             this.player = player;
             return new HeadshotLogoView(this);
         }
@@ -36,10 +36,12 @@ public class HeadshotLogoView extends GridPane {
     private URLCreator url = URLCreator.createEmptyUrl();
     private ImageView headshotView = new ImageView();
     private ImageView logoView = new ImageView();
+    private String team;
+    private String player;
 
-    public HeadshotLogoView(HeadshotLogoBuilder builder) throws IOException {
-        generateHeadshot(builder.player);
-        structureLogo(builder.team);
+    public HeadshotLogoView(HeadshotLogoBuilder builder) {
+        this.team = builder.team;
+        this.player = builder.player;
         formatPane();
         getChildren().addAll(logoView, headshotView);
     }
@@ -52,20 +54,18 @@ public class HeadshotLogoView extends GridPane {
         setConstraints(logoView,1,0);
     }
 
-    private Image generateLogo(String team) throws IOException {
+    public ImageView generateLogo() throws IOException {
         TeamParser parser = TeamParser.withStream(url.createTeamListStream(2019)).andFullTeamName(team);
         Team teamObject = parser.parse();
         InputStream logoStream = url.createLogoStream(teamObject.getAbbreviation());
-        return new Image(logoStream);
-    }
-
-    private void structureLogo(String team) throws IOException {
+        Image image = new Image(logoStream);
         logoView.setFitHeight(200);
         logoView.setFitWidth(200);
-        logoView.setImage(generateLogo(team));
+        logoView.setImage(image);
+        return logoView;
     }
 
-    private void generateHeadshot(String player) throws IOException {
+    public void generateHeadshot() throws IOException {
         Map <String, String> fullPlayerList = ListOfPlayers.createEmptyListOfPlayers().createFullListOfPlayers();
         InputStream headshotStream = url.createHeadshotStream(Integer.parseInt(fullPlayerList.get(player)));
         Image headshot = new Image(headshotStream);

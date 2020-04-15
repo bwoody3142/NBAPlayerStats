@@ -21,8 +21,8 @@ public class ControlPanel extends VBox {
         void onPlayerStatsProduced(PlayerStatsGenerationEvent generationEvent);
     }
 
-    public final ComboBox<String> teams = new ComboBox<>();
-    public final ComboBox<String> player = new ComboBox<>();
+    private final ComboBox<String> teams = new ComboBox<>();
+    private final ComboBox<String> player = new ComboBox<>();
     private final ComboBox<Integer> season = new ComboBox<>();
     private final ListOfPlayers emptyListOfPlayers = ListOfPlayers.createEmptyListOfPlayers();
     private Map<String, String> fullPlayerList = new HashMap<>();
@@ -33,7 +33,8 @@ public class ControlPanel extends VBox {
     private PlayerStatsGenerationEvent generationEvent;
     private Executor executor = Executors.newCachedThreadPool();
 
-    public ControlPanel() throws IOException {
+    public ControlPanel() {
+        teams.setDisable(true);
         player.setDisable(true);
         season.setDisable(true);
         generateTeams();
@@ -54,24 +55,33 @@ public class ControlPanel extends VBox {
         });
     }
 
-    public void generateTeams() throws IOException {
-        teams.setItems(FXCollections.observableList(getValidTeams()));
+    public void generateTeams() {
+        executor.execute(() -> {
+            try {
+                teams.setItems(FXCollections.observableList(getValidTeams()));
+                teams.setDisable(false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void generateRoster() {
-        try {
-            player.setDisable(false);
-            player.setItems(FXCollections.observableList(getValidRoster()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        executor.execute(() -> {
+            try {
+                player.setItems(FXCollections.observableList(getValidRoster()));
+                player.setDisable(false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void generateSeasons() {
         try {
-            season.setDisable(false);
             fullPlayerList = emptyListOfPlayers.createFullListOfPlayers();
             season.setItems(FXCollections.observableArrayList(getValidSeasons()));
+            season.setDisable(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -143,5 +153,13 @@ public class ControlPanel extends VBox {
     private PlayerStats parseCareerStats() throws IOException {
         playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
         return PlayerParser.withStream(playerStream).andYear(season.getValue()).parseForCareerStats();
+    }
+
+    public String getTeam(){
+        return teams.getValue();
+    }
+
+    public String getPlayer(){
+        return player.getValue();
     }
 }
