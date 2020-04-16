@@ -66,13 +66,8 @@ public class URLCreator {
     }
 
     public URL getLogoUrl(String abbreviation) throws IOException {
-        /*  **Special Case** API abbreviation returns "nop" as abbreviation for New Orleans Pelicans,
-         while the URL takes "no" as the parameter*/
-        if(abbreviation.equals("nop")){
-            abbreviation = "no";
-        }
         String encodedAbbreviation = URLEncoder.encode(abbreviation,"UTF-8");
-        String search = "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/" + encodedAbbreviation + ".png";
+        String search = "https://www.nba.com/.element/img/1.0/teamsites/logos/teamlogos_500x500/"+encodedAbbreviation+".png";
         return new URL(search);
     }
 
