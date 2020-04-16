@@ -12,10 +12,9 @@ import java.io.IOException;
 
 public class NBAPlayerStatsApp extends Application {
 
-    private StatView seasonStats;
-    private StatView careerStats;
     private HeadshotLogoView headshotLogoView;
     private ControlPanel controlPanel;
+    private HBox playerInfoArea;
 
     public NBAPlayerStatsApp() {
     }
@@ -32,16 +31,20 @@ public class NBAPlayerStatsApp extends Application {
 
     private VBox createUI() {
         controlPanel = new ControlPanel();
-        HBox playerInfoArea = new HBox();
+        playerInfoArea = new HBox();
         VBox container = new VBox(controlPanel, playerInfoArea);
+        listenForPlayerStats();
+        return container;
+    }
+
+    private void listenForPlayerStats() {
         controlPanel.addListeners(playerStatsGenerationEvent -> Platform.runLater(() -> {
             playerInfoArea.getChildren().clear();
-            seasonStats = new StatView(playerStatsGenerationEvent.seasonPlayerStats);
-            careerStats = new StatView(playerStatsGenerationEvent.careerPlayerStats);
+            StatView seasonStats = new StatView(playerStatsGenerationEvent.seasonPlayerStats);
+            StatView careerStats = new StatView(playerStatsGenerationEvent.careerPlayerStats);
             getHeadshotLogoView();
             playerInfoArea.getChildren().addAll(headshotLogoView, seasonStats, careerStats);
         }));
-        return container;
     }
 
     private void getHeadshotLogoView() {

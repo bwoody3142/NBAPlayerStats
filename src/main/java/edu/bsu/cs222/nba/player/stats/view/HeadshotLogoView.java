@@ -54,7 +54,7 @@ public class HeadshotLogoView extends GridPane {
         setConstraints(logoView,1,0);
     }
 
-    public ImageView generateLogo() throws IOException {
+    public void generateLogo() throws IOException {
         TeamParser parser = TeamParser.withStream(url.createTeamListStream(2019)).andFullTeamName(team);
         Team teamObject = parser.parse();
         InputStream logoStream = url.createLogoStream(teamObject.getAbbreviation());
@@ -62,7 +62,6 @@ public class HeadshotLogoView extends GridPane {
         logoView.setFitHeight(200);
         logoView.setFitWidth(200);
         logoView.setImage(image);
-        return logoView;
     }
 
     public void generateHeadshot() throws IOException {

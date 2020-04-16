@@ -34,12 +34,16 @@ public class ControlPanel extends VBox {
     private Executor executor = Executors.newCachedThreadPool();
 
     public ControlPanel() {
+        setup();
+        HBox teamBox = createTeamBox();
+        getChildren().add(teamBox);
+    }
+
+    private void setup(){
         teams.setDisable(true);
         player.setDisable(true);
         season.setDisable(true);
         generateTeams();
-        VBox parent = createParentBox();
-        getChildren().add(parent);
     }
 
     public void addListeners(PlayerStatsProductionListener listener){
@@ -75,6 +79,7 @@ public class ControlPanel extends VBox {
                 e.printStackTrace();
             }
         });
+        getChildren().add(createPlayerBox());
     }
 
     private void generateSeasons() {
@@ -82,6 +87,7 @@ public class ControlPanel extends VBox {
             fullPlayerList = emptyListOfPlayers.createFullListOfPlayers();
             season.setItems(FXCollections.observableArrayList(getValidSeasons()));
             season.setDisable(false);
+            getChildren().add(createSeasonBox());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -95,13 +101,6 @@ public class ControlPanel extends VBox {
             e.printStackTrace();
         }
         return playerStatsGenerationEvent;
-    }
-
-    public VBox createParentBox() {
-        HBox teamBox = createTeamBox();
-        HBox playerBox = createPlayerBox();
-        HBox seasonBox = createSeasonBox();
-        return new VBox(teamBox, playerBox, seasonBox);
     }
 
     private HBox createTeamBox(){
