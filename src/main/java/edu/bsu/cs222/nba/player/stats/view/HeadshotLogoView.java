@@ -41,21 +41,30 @@ public class HeadshotLogoView extends StackPane {
     private ImageView logoView = new ImageView();
     private String team;
     private String player;
+    private boolean isSecondPlayer = false;
 
     public HeadshotLogoView(HeadshotLogoBuilder builder) {
         this.team = builder.team;
         this.player = builder.player;
-        formatPane();
         getChildren().addAll(logoView, headshotView);
     }
 
-    private void formatPane() {
+    public void formatFirstPane() {
         setHeight(1000);
-        setHeight(1000);
+        setWidth(1000);
         logoView.setFitHeight(90);
         logoView.setFitWidth(90);
         setAlignment(logoView, Pos.TOP_LEFT);
         setAlignment(headshotView, Pos.BOTTOM_RIGHT);
+    }
+
+    public void formatSecondPane() {
+        setHeight(1000);
+        setWidth(1000);
+        logoView.setFitHeight(90);
+        logoView.setFitWidth(90);
+        setAlignment(logoView, Pos.TOP_RIGHT);
+        setAlignment(headshotView, Pos.BOTTOM_LEFT);
     }
 
     public void generateLogo() throws IOException {

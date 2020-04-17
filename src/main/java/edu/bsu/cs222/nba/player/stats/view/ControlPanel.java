@@ -40,6 +40,7 @@ public class ControlPanel extends VBox {
 
     public ControlPanel() {
         setup();
+        generateTeams();
         HBox teamBox = createTeamBox();
         playerBox = createPlayerBox();
         seasonBox = createSeasonBox();
@@ -50,7 +51,6 @@ public class ControlPanel extends VBox {
         teams.setDisable(true);
         player.setDisable(true);
         season.setDisable(true);
-        generateTeams();
     }
 
     public void addListeners(PlayerStatsProductionListener listener){

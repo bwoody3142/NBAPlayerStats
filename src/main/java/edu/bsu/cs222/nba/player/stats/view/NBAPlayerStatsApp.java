@@ -13,9 +13,13 @@ import java.io.IOException;
 
 public class NBAPlayerStatsApp extends Application {
 
-    private HeadshotLogoView headshotLogoView;
-    private ControlPanel controlPanel;
-    private HBox playerInfoArea;
+    private HeadshotLogoView firstHeadshotLogoView;
+    private HeadshotLogoView secondHeadshotLogoView;
+    private ControlPanel firstControlPanel;
+    private ControlPanel secondControlPanel;
+    private HBox firstPlayerInfoArea;
+    private HBox secondPlayerInfoArea;
+
 
     public NBAPlayerStatsApp() {
     }
@@ -30,31 +34,67 @@ public class NBAPlayerStatsApp extends Application {
         stage.show();
     }
 
-    private VBox createUI() {
-        controlPanel = new ControlPanel();
-        playerInfoArea = new HBox();
-        VBox container = new VBox(controlPanel, playerInfoArea);
-        container.setBackground(new Background(new BackgroundFill(Color.GAINSBORO, CornerRadii.EMPTY, Insets.EMPTY)));
-        listenForPlayerStats();
-        return container;
+    private HBox createUI() {
+        VBox firstContainer = buildFirstContainer();
+        VBox secondContainer = buildSecondContainer();
+        HBox ui = new HBox(firstContainer, secondContainer);
+        ui.setBackground(new Background(new BackgroundFill(Color.GAINSBORO, CornerRadii.EMPTY, Insets.EMPTY)));
+        listenForFirstPlayerStats();
+        listenForSecondPlayerStats();
+        return ui;
     }
 
-    private void listenForPlayerStats() {
-        controlPanel.addListeners(playerStatsGenerationEvent -> Platform.runLater(() -> {
-            playerInfoArea.getChildren().clear();
+    private VBox buildFirstContainer(){
+        firstControlPanel = new ControlPanel();
+        firstPlayerInfoArea = new HBox();
+        return new VBox(firstControlPanel, firstPlayerInfoArea);
+    }
+
+    private VBox buildSecondContainer(){
+        secondControlPanel = new ControlPanel();
+        secondPlayerInfoArea = new HBox();
+        return new VBox(secondControlPanel, secondPlayerInfoArea);
+    }
+
+    private void listenForFirstPlayerStats() {
+        firstControlPanel.addListeners(playerStatsGenerationEvent -> Platform.runLater(() -> {
+            firstPlayerInfoArea.getChildren().clear();
             StatView seasonStats = new StatView(playerStatsGenerationEvent.seasonPlayerStats);
             StatView careerStats = new StatView(playerStatsGenerationEvent.careerPlayerStats);
-            getHeadshotLogoView();
-            playerInfoArea.getChildren().addAll(headshotLogoView, seasonStats, careerStats);
+            getFirstHeadshotLogoView();
+            firstPlayerInfoArea.getChildren().addAll(firstHeadshotLogoView, seasonStats, careerStats);
         }));
     }
 
-    private void getHeadshotLogoView() {
+    private void listenForSecondPlayerStats() {
+        secondControlPanel.addListeners(playerStatsGenerationEvent -> Platform.runLater(() -> {
+            secondPlayerInfoArea.getChildren().clear();
+            StatView seasonStats = new StatView(playerStatsGenerationEvent.seasonPlayerStats);
+            StatView careerStats = new StatView(playerStatsGenerationEvent.careerPlayerStats);
+            getSecondHeadshotLogoView();
+            secondPlayerInfoArea.getChildren().addAll(seasonStats, careerStats, secondHeadshotLogoView);
+        }));
+    }
+
+    private void getFirstHeadshotLogoView() {
         try {
-            headshotLogoView = HeadshotLogoView.withTeam(controlPanel.getTeam())
-                    .andPlayerName(controlPanel.getPlayer());
-            headshotLogoView.generateHeadshot();
-            headshotLogoView.generateLogo();
+            firstHeadshotLogoView = HeadshotLogoView.withTeam(firstControlPanel.getTeam())
+                    .andPlayerName(firstControlPanel.getPlayer());
+            firstHeadshotLogoView.generateHeadshot();
+            firstHeadshotLogoView.generateLogo();
+            firstHeadshotLogoView.formatFirstPane();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getSecondHeadshotLogoView() {
+        try {
+            secondHeadshotLogoView = HeadshotLogoView.withTeam(secondControlPanel.getTeam())
+                    .andPlayerName(secondControlPanel.getPlayer());
+            secondHeadshotLogoView.generateHeadshot();
+            secondHeadshotLogoView.generateLogo();
+            secondHeadshotLogoView.formatSecondPane();
         } catch (IOException e) {
             e.printStackTrace();
         }

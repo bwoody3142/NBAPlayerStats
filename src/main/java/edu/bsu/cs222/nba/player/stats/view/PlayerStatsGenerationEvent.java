@@ -16,6 +16,7 @@ public class PlayerStatsGenerationEvent {
         public PlayerStatsGenerationBuilder(PlayerStats careerPlayerStats){
             this.careerPlayerStats = careerPlayerStats;
         }
+
         public PlayerStatsGenerationEvent andSeasonStats(PlayerStats seasonPlayerStats){
             this.seasonPlayerStats = seasonPlayerStats;
             return new PlayerStatsGenerationEvent(this);
@@ -30,6 +31,4 @@ public class PlayerStatsGenerationEvent {
         this.careerPlayerStats = builder.careerPlayerStats;
         this.seasonPlayerStats = builder.seasonPlayerStats;
     }
-
-
 }
