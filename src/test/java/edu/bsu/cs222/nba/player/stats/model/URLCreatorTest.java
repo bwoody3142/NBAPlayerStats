@@ -80,7 +80,7 @@ public class URLCreatorTest {
     @Test
     public void testLogoUrl() throws Exception {
         URL expected = URLCreator.createEmptyUrl().getLogoUrl("lal");
-        Assertions.assertEquals("https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/lal.png",
+        Assertions.assertEquals("https://www.nba.com/.element/img/1.0/teamsites/logos/teamlogos_500x500/lal.png",
                 expected.toString());
     }
 }

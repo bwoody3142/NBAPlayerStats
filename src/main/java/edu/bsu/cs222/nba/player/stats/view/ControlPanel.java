@@ -23,7 +23,7 @@ public class ControlPanel extends VBox {
 
     private final ComboBox<String> teams = new ComboBox<>();
     private final ComboBox<String> player = new ComboBox<>();
-    private final ComboBox<Integer> season = new ComboBox<>();
+    private final ComboBox<String> season = new ComboBox<>();
     private final ListOfPlayers emptyListOfPlayers = ListOfPlayers.createEmptyListOfPlayers();
     private Map<String, String> fullPlayerList = new HashMap<>();
     private PlayerStatsGenerationEvent playerStatsGenerationEvent;
@@ -156,19 +156,24 @@ public class ControlPanel extends VBox {
         return FXCollections.observableArrayList(collection);
     }
 
-    private List<Integer> getValidSeasons() throws IOException {
+    private List<String> getValidSeasons() throws IOException {
         playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
-        return ListOfActiveSeasons.create().getYearsAsList(playerStream);
+        return ListOfActiveSeasons.create().getSeasonsAsList(playerStream);
     }
 
     private PlayerStats parseSeasonStats() throws IOException {
-        playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
-        return PlayerParser.withStream(playerStream).andYear(season.getValue()).parseForSeasonStats();
+        return parseStats().parseForSeasonStats();
     }
 
     private PlayerStats parseCareerStats() throws IOException {
+        return parseStats().parseForCareerStats();
+    }
+
+    private PlayerParser parseStats() throws IOException{
         playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
-        return PlayerParser.withStream(playerStream).andYear(season.getValue()).parseForCareerStats();
+        Map<String, Integer> map = ListOfActiveSeasons.create().createListOfActiveSeasons(playerStream);
+        playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
+        return PlayerParser.withStream(playerStream).andYear(map.get(season.getValue()));
     }
 
     public String getTeam(){
