@@ -81,6 +81,7 @@ public class ControlPanel extends VBox {
     }
 
     private void generateRoster() {
+        loadingRosterLabel.setVisible(true);
         getChildren().removeAll(playerBox, seasonBox);
         player.setDisable(true);
         executor.execute(() -> {

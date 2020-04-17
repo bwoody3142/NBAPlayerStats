@@ -5,14 +5,17 @@ import edu.bsu.cs222.nba.player.stats.model.Team;
 import edu.bsu.cs222.nba.player.stats.model.TeamParser;
 import edu.bsu.cs222.nba.player.stats.model.URLCreator;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-public class HeadshotLogoView extends GridPane {
+public class HeadshotLogoView extends StackPane {
 
     public static HeadshotLogoBuilder withTeam(String team){
         return new HeadshotLogoBuilder(team);
@@ -47,11 +50,12 @@ public class HeadshotLogoView extends GridPane {
     }
 
     private void formatPane() {
-        setPadding(new Insets(20,20,20,20));
-        setVgap(10);
-        setHgap(10);
-        setConstraints(headshotView,0,0);
-        setConstraints(logoView,1,0);
+        setHeight(1000);
+        setHeight(1000);
+        logoView.setFitHeight(90);
+        logoView.setFitWidth(90);
+        setAlignment(logoView, Pos.TOP_LEFT);
+        setAlignment(headshotView, Pos.BOTTOM_RIGHT);
     }
 
     public void generateLogo() throws IOException {
@@ -59,8 +63,6 @@ public class HeadshotLogoView extends GridPane {
         Team teamObject = parser.parse();
         InputStream logoStream = url.createLogoStream(teamObject.getAbbreviation());
         Image image = new Image(logoStream);
-        logoView.setFitHeight(200);
-        logoView.setFitWidth(200);
         logoView.setImage(image);
     }
 

@@ -34,7 +34,7 @@ public class NBAPlayerStatsApp extends Application {
         controlPanel = new ControlPanel();
         playerInfoArea = new HBox();
         VBox container = new VBox(controlPanel, playerInfoArea);
-        container.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        container.setBackground(new Background(new BackgroundFill(Color.GAINSBORO, CornerRadii.EMPTY, Insets.EMPTY)));
         listenForPlayerStats();
         return container;
     }
