@@ -2,10 +2,11 @@ package edu.bsu.cs222.nba.player.stats.view;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class NBAPlayerStatsApp extends Application {
         controlPanel = new ControlPanel();
         playerInfoArea = new HBox();
         VBox container = new VBox(controlPanel, playerInfoArea);
+        container.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
         listenForPlayerStats();
         return container;
     }

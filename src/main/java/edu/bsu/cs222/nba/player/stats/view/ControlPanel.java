@@ -34,6 +34,9 @@ public class ControlPanel extends VBox {
     private Executor executor = Executors.newCachedThreadPool();
     private HBox playerBox;
     private HBox seasonBox;
+    private Label loadingTeamsLabel = new Label(" Loading teams...");
+    private Label loadingRosterLabel = new Label(" Loading roster...");
+    private Label loadingInfoLabel = new Label(" Loading player's information...");
 
     public ControlPanel() {
         setup();
@@ -56,10 +59,12 @@ public class ControlPanel extends VBox {
 
     public void fireEvent() {
         executor.execute(() -> {
+            loadingInfoLabel.setVisible(true);
             generationEvent = generatePlayerStats();
             for (PlayerStatsProductionListener listener : listeners) {
                 listener.onPlayerStatsProduced(generationEvent);
             }
+            loadingInfoLabel.setVisible(false);
         });
     }
 
@@ -68,6 +73,7 @@ public class ControlPanel extends VBox {
             try {
                 teams.setItems(FXCollections.observableList(getValidTeams()));
                 teams.setDisable(false);
+                loadingTeamsLabel.setVisible(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -81,6 +87,7 @@ public class ControlPanel extends VBox {
             try {
                 player.setItems(FXCollections.observableList(getValidRoster()));
                 player.setDisable(false);
+                loadingRosterLabel.setVisible(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -96,7 +103,7 @@ public class ControlPanel extends VBox {
             season.setItems(FXCollections.observableArrayList(getValidSeasons()));
             season.setDisable(false);
             getChildren().add(seasonBox);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -115,22 +122,23 @@ public class ControlPanel extends VBox {
         Label teamLabel = new Label("Team ");
         teams.setPromptText("Select a Team");
         teams.setOnAction(event -> generateRoster());
-        return new HBox(teamLabel, teams);
+        return new HBox(teamLabel, teams, loadingTeamsLabel);
     }
 
     private HBox createPlayerBox(){
         Label playerLabel = new Label("Player ");
         player.setPromptText("Select a Player");
         player.setOnAction(event -> generateSeasons());
-        return new HBox(playerLabel, player);
+        return new HBox(playerLabel, player, loadingRosterLabel);
     }
 
     private HBox createSeasonBox(){
+        loadingInfoLabel.setVisible(false);
         Button getStatsButton = new Button("Get Stats!");
         Label seasonLabel = new Label("Active Seasons ");
         season.setPromptText("Select a season");
         getStatsButton.setOnAction(event -> fireEvent());
-        return new HBox(seasonLabel, season, getStatsButton);
+        return new HBox(seasonLabel, season, getStatsButton, loadingInfoLabel);
     }
 
 
