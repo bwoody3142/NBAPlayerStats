@@ -4,11 +4,11 @@ import edu.bsu.cs222.nba.player.stats.model.PlayerStats;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class StatView extends GridPane {
+public class StatView extends VBox {
 
     private Label ppgLabel;
     private Label apgLabel;
@@ -25,7 +25,6 @@ public class StatView extends GridPane {
         checkForFirstOrSecondPlayer(playerStats);
         changeFont();
         getChildren().addAll(getStatsList());
-        setStatsPaneConstraints();
     }
 
     private void checkForFirstOrSecondPlayer(PlayerStats playerStats){
@@ -106,15 +105,9 @@ public class StatView extends GridPane {
                 spgLabel, bpgLabel, fgpLabel, ftpLabel, tpmLabel);
     }
 
-    private void setStatsPaneConstraints(){
-        for (int i = 0; i < getStatsList().size(); i++){
-            setConstraints(getStatsList().get(i), 0, i);
-        }
-    }
-
     private void changeFont(){
         for (int i = 0; i < getStatsList().size(); i++){
-            getStatsList().get(i).setFont(Font.font("Times New Roman", FontWeight.BOLD, 18));
+            getStatsList().get(i).setFont(Font.font("Times New Roman", FontWeight.NORMAL, 18));
         }
     }
 }

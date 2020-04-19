@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 public class ControlPanel extends VBox {
 
     public interface PlayerStatsProductionListener {
-        void onPlayerStatsProduced(PlayerStatsGenerationEvent generationEvent);
+        void onPlayerStatsProduced(ResultGenerationEvent generationEvent);
     }
 
     private final ComboBox<String> teams = new ComboBox<>();
@@ -26,11 +26,11 @@ public class ControlPanel extends VBox {
     private final ComboBox<String> season = new ComboBox<>();
     private final ListOfPlayers emptyListOfPlayers = ListOfPlayers.createEmptyListOfPlayers();
     private Map<String, String> fullPlayerList = new HashMap<>();
-    private PlayerStatsGenerationEvent playerStatsGenerationEvent;
+    private ResultGenerationEvent resultGenerationEvent;
     private final URLCreator url = URLCreator.createEmptyUrl();
     private InputStream playerStream;
     private final List<PlayerStatsProductionListener> listeners = new ArrayList<>();
-    private PlayerStatsGenerationEvent generationEvent;
+    private ResultGenerationEvent generationEvent;
     private final Executor executor = Executors.newCachedThreadPool();
     private final HBox playerBox;
     private final HBox seasonBox;
@@ -109,14 +109,16 @@ public class ControlPanel extends VBox {
         }
     }
 
-    private PlayerStatsGenerationEvent generatePlayerStats() {
+    private ResultGenerationEvent generatePlayerStats() {
         try {
-            playerStatsGenerationEvent =
-                    PlayerStatsGenerationEvent.withCareer(parseCareerStats()).andSeasonStats(parseSeasonStats());
+            resultGenerationEvent =
+                ResultGenerationEvent.withCareerStats(parseCareerStats())
+                                     .seasonStats(parseSeasonStats())
+                                     .andPlayerInfo(parsePlayerInfo());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return playerStatsGenerationEvent;
+        return resultGenerationEvent;
     }
 
     private HBox createTeamBox(){
@@ -174,6 +176,12 @@ public class ControlPanel extends VBox {
         Map<String, Integer> map = ListOfActiveSeasons.create().createListOfActiveSeasons(playerStream);
         playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
         return PlayerParser.withStream(playerStream).andYear(map.get(season.getValue()));
+    }
+
+    private PlayerInfo parsePlayerInfo() throws IOException{
+        InputStream playerListStream = url.createPlayerListStream(2019);
+        int personID = Integer.parseInt(fullPlayerList.get(player.getValue()));
+        return PlayerInfoParser.withStream(playerListStream).andPersonID(personID).parseForPlayerInfo();
     }
 
     public String getTeam(){

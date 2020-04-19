@@ -3,6 +3,7 @@ package edu.bsu.cs222.nba.player.stats.view;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
@@ -17,8 +18,8 @@ public class NBAPlayerStatsApp extends Application {
     private HeadshotLogoView secondHeadshotLogoView;
     private ControlPanel firstControlPanel;
     private ControlPanel secondControlPanel;
-    private HBox firstPlayerInfoArea;
-    private HBox secondPlayerInfoArea;
+    private VBox firstPlayerInfoArea;
+    private VBox secondPlayerInfoArea;
 
 
     public NBAPlayerStatsApp() {
@@ -30,15 +31,18 @@ public class NBAPlayerStatsApp extends Application {
     public void start(Stage stage) {
         stage.setTitle("NBA Player Stats");
         Parent ui = createUI();
-        stage.setScene(new Scene(ui, 900, 650));
+        stage.setScene(new Scene(ui, 1000, 500));
         stage.show();
     }
 
     private HBox createUI() {
         VBox firstContainer = buildFirstContainer();
         VBox secondContainer = buildSecondContainer();
-        HBox ui = new HBox(firstContainer, secondContainer);
+        HBox ui = new HBox(50, firstContainer, secondContainer);
         ui.setBackground(new Background(new BackgroundFill(Color.GAINSBORO, CornerRadii.EMPTY, Insets.EMPTY)));
+        firstContainer.setPadding(new Insets(20, 0, 0, 10));
+        secondContainer.setPadding(new Insets(20, 0, 0, 0));
+        secondContainer.setAlignment(Pos.TOP_RIGHT);
         listenForFirstPlayerStats();
         listenForSecondPlayerStats();
         return ui;
@@ -46,33 +50,43 @@ public class NBAPlayerStatsApp extends Application {
 
     private VBox buildFirstContainer(){
         firstControlPanel = new ControlPanel();
-        firstPlayerInfoArea = new HBox();
+        firstPlayerInfoArea = new VBox();
         return new VBox(firstControlPanel, firstPlayerInfoArea);
     }
 
     private VBox buildSecondContainer(){
         secondControlPanel = new ControlPanel();
-        secondPlayerInfoArea = new HBox();
+        secondPlayerInfoArea = new VBox();
         return new VBox(secondControlPanel, secondPlayerInfoArea);
     }
 
     private void listenForFirstPlayerStats() {
-        firstControlPanel.addListeners(playerStatsGenerationEvent -> Platform.runLater(() -> {
+        firstControlPanel.addListeners(resultGenerationEvent -> Platform.runLater(() -> {
             firstPlayerInfoArea.getChildren().clear();
-            StatView seasonStats = new StatView(playerStatsGenerationEvent.seasonPlayerStats);
-            StatView careerStats = new StatView(playerStatsGenerationEvent.careerPlayerStats);
+            StatView seasonStats = new StatView(resultGenerationEvent.seasonPlayerStats);
+            StatView careerStats = new StatView(resultGenerationEvent.careerPlayerStats);
+            PlayerInfoView playerInfoView = PlayerInfoView.create(resultGenerationEvent.playerInfo);
             getFirstHeadshotLogoView();
-            firstPlayerInfoArea.getChildren().addAll(firstHeadshotLogoView, seasonStats, careerStats);
+            HBox hbox = new HBox(firstHeadshotLogoView, playerInfoView);
+            firstPlayerInfoArea.getChildren().addAll(hbox, seasonStats);
+            seasonStats.setAlignment(Pos.CENTER_RIGHT);
+            hbox.setAlignment(Pos.CENTER_RIGHT);
+            playerInfoView.setAlignment(Pos.CENTER_RIGHT);
+            playerInfoView.getNameJerseyPositionBox().setAlignment(Pos.CENTER_RIGHT);
         }));
     }
 
     private void listenForSecondPlayerStats() {
-        secondControlPanel.addListeners(playerStatsGenerationEvent -> Platform.runLater(() -> {
+        secondControlPanel.addListeners(resultGenerationEvent -> Platform.runLater(() -> {
             secondPlayerInfoArea.getChildren().clear();
-            StatView seasonStats = new StatView(playerStatsGenerationEvent.seasonPlayerStats);
-            StatView careerStats = new StatView(playerStatsGenerationEvent.careerPlayerStats);
+            StatView seasonStats = new StatView(resultGenerationEvent.seasonPlayerStats);
+            StatView careerStats = new StatView(resultGenerationEvent.careerPlayerStats);
+            PlayerInfoView playerInfoView = PlayerInfoView.create(resultGenerationEvent.playerInfo);
             getSecondHeadshotLogoView();
-            secondPlayerInfoArea.getChildren().addAll(seasonStats, careerStats, secondHeadshotLogoView);
+            HBox hbox = new HBox(playerInfoView, secondHeadshotLogoView);
+            secondPlayerInfoArea.getChildren().addAll(hbox, seasonStats);
+            playerInfoView.setAlignment(Pos.CENTER_LEFT);
+            playerInfoView.getNameJerseyPositionBox().setAlignment(Pos.CENTER_LEFT);
         }));
     }
 
