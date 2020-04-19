@@ -39,7 +39,7 @@ public class PlayerInfoView extends VBox {
         yearsPro = new Label("Seasons in the NBA: " + playerInfo.getYearsPro());
         height = new Label("Height: " + playerInfo.getHeightFeet() + "' "
                 + playerInfo.getHeightInches() + "\"");
-        weight = new Label("Weight: " + playerInfo.getWeight());
+        weight = new Label("Weight: " + playerInfo.getWeight() + " lbs");
         nameJerseyPositionBox = new HBox(name, jerseyNumber, position);
     }
 
