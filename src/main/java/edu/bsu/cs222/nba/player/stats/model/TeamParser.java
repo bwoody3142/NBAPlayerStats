@@ -13,7 +13,7 @@ public class TeamParser {
     }
 
     public static final class TeamParserBuilder{
-        private InputStream stream;
+        private final InputStream stream;
         private String fullName;
 
         public TeamParserBuilder(InputStream stream){
@@ -26,12 +26,11 @@ public class TeamParser {
         }
     }
 
-    private InputStream stream;
-    private String fullName;
-    private Object document;
+    private final String fullName;
+    private final Object document;
 
     public TeamParser(TeamParserBuilder builder) {
-        this.stream = builder.stream;
+        InputStream stream = builder.stream;
         this.fullName = builder.fullName;
         document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
     }

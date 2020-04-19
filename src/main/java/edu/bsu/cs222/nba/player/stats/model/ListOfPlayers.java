@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class ListOfPlayers {
 
-    private Map<String, String> playerMap = new HashMap<>();
+    private final Map<String, String> playerMap = new HashMap<>();
 
     private ListOfPlayers() {}
 

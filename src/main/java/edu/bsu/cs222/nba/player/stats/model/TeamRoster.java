@@ -16,10 +16,10 @@ import static edu.bsu.cs222.nba.player.stats.model.ListOfPlayers.createEmptyList
 public class TeamRoster {
 
 
-    private Map<String, String> map = createEmptyListOfPlayers().createFullListOfPlayers();
-    private BiMap<String, String> invertedMap = HashBiMap.create(map).inverse();
-    private Map<String, String> roster = new HashMap<>();
-    private String team;
+    private final Map<String, String> map = createEmptyListOfPlayers().createFullListOfPlayers();
+    private final BiMap<String, String> invertedMap = HashBiMap.create(map).inverse();
+    private final Map<String, String> roster = new HashMap<>();
+    private final String team;
 
     private TeamRoster(String team) throws IOException {
         this.team = team;

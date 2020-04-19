@@ -10,7 +10,7 @@ public class PlayerStatsGenerationEvent {
 
     public static final class PlayerStatsGenerationBuilder {
 
-        private PlayerStats careerPlayerStats;
+        private final PlayerStats careerPlayerStats;
         private PlayerStats seasonPlayerStats;
 
         public PlayerStatsGenerationBuilder(PlayerStats careerPlayerStats){

@@ -4,11 +4,9 @@ import edu.bsu.cs222.nba.player.stats.model.ListOfPlayers;
 import edu.bsu.cs222.nba.player.stats.model.Team;
 import edu.bsu.cs222.nba.player.stats.model.TeamParser;
 import edu.bsu.cs222.nba.player.stats.model.URLCreator;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
@@ -23,7 +21,7 @@ public class HeadshotLogoView extends StackPane {
 
     public static final class HeadshotLogoBuilder {
 
-        private String team;
+        private final String team;
         private String player;
 
         public HeadshotLogoBuilder(String team){
@@ -36,12 +34,11 @@ public class HeadshotLogoView extends StackPane {
         }
     }
 
-    private URLCreator url = URLCreator.createEmptyUrl();
-    private ImageView headshotView = new ImageView();
-    private ImageView logoView = new ImageView();
-    private String team;
-    private String player;
-    private boolean isSecondPlayer = false;
+    private final URLCreator url = URLCreator.createEmptyUrl();
+    private final ImageView headshotView = new ImageView();
+    private final ImageView logoView = new ImageView();
+    private final String team;
+    private final String player;
 
     public HeadshotLogoView(HeadshotLogoBuilder builder) {
         this.team = builder.team;

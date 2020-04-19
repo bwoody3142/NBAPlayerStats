@@ -27,16 +27,16 @@ public class ControlPanel extends VBox {
     private final ListOfPlayers emptyListOfPlayers = ListOfPlayers.createEmptyListOfPlayers();
     private Map<String, String> fullPlayerList = new HashMap<>();
     private PlayerStatsGenerationEvent playerStatsGenerationEvent;
-    private URLCreator url = URLCreator.createEmptyUrl();
+    private final URLCreator url = URLCreator.createEmptyUrl();
     private InputStream playerStream;
-    private List<PlayerStatsProductionListener> listeners = new ArrayList<>();
+    private final List<PlayerStatsProductionListener> listeners = new ArrayList<>();
     private PlayerStatsGenerationEvent generationEvent;
-    private Executor executor = Executors.newCachedThreadPool();
-    private HBox playerBox;
-    private HBox seasonBox;
-    private Label loadingTeamsLabel = new Label(" Loading teams...");
-    private Label loadingRosterLabel = new Label(" Loading roster...");
-    private Label loadingInfoLabel = new Label(" Loading player's information...");
+    private final Executor executor = Executors.newCachedThreadPool();
+    private final HBox playerBox;
+    private final HBox seasonBox;
+    private final Label loadingTeamsLabel = new Label(" Loading teams...");
+    private final Label loadingRosterLabel = new Label(" Loading roster...");
+    private final Label loadingInfoLabel = new Label(" Loading player's information...");
 
     public ControlPanel() {
         setup();

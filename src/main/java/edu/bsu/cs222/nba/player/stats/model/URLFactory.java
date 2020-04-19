@@ -7,7 +7,7 @@ public class URLFactory {
     }
 
     public static final class URLFactoryBuilder {
-        private Integer year;
+        private final Integer year;
         private Integer personID;
 
         public URLFactoryBuilder(Integer year){
@@ -20,8 +20,8 @@ public class URLFactory {
         }
     }
 
-    private Integer year;
-    private Integer personID;
+    private final Integer year;
+    private final Integer personID;
 
     private URLFactory(URLFactoryBuilder builder){
         this.year = builder.year;

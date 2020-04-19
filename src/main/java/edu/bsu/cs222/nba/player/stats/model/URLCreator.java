@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class URLCreator {
     public URLCreator(){
@@ -14,7 +15,7 @@ public class URLCreator {
     }
 
     public URL getPlayerListUrl(Integer year) throws IOException {
-        String encodedYear = URLEncoder.encode(year.toString(),"UTF-8");
+        String encodedYear = URLEncoder.encode(year.toString(), StandardCharsets.UTF_8);
         String search = "http://data.nba.net/data/10s/prod/v1/" + encodedYear + "/players.json";
         return new URL(search);
     }
@@ -25,8 +26,8 @@ public class URLCreator {
 
     public URL getPlayerProfileUrl(Integer personID) throws IOException {
         URLFactory factory = URLFactory.withYear(2019).andPersonID(personID);
-        String encodedYear = URLEncoder.encode(factory.getYear().toString(),"UTF-8");
-        String encodedPersonID = URLEncoder.encode(factory.getPersonID().toString(),"UTF-8");
+        String encodedYear = URLEncoder.encode(factory.getYear().toString(), StandardCharsets.UTF_8);
+        String encodedPersonID = URLEncoder.encode(factory.getPersonID().toString(), StandardCharsets.UTF_8);
         String search = "http://data.nba.net/data/10s/prod/v1/" + encodedYear + "/players/" + encodedPersonID + "_profile.json";
         return new URL(search);
     }
@@ -36,7 +37,7 @@ public class URLCreator {
     }
 
     public URL getTeamListUrl(Integer year) throws IOException {
-        String encodedYear = URLEncoder.encode(year.toString(),"UTF-8");
+        String encodedYear = URLEncoder.encode(year.toString(), StandardCharsets.UTF_8);
         String search = "http://data.nba.net/data/10s/prod/v1/" + encodedYear + "/teams.json";
         return new URL(search);
     }
@@ -46,7 +47,7 @@ public class URLCreator {
     }
 
     public URL getTeamRosterUrl(String urlName) throws IOException {
-        String encodedUrlName = URLEncoder.encode(urlName,"UTF-8");
+        String encodedUrlName = URLEncoder.encode(urlName, StandardCharsets.UTF_8);
         String search = "http://data.nba.net/data/10s/prod/v1/2019/teams/" + encodedUrlName +  "/roster.json";
         return new URL(search);
     }
@@ -56,7 +57,7 @@ public class URLCreator {
     }
 
     public URL getHeadshotUrl(Integer personID) throws IOException {
-        String encodedPersonID = URLEncoder.encode(personID.toString(),"UTF-8");
+        String encodedPersonID = URLEncoder.encode(personID.toString(), StandardCharsets.UTF_8);
         String search = "https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/" + encodedPersonID + ".png";
         return new URL(search);
     }
@@ -66,7 +67,7 @@ public class URLCreator {
     }
 
     public URL getLogoUrl(String abbreviation) throws IOException {
-        String encodedAbbreviation = URLEncoder.encode(abbreviation,"UTF-8");
+        String encodedAbbreviation = URLEncoder.encode(abbreviation, StandardCharsets.UTF_8);
         String search = "https://www.nba.com/.element/img/1.0/teamsites/logos/teamlogos_500x500/"+encodedAbbreviation+".png";
         return new URL(search);
     }

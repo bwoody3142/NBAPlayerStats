@@ -13,7 +13,7 @@ public class PlayerParser {
     }
 
     public static final class PlayerParserBuilder{
-        private InputStream stream;
+        private final InputStream stream;
         private Integer year;
 
         public PlayerParserBuilder(InputStream stream){
@@ -25,9 +25,9 @@ public class PlayerParser {
             return new PlayerParser(this);
         }
     }
-    private InputStream stream;
-    private Integer year;
-    private JSONArray array = new JSONArray();
+    private final InputStream stream;
+    private final Integer year;
+    private final JSONArray array = new JSONArray();
 
     public PlayerParser(PlayerParserBuilder builder) {
         this.stream = builder.stream;

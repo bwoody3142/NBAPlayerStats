@@ -11,7 +11,7 @@ public class PlayerStats {
     }
 
     public static final class PlayerStatsBuilder {
-        private float pointsPerGame;
+        private final float pointsPerGame;
         private float assistsPerGame;
         private float reboundsPerGame;
         private float seasonTurnOversPerGame;
@@ -88,16 +88,16 @@ public class PlayerStats {
 
     }
 
-    private float pointsPerGame;
-    private float assistsPerGame;
-    private float reboundsPerGame;
-    private float seasonTurnOversPerGame;
-    private float careerTurnOversPerGame;
-    private float stealsPerGame;
-    private float blocksPerGame;
-    private float fieldGoalPercentage;
-    private float freeThrowPercentage;
-    private float threePointers;
+    private final float pointsPerGame;
+    private final float assistsPerGame;
+    private final float reboundsPerGame;
+    private final float seasonTurnOversPerGame;
+    private final float careerTurnOversPerGame;
+    private final float stealsPerGame;
+    private final float blocksPerGame;
+    private final float fieldGoalPercentage;
+    private final float freeThrowPercentage;
+    private final float threePointers;
 
     private PlayerStats (PlayerStatsBuilder builder){
         this.pointsPerGame = builder.pointsPerGame;

@@ -7,7 +7,7 @@ public class Team {
     }
 
     public static final class TeamBuilder {
-        private String urlName;
+        private final String urlName;
         private String abbreviation;
 
         public TeamBuilder(String urlName) {
@@ -20,8 +20,8 @@ public class Team {
         }
     }
 
-    private String urlName;
-    private String abbreviation;
+    private final String urlName;
+    private final String abbreviation;
 
     private Team(TeamBuilder builder){
         this.urlName = builder.urlName;
