@@ -127,7 +127,7 @@ public class NBAPlayerStatsApp extends Application {
             } else {
                 careerStats.setVisible(false);
                 seasonStats.setVisible(true);
-                label.setText(controlPanel.getSeason() + " Stats");
+                label.setText(controlPanel.getSeason());
                 button.setText("See Career Stats!");
             }
         });

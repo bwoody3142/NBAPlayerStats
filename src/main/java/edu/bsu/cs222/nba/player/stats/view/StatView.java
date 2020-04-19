@@ -28,6 +28,7 @@ public class StatView extends VBox {
     private boolean isThisSecondPlayer = false;
 
     public StatView(PlayerStats playerStats) {
+        this.playerStats = playerStats;
         checkForFirstOrSecondPlayer();
         changeFont();
         getChildren().addAll(getStatsList());
