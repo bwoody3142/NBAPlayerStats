@@ -3,8 +3,13 @@ package edu.bsu.cs222.nba.player.stats.view;
 import edu.bsu.cs222.nba.player.stats.model.PlayerStats;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -19,40 +24,41 @@ public class StatView extends VBox {
     private Label fgpLabel;
     private Label ftpLabel;
     private Label tpmLabel;
+    private PlayerStats playerStats;
     private boolean isThisSecondPlayer = false;
 
     public StatView(PlayerStats playerStats) {
-        checkForFirstOrSecondPlayer(playerStats);
+        checkForFirstOrSecondPlayer();
         changeFont();
         getChildren().addAll(getStatsList());
     }
 
-    private void checkForFirstOrSecondPlayer(PlayerStats playerStats){
+    private void checkForFirstOrSecondPlayer(){
         if (!isThisSecondPlayer){
-            checkForFirstSeasonOrCareerStats(playerStats);
+            checkForFirstSeasonOrCareerStats();
             isThisSecondPlayer = true;
         } else {
-            checkForSecondSeasonOrCareerStats(playerStats);
+            checkForSecondSeasonOrCareerStats();
         }
     }
 
-    private void checkForFirstSeasonOrCareerStats(PlayerStats playerStats){
+    private void checkForFirstSeasonOrCareerStats(){
         if(playerStats.getSeasonTurnOversPerGame() == 0){
-            createFirstCareerStatLabels(playerStats);
+            createFirstCareerStatLabels();
         } else {
-            createFirstSeasonStatLabels(playerStats);
+            createFirstSeasonStatLabels();
         }
     }
 
-    private void checkForSecondSeasonOrCareerStats(PlayerStats playerStats){
+    private void checkForSecondSeasonOrCareerStats(){
         if(playerStats.getSeasonTurnOversPerGame() == 0){
-            createSecondCareerStatLabels(playerStats);
+            createSecondCareerStatLabels();
         } else {
-            createSecondSeasonStatLabels(playerStats);
+            createSecondSeasonStatLabels();
         }
     }
 
-    private void createFirstSeasonStatLabels(PlayerStats playerStats) {
+    private void createFirstSeasonStatLabels() {
 
         ppgLabel = new Label("PPG " + playerStats.getPointsPerGame());
         apgLabel = new Label("APG  " + playerStats.getAssistsPerGame());
@@ -65,7 +71,7 @@ public class StatView extends VBox {
         tpmLabel = new Label("TPM  " + playerStats.getThreePointers());
     }
 
-    private void createFirstCareerStatLabels(PlayerStats playerStats) {
+    private void createFirstCareerStatLabels() {
         ppgLabel = new Label("PPG " + playerStats.getPointsPerGame());
         apgLabel = new Label("APG  " + playerStats.getAssistsPerGame());
         rpgLabel = new Label("RPG  " + playerStats.getReboundsPerGame());
@@ -77,7 +83,7 @@ public class StatView extends VBox {
         tpmLabel = new Label("TPM  " + playerStats.getThreePointers());
     }
 
-    private void createSecondSeasonStatLabels(PlayerStats playerStats) {
+    private void createSecondSeasonStatLabels() {
         ppgLabel = new Label(playerStats.getPointsPerGame() + "  PPG");
         apgLabel = new Label(playerStats.getAssistsPerGame() + "  APG");
         rpgLabel = new Label(playerStats.getReboundsPerGame() + "  RPG");
@@ -89,7 +95,7 @@ public class StatView extends VBox {
         tpmLabel = new Label(playerStats.getThreePointers() + "  TPM");
     }
 
-    private void createSecondCareerStatLabels(PlayerStats playerStats) {
+    private void createSecondCareerStatLabels() {
         ppgLabel = new Label(playerStats.getPointsPerGame() + "  PPG");
         apgLabel = new Label(playerStats.getAssistsPerGame() + "  APG");
         rpgLabel = new Label(playerStats.getReboundsPerGame() + "  RPG");
@@ -110,5 +116,49 @@ public class StatView extends VBox {
         for (int i = 0; i < getStatsList().size(); i++){
             getStatsList().get(i).setFont(Font.font("Times New Roman", FontWeight.NORMAL, 18));
         }
+    }
+
+    public Label getPpgLabel() {
+        return ppgLabel;
+    }
+
+    public Label getApgLabel() {
+        return apgLabel;
+    }
+
+    public Label getRpgLabel() {
+        return rpgLabel;
+    }
+
+    public Label getTopgLabel() {
+        return topgLabel;
+    }
+
+    public Label getSpgLabel() {
+        return spgLabel;
+    }
+
+    public Label getBpgLabel() {
+        return bpgLabel;
+    }
+
+    public Label getFgpLabel() {
+        return fgpLabel;
+    }
+
+    public Label getFtpLabel() {
+        return ftpLabel;
+    }
+
+    public Label getTpmLabel() {
+        return tpmLabel;
+    }
+
+    public void highlightLabelGreen(Label label){
+        label.setBackground(new Background(new BackgroundFill(Color.LAWNGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+
+    public void highlightLabelRed(Label label){
+        label.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 }
