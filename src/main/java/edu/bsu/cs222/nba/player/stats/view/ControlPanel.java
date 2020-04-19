@@ -191,4 +191,8 @@ public class ControlPanel extends VBox {
     public String getPlayer(){
         return player.getValue();
     }
+
+    public String getSeason(){
+        return season.getValue();
+    }
 }

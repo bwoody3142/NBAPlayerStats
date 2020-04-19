@@ -53,6 +53,7 @@ public class StatView extends VBox {
     }
 
     private void createFirstSeasonStatLabels(PlayerStats playerStats) {
+
         ppgLabel = new Label("PPG " + playerStats.getPointsPerGame());
         apgLabel = new Label("APG  " + playerStats.getAssistsPerGame());
         rpgLabel = new Label("RPG  " + playerStats.getReboundsPerGame());

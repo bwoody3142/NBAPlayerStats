@@ -7,8 +7,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -66,14 +69,19 @@ public class NBAPlayerStatsApp extends Application {
             firstPlayerResultArea.getChildren().clear();
             StatView seasonStats = new StatView(resultGenerationEvent.seasonPlayerStats);
             StatView careerStats = new StatView(resultGenerationEvent.careerPlayerStats);
+            Label label = new Label(firstControlPanel.getSeason());
+            label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 18));
             StackPane statsPane = new StackPane(seasonStats, careerStats);
-            Button button = makeButton(seasonStats, careerStats);
-            HBox buttonStatsBox = new HBox(125, button, statsPane);
+            Button button = makeButton(seasonStats, careerStats, firstControlPanel, label);
+            VBox vbox = new VBox(label, statsPane);
+            HBox buttonStatsBox = new HBox(125, button, vbox);
             careerStats.setVisible(false);
             PlayerInfoView playerInfoView = makePlayerInfoView(resultGenerationEvent);
             getFirstHeadshotLogoView();
             HBox hbox = new HBox(firstHeadshotLogoView, playerInfoView);
             firstPlayerResultArea.getChildren().addAll(hbox, buttonStatsBox);
+            seasonStats.setAlignment(Pos.CENTER_RIGHT);
+            careerStats.setAlignment(Pos.CENTER_RIGHT);
             buttonStatsBox.setAlignment(Pos.CENTER_RIGHT);
             hbox.setAlignment(Pos.CENTER_RIGHT);
         }));
@@ -91,9 +99,12 @@ public class NBAPlayerStatsApp extends Application {
             secondPlayerResultArea.getChildren().clear();
             StatView seasonStats = new StatView(resultGenerationEvent.seasonPlayerStats);
             StatView careerStats = new StatView(resultGenerationEvent.careerPlayerStats);
+            Label label = new Label(secondControlPanel.getSeason());
+            label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 18));
             StackPane statsPane = new StackPane(seasonStats, careerStats);
-            Button button = makeButton(seasonStats, careerStats);
-            HBox buttonStatsBox = new HBox(125, statsPane, button);
+            Button button = makeButton(seasonStats, careerStats, secondControlPanel, label);
+            VBox vbox = new VBox(label, statsPane);
+            HBox buttonStatsBox = new HBox(125, vbox, button);
             careerStats.setVisible(false);
             PlayerInfoView playerInfoView = PlayerInfoView.create(resultGenerationEvent.playerInfo);
             getSecondHeadshotLogoView();
@@ -105,16 +116,18 @@ public class NBAPlayerStatsApp extends Application {
         }));
     }
 
-    private Button makeButton(StatView seasonStats, StatView careerStats){
+    private Button makeButton(StatView seasonStats, StatView careerStats, ControlPanel controlPanel, Label label) {
         Button button = new Button("See Career Stats!");
         button.setOnAction(event -> {
             if (!careerStats.isVisible()){
                 careerStats.setVisible(true);
                 seasonStats.setVisible(false);
+                label.setText("Career Stats");
                 button.setText("See Season Stats!");
             } else {
                 careerStats.setVisible(false);
                 seasonStats.setVisible(true);
+                label.setText(controlPanel.getSeason() + " Stats");
                 button.setText("See Career Stats!");
             }
         });
