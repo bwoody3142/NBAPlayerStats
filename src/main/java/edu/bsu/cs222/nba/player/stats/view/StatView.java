@@ -13,6 +13,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class StatView extends VBox {
 
     private Label ppgLabel;
@@ -155,11 +158,19 @@ public class StatView extends VBox {
         return tpmLabel;
     }
 
-    public void highlightLabelGreen(Label label){
-        label.setBackground(new Background(new BackgroundFill(Color.LAWNGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+    public PlayerStats getPlayerStats() {
+        return playerStats;
     }
 
-    public void highlightLabelRed(Label label){
-        label.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+    public List<Label> getListOfLabels(){
+        return Arrays.asList(getPpgLabel(),
+                getApgLabel(),
+                getRpgLabel(),
+                getTopgLabel(),
+                getSpgLabel(),
+                getBpgLabel(),
+                getFgpLabel(),
+                getFtpLabel(),
+                getTpmLabel());
     }
 }
