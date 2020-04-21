@@ -33,6 +33,8 @@ public class NBAPlayerStatsApp extends Application {
     private VBox firstPlayerResultArea;
     private VBox secondPlayerResultArea;
     private Button differenceButton = new Button("See Difference");
+    private boolean isSecondStatViewCreated = false;
+    private boolean isFirstStatViewCreated = false;
 
 
     public NBAPlayerStatsApp() {
@@ -98,7 +100,10 @@ public class NBAPlayerStatsApp extends Application {
             firstCareerStatView.setAlignment(Pos.CENTER_RIGHT);
             buttonStatsBox.setAlignment(Pos.CENTER_RIGHT);
             hbox.setAlignment(Pos.CENTER_RIGHT);
-            removeHighlightFromAllLabels();
+            if (isSecondStatViewCreated){
+               removeHighlightFromAllLabels();
+            }
+            isFirstStatViewCreated = true;
         }));
     }
 
@@ -130,8 +135,11 @@ public class NBAPlayerStatsApp extends Application {
             playerInfoView.getNameJerseyPositionBox().setAlignment(Pos.CENTER_LEFT);
             differenceButton.setVisible(true);
             differenceButton = makeSeeDifferenceButton();
-            removeHighlightFromAllLabels();
-        }));
+            if(isFirstStatViewCreated){
+                removeHighlightFromAllLabels();
+            }
+            isSecondStatViewCreated = true;
+            }));
     }
 
     private Button makeSeasonOrCareerButton(StatView seasonStats, StatView careerStats, ControlPanel controlPanel, Label label) {
@@ -143,14 +151,13 @@ public class NBAPlayerStatsApp extends Application {
                 seasonStats.setVisible(false);
                 label.setText("Career Stats");
                 button.setText("See Season Stats!");
-                differenceButton = makeSeeDifferenceButton();
             } else {
                 careerStats.setVisible(false);
                 seasonStats.setVisible(true);
                 label.setText(controlPanel.getSeason());
                 button.setText("See Career Stats!");
-                differenceButton = makeSeeDifferenceButton();
             }
+            differenceButton = makeSeeDifferenceButton();
         });
         button.setAlignment(Pos.CENTER);
         return button;

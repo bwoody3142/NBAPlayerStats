@@ -31,18 +31,6 @@ public class PlayerStatComparisonTest {
     }
 
     @Test
-    public void testCompareStat_getDifference_regularCase(){
-        setup(Statistic.PPG);
-        Assertions.assertEquals(0.8f, playerStatComparison.getDifference());
-    }
-
-    @Test
-    public void testCompareStat_getDifferenceForTurnovers_specialCase(){
-        setup(Statistic.TURNOVERS);
-        Assertions.assertEquals(0.6f, playerStatComparison.getDifference());
-    }
-
-    @Test
     public void testCompareStat_getFlag_playerOneIsBetter(){
         setup(Statistic.PPG);
         Assertions.assertEquals(1, playerStatComparison.getFlag());

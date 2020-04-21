@@ -124,7 +124,10 @@ public class ControlPanel extends VBox {
     private HBox createTeamBox(){
         Label teamLabel = new Label("Team ");
         teams.setPromptText("Select a Team");
-        teams.setOnAction(event -> generateRoster());
+        teams.setOnAction(event -> {
+            player.getItems().clear();
+            generateRoster();
+        });
         return new HBox(teamLabel, teams, loadingTeamsLabel);
     }
 

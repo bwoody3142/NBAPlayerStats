@@ -1,7 +1,5 @@
 package edu.bsu.cs222.nba.player.stats.model;
 
-import javax.naming.directory.InitialDirContext;
-
 public class IndividualStatistic {
 
     public static IndividualStatisticBuilder withPlayerStats(PlayerStats playerStats){
@@ -10,7 +8,7 @@ public class IndividualStatistic {
 
     public static final class IndividualStatisticBuilder {
 
-        private PlayerStats playerStats;
+        private final PlayerStats playerStats;
         private Statistic statistic;
 
         public IndividualStatisticBuilder(PlayerStats playerStats){
@@ -33,10 +31,6 @@ public class IndividualStatistic {
 
     public float generateStatistic(){
         return playerStats.getStatsList().get(statistic.getIndex());
-    }
-
-    public PlayerStats getPlayerStats() {
-        return playerStats;
     }
 
     public Statistic getStatistic() {
