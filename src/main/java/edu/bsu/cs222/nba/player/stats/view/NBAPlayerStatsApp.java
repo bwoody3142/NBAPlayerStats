@@ -98,6 +98,7 @@ public class NBAPlayerStatsApp extends Application {
             firstCareerStatView.setAlignment(Pos.CENTER_RIGHT);
             buttonStatsBox.setAlignment(Pos.CENTER_RIGHT);
             hbox.setAlignment(Pos.CENTER_RIGHT);
+            removeHighlightFromAllLabels();
         }));
     }
 
@@ -129,16 +130,14 @@ public class NBAPlayerStatsApp extends Application {
             playerInfoView.getNameJerseyPositionBox().setAlignment(Pos.CENTER_LEFT);
             differenceButton.setVisible(true);
             differenceButton = makeSeeDifferenceButton();
+            removeHighlightFromAllLabels();
         }));
     }
 
     private Button makeSeasonOrCareerButton(StatView seasonStats, StatView careerStats, ControlPanel controlPanel, Label label) {
         Button button = new Button("See Career Stats!");
         button.setOnAction(event -> {
-            highlightLabelBlack(firstSeasonStatView.getListOfLabels());
-            highlightLabelBlack(secondSeasonStatView.getListOfLabels());
-            highlightLabelBlack(firstCareerStatView.getListOfLabels());
-            highlightLabelBlack(secondCareerStatView.getListOfLabels());
+            removeHighlightFromAllLabels();
             if (!careerStats.isVisible()){
                 careerStats.setVisible(true);
                 seasonStats.setVisible(false);
@@ -237,5 +236,12 @@ public class NBAPlayerStatsApp extends Application {
         for (Label label : list){
             label.setTextFill(Color.BLACK);
         }
+    }
+
+    private void removeHighlightFromAllLabels(){
+        highlightLabelBlack(firstSeasonStatView.getListOfLabels());
+        highlightLabelBlack(firstCareerStatView.getListOfLabels());
+        highlightLabelBlack(secondSeasonStatView.getListOfLabels());
+        highlightLabelBlack(secondCareerStatView.getListOfLabels());
     }
 }
