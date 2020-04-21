@@ -22,6 +22,7 @@ import java.util.List;
 
 public class NBAPlayerStatsApp extends Application {
 
+
     private HeadshotLogoView firstHeadshotLogoView;
     private HeadshotLogoView secondHeadshotLogoView;
     private ControlPanel firstControlPanel;

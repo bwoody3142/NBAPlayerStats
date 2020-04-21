@@ -25,7 +25,9 @@ public class URLCreator {
     }
 
     public URL getPlayerProfileUrl(Integer personID) throws IOException {
-        URLFactory factory = URLFactory.withYear(2019).andPersonID(personID);
+        CurrentSeasonGenerator currentSeasonGenerator = new CurrentSeasonGenerator();
+        int currentSeason = currentSeasonGenerator.generateCurrentSeason();
+        URLFactory factory = URLFactory.withYear(currentSeason).andPersonID(personID);
         String encodedYear = URLEncoder.encode(factory.getYear().toString(), "UTF-8");
         String encodedPersonID = URLEncoder.encode(factory.getPersonID().toString(), "UTF-8");
         String search = "http://data.nba.net/data/10s/prod/v1/" + encodedYear + "/players/" + encodedPersonID + "_profile.json";
