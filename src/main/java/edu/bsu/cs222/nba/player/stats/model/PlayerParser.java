@@ -45,28 +45,16 @@ public class PlayerParser {
     public PlayerStats parseForStats(){
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(stream, "UTF-8");
         for (Statistic statistic : Statistic.values()) {
-            if (isCareer){
-                if(!statistic.getDataSourceKey().equals("topg")){
-                    array.add(JsonPath.read(document, makeStatsQuery(statistic.getDataSourceKey())));
-                }
-            } else {
-                array.add(JsonPath.read(document, makeStatsQuery(statistic.getDataSourceKey())));
-            }
+            array.add(JsonPath.read(document, makeStatsQuery(statistic.getDataSourceKey())));
         }
         return buildStats();
     }
 
     private PlayerStats buildStats() {
-        float turnovers;
-        if (!isCareer){
-            turnovers = getFloat(Statistic.SEASON_TOPG.getIndex());
-        } else {
-            turnovers = getFloat(Statistic.CAREER_TURNOVERS.getIndex()) / getFloat(Statistic.GAMES_PLAYED.getIndex());
-        }
         return PlayerStats.withPoints(getFloat(Statistic.PPG.getIndex()))
                 .assists(getFloat(Statistic.APG.getIndex()))
                 .rebounds(getFloat(Statistic.RPG.getIndex()))
-                .turnovers(turnovers)
+                .turnovers(getFloat(Statistic.TURNOVERS.getIndex()) / getFloat(Statistic.GAMES_PLAYED.getIndex()))
                 .steals(getFloat(Statistic.SPG.getIndex()))
                 .blocks(getFloat(Statistic.BPG.getIndex()))
                 .fieldGoalPercentage(getFloat(Statistic.FGP.getIndex()))

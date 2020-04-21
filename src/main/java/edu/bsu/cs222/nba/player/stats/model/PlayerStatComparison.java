@@ -1,180 +1,81 @@
 package edu.bsu.cs222.nba.player.stats.model;
 
-import java.util.Arrays;
-import java.util.List;
+import java.text.DecimalFormat;
 
 public class PlayerStatComparison {
 
-    public static ComparePlayerStatBuilder withFirstPlayerStats(PlayerStats firstPlayerStats){
-        return new ComparePlayerStatBuilder(firstPlayerStats);
+    public static ComparePlayerStatBuilder withFirstIndividualStats(IndividualStatistic stat){
+        return new ComparePlayerStatBuilder(stat);
     }
 
     public static final class ComparePlayerStatBuilder {
 
-        private final PlayerStats firstPlayerStats;
-        private PlayerStats secondPlayerStats;
+        private final IndividualStatistic firstIndividualStat;
+        private IndividualStatistic secondIndividualStats;
 
-        public ComparePlayerStatBuilder(PlayerStats firstPlayerStats){
-            this.firstPlayerStats = firstPlayerStats;
+        public ComparePlayerStatBuilder(IndividualStatistic stat){
+            this.firstIndividualStat = stat;
         }
 
-        public PlayerStatComparison andSecondPlayerStats(PlayerStats secondPlayerStats){
-            this.secondPlayerStats = secondPlayerStats;
+        public PlayerStatComparison andSecondPlayerStats(IndividualStatistic stat){
+            this.secondIndividualStats = stat;
             return new PlayerStatComparison(this);
         }
     }
 
-    private final PlayerStats firstPlayerStats;
-    private final PlayerStats secondPlayerStats;
+    private final IndividualStatistic firstIndividualStat;
+    private final IndividualStatistic secondIndividualStat;
     public final int PLAYER_STAT_IS_EQUAL = 0;
-    public final int FIRST_PLAYER_IS_GREATER = 1;
-    public final int SECOND_PLAYER_IS_GREATER = 2;
+    public final int FIRST_PLAYER_IS_BETTER = 1;
+    public final int SECOND_PLAYER_IS_BETTER = 2;
     private int flag;
+    private float difference;
 
     public PlayerStatComparison(ComparePlayerStatBuilder builder){
-        this.firstPlayerStats = builder.firstPlayerStats;
-        this.secondPlayerStats = builder.secondPlayerStats;
+        this.firstIndividualStat = builder.firstIndividualStat;
+        this.secondIndividualStat = builder.secondIndividualStats;
+        compareStat();
     }
 
-    public float comparePPG(){
-        float firstStat = firstPlayerStats.getPointsPerGame();
-        float secondStat = secondPlayerStats.getPointsPerGame();
-        if (firstStat > secondStat){
-            flag = FIRST_PLAYER_IS_GREATER;
-            return firstStat - secondStat;
-        } else if (firstStat < secondStat){
-            flag = SECOND_PLAYER_IS_GREATER;
-            return secondStat - firstStat;
+    private void compareStat(){
+        if (firstIndividualStat.getStatistic().equals(Statistic.TURNOVERS)){
+            float firstStat = firstIndividualStat.generateStatistic();
+            float secondStat = secondIndividualStat.generateStatistic();
+            if (firstStat < secondStat){
+                flag = FIRST_PLAYER_IS_BETTER;
+                difference = secondStat - firstStat;
+            } else if (firstStat > secondStat){
+                flag = SECOND_PLAYER_IS_BETTER;
+                difference = firstStat - secondStat;
+            } else {
+                difference = PLAYER_STAT_IS_EQUAL;
+            }
         } else {
-            return PLAYER_STAT_IS_EQUAL;
+            float firstStat = firstIndividualStat.generateStatistic();
+            float secondStat = secondIndividualStat.generateStatistic();
+            if (firstStat > secondStat){
+                flag = FIRST_PLAYER_IS_BETTER;
+                difference = firstStat - secondStat;
+            } else if (firstStat < secondStat){
+                flag = SECOND_PLAYER_IS_BETTER;
+                difference = secondStat - firstStat;
+            } else {
+                flag = PLAYER_STAT_IS_EQUAL;
+                difference = 0;
+            }
         }
-    }
-
-    public float compareAPG(){
-        float firstStat = firstPlayerStats.getAssistsPerGame();
-        float secondStat = secondPlayerStats.getAssistsPerGame();
-        if (firstStat > secondStat){
-            flag = FIRST_PLAYER_IS_GREATER;
-            return firstStat - secondStat;
-        } else if (firstStat < secondStat){
-            flag = SECOND_PLAYER_IS_GREATER;
-            return secondStat - firstStat;
-        } else {
-            return PLAYER_STAT_IS_EQUAL;
-        }
-    }
-
-    public float compareRPG(){
-        float firstStat = firstPlayerStats.getReboundsPerGame();
-        float secondStat = secondPlayerStats.getReboundsPerGame();
-        if (firstStat > secondStat){
-            flag = FIRST_PLAYER_IS_GREATER;
-            return firstStat - secondStat;
-        } else if (firstStat < secondStat){
-            flag = SECOND_PLAYER_IS_GREATER;
-            return secondStat - firstStat;
-        } else {
-            return PLAYER_STAT_IS_EQUAL;
-        }
-    }
-
-    public float compareTOPG(){
-        float firstStat = firstPlayerStats.getTurnOversPerGame();
-        float secondStat = secondPlayerStats.getTurnOversPerGame();
-        if (firstStat > secondStat){
-            flag = FIRST_PLAYER_IS_GREATER;
-            return firstStat - secondStat;
-        } else if (firstStat < secondStat){
-            flag = SECOND_PLAYER_IS_GREATER;
-            return secondStat - firstStat;
-        } else {
-            return PLAYER_STAT_IS_EQUAL;
-        }
-    }
-
-    public float compareSPG(){
-        float firstStat = firstPlayerStats.getStealsPerGame();
-        float secondStat = secondPlayerStats.getStealsPerGame();
-        if (firstStat > secondStat){
-            flag = FIRST_PLAYER_IS_GREATER;
-            return firstStat - secondStat;
-        } else if (firstStat < secondStat){
-            flag = SECOND_PLAYER_IS_GREATER;
-            return secondStat - firstStat;
-        } else {
-            return PLAYER_STAT_IS_EQUAL;
-        }
-    }
-
-    public float compareBPG(){
-        float firstStat = firstPlayerStats.getBlocksPerGame();
-        float secondStat = secondPlayerStats.getBlocksPerGame();
-        if (firstStat > secondStat){
-            flag = FIRST_PLAYER_IS_GREATER;
-            return firstStat - secondStat;
-        } else if (firstStat < secondStat){
-            flag = SECOND_PLAYER_IS_GREATER;
-            return secondStat - firstStat;
-        } else {
-            return PLAYER_STAT_IS_EQUAL;
-        }
-    }
-
-    public float compareFGP(){
-        float firstStat = firstPlayerStats.getFieldGoalPercentage();
-        float secondStat = secondPlayerStats.getFieldGoalPercentage();
-        if (firstStat > secondStat){
-            flag = FIRST_PLAYER_IS_GREATER;
-            return firstStat - secondStat;
-        } else if (firstStat < secondStat){
-            flag = SECOND_PLAYER_IS_GREATER;
-            return secondStat - firstStat;
-        } else {
-            return PLAYER_STAT_IS_EQUAL;
-        }
-    }
-
-    public float compareFTP(){
-        float firstStat = firstPlayerStats.getFreeThrowPercentage();
-        float secondStat = secondPlayerStats.getFreeThrowPercentage();
-        if (firstStat > secondStat){
-            flag = FIRST_PLAYER_IS_GREATER;
-            return firstStat - secondStat;
-        } else if (firstStat < secondStat){
-            flag = SECOND_PLAYER_IS_GREATER;
-            return secondStat - firstStat;
-        } else {
-            return PLAYER_STAT_IS_EQUAL;
-        }
-    }
-
-    public float compareTPM(){
-        float firstStat = firstPlayerStats.getThreePointers();
-        float secondStat = secondPlayerStats.getThreePointers();
-        if (firstStat > secondStat){
-            flag = FIRST_PLAYER_IS_GREATER;
-            return firstStat - secondStat;
-        } else if (firstStat < secondStat){
-            flag = SECOND_PLAYER_IS_GREATER;
-            return secondStat - firstStat;
-        } else {
-            return PLAYER_STAT_IS_EQUAL;
-        }
-    }
-
-    public List<Float> getDifferencesAsList(){
-        return Arrays.asList(comparePPG(),
-                             compareAPG(),
-                             compareRPG(),
-                             compareTOPG(),
-                             compareSPG(),
-                             compareBPG(),
-                             compareFGP(),
-                             compareFTP(),
-                             compareTPM());
     }
 
     public int getFlag() {
         return flag;
+    }
+
+    public float getDifference() {
+        return roundFloat(difference);
+    }
+
+    private float roundFloat(float stat){
+        DecimalFormat decimalFormat = new DecimalFormat("0.0");
+        return Float.parseFloat(decimalFormat.format(stat));
     }
 }
