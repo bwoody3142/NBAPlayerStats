@@ -8,6 +8,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class StatView extends VBox {
 
     private Label ppgLabel;
@@ -55,46 +58,28 @@ public class StatView extends VBox {
                 spgLabel, bpgLabel, fgpLabel, ftpLabel, tpmLabel);
     }
 
+
     private void changeFont(){
         for (int i = 0; i < getStatsList().size(); i++){
             getStatsList().get(i).setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
         }
     }
 
-    public Label getPpgLabel() {
-        return ppgLabel;
+    public List<Label> getListOfLabels(){
+        return Arrays.asList(ppgLabel,
+            apgLabel,
+            rpgLabel,
+            topgLabel,
+            spgLabel,
+            bpgLabel,
+            fgpLabel,
+            ftpLabel,
+            tpmLabel);
     }
 
-    public Label getApgLabel() {
-        return apgLabel;
-    }
-
-    public Label getRpgLabel() {
-        return rpgLabel;
-    }
-
-    public Label getTopgLabel() {
-        return topgLabel;
-    }
-
-    public Label getSpgLabel() {
-        return spgLabel;
-    }
-
-    public Label getBpgLabel() {
-        return bpgLabel;
-    }
-
-    public Label getFgpLabel() {
-        return fgpLabel;
-    }
-
-    public Label getFtpLabel() {
-        return ftpLabel;
-    }
-
-    public Label getTpmLabel() {
-        return tpmLabel;
+    public Label getLabelFromListOfLabels(int index){
+        List<Label> list = getListOfLabels();
+        return list.get(index);
     }
 
     public PlayerStats getPlayerStats() {
