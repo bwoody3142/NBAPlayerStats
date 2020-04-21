@@ -14,15 +14,12 @@ public class PlayerStats {
         private final float pointsPerGame;
         private float assistsPerGame;
         private float reboundsPerGame;
-        private float seasonTurnOversPerGame;
-        private float careerTurnOversPerGame;
+        private float turnOversPerGame;
         private float stealsPerGame;
         private float blocksPerGame;
         private float fieldGoalPercentage;
         private float freeThrowPercentage;
         private float threePointers;
-
-        private boolean turnoversSpecified = false;
 
         public PlayerStatsBuilder(float pointsPerGame){
             this.pointsPerGame = pointsPerGame;
@@ -38,21 +35,8 @@ public class PlayerStats {
             return this;
         }
 
-        public PlayerStatsBuilder seasonTurnovers(float turnOversPerGame) {
-            if (turnoversSpecified) {
-                throw new IllegalStateException("Cannot specify both season and lifetime turnovers");
-            }
-            this.seasonTurnOversPerGame = turnOversPerGame;
-            turnoversSpecified = true;
-            return this;
-        }
-
-        public PlayerStatsBuilder careerTurnovers(float turnOversPerGame) {
-            if (turnoversSpecified) {
-                throw new IllegalStateException("Cannot specify both season and lifetime turnovers");
-            }
-            this.careerTurnOversPerGame = roundFloat(turnOversPerGame);
-            turnoversSpecified = true;
+        public PlayerStatsBuilder turnovers(float turnOversPerGame) {
+            this.turnOversPerGame = roundFloat(turnOversPerGame);
             return this;
         }
 
@@ -91,8 +75,7 @@ public class PlayerStats {
     private final float pointsPerGame;
     private final float assistsPerGame;
     private final float reboundsPerGame;
-    private final float seasonTurnOversPerGame;
-    private final float careerTurnOversPerGame;
+    private final float turnOversPerGame;
     private final float stealsPerGame;
     private final float blocksPerGame;
     private final float fieldGoalPercentage;
@@ -103,8 +86,7 @@ public class PlayerStats {
         this.pointsPerGame = builder.pointsPerGame;
         this.assistsPerGame = builder.assistsPerGame;
         this.reboundsPerGame = builder.reboundsPerGame;
-        this.seasonTurnOversPerGame = builder.seasonTurnOversPerGame;
-        this.careerTurnOversPerGame = builder.careerTurnOversPerGame;
+        this.turnOversPerGame = builder.turnOversPerGame;
         this.stealsPerGame = builder.stealsPerGame;
         this.blocksPerGame = builder.blocksPerGame;
         this.fieldGoalPercentage = builder.fieldGoalPercentage;
@@ -116,28 +98,16 @@ public class PlayerStats {
         return new PlayerStats(builder);
     }
 
-    public List<Float> getSeasonStatsList(){
-        return Arrays.asList(getPointsPerGame(),
-                getAssistsPerGame(),
-                getReboundsPerGame(),
-                getSeasonTurnOversPerGame(),
-                getStealsPerGame(),
-                getBlocksPerGame(),
-                getFieldGoalPercentage(),
-                getFreeThrowPercentage(),
-                getThreePointers());
-    }
-
-    public List<Float> getCareerStatsList(){
-        return Arrays.asList(getPointsPerGame(),
-                getAssistsPerGame(),
-                getReboundsPerGame(),
-                getCareerTurnOversPerGame(),
-                getStealsPerGame(),
-                getBlocksPerGame(),
-                getFieldGoalPercentage(),
-                getFreeThrowPercentage(),
-                getThreePointers());
+    public List<Float> getStatsList(){
+        return Arrays.asList(pointsPerGame,
+                assistsPerGame,
+                reboundsPerGame,
+                turnOversPerGame,
+                stealsPerGame,
+                blocksPerGame,
+                fieldGoalPercentage,
+                freeThrowPercentage,
+                threePointers);
     }
 
     public float getPointsPerGame() {
@@ -152,12 +122,8 @@ public class PlayerStats {
         return reboundsPerGame;
     }
 
-    public float getSeasonTurnOversPerGame() {
-        return seasonTurnOversPerGame;
-    }
-
-    public float getCareerTurnOversPerGame() {
-        return careerTurnOversPerGame;
+    public float getTurnOversPerGame() {
+        return turnOversPerGame;
     }
 
     public float getStealsPerGame() {

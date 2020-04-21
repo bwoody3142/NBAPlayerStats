@@ -7,21 +7,13 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.lang.String.format;
-
 public class PlayerParserTest {
 
 
-    private List<Float> getSeasonStats(){
+    private List<Float> getStats(boolean isCareer){
         InputStream lebronInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("LeBronJamesStats2018.json");
-        PlayerParser parser = PlayerParser.withStream(lebronInputStream).andYear(2018);
-        return parser.parseForSeasonStats().getSeasonStatsList();
-    }
-
-    private List<Float> getCareerStats(){
-        InputStream lebronInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("LeBronJamesStats2018.json");
-        PlayerParser parser = PlayerParser.withStream(lebronInputStream).andYear(2018);
-        return parser.parseForCareerStats().getCareerStatsList();
+        PlayerParser parser = PlayerParser.isCareer(isCareer).withStream(lebronInputStream).andYear(2018);
+        return parser.parseForStats().getStatsList();
     }
 
     private List<Float> getActualSeasonStatsList(){
@@ -34,11 +26,11 @@ public class PlayerParserTest {
 
     @Test
     public void testParseForSeasonStats(){
-        Assertions.assertEquals(getActualSeasonStatsList(), getSeasonStats());
+        Assertions.assertEquals(getActualSeasonStatsList(), getStats(false));
     }
 
     @Test
     public void testParseForCareerStats(){
-        Assertions.assertEquals(getActualCareerStatsList(), getCareerStats());
+        Assertions.assertEquals(getActualCareerStatsList(), getStats(true));
     }
 }

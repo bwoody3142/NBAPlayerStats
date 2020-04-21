@@ -112,8 +112,8 @@ public class ControlPanel extends VBox {
     private ResultGenerationEvent generatePlayerStats() {
         try {
             resultGenerationEvent =
-                ResultGenerationEvent.withCareerStats(parseCareerStats())
-                                     .seasonStats(parseSeasonStats())
+                ResultGenerationEvent.withCareerStats(parseStats(true))
+                                     .seasonStats(parseStats(false))
                                      .andPlayerInfo(parsePlayerInfo());
         } catch (IOException e) {
             e.printStackTrace();
@@ -163,19 +163,11 @@ public class ControlPanel extends VBox {
         return ListOfActiveSeasons.create().getSeasonsAsList(playerStream);
     }
 
-    private PlayerStats parseSeasonStats() throws IOException {
-        return parseStats().parseForSeasonStats();
-    }
-
-    private PlayerStats parseCareerStats() throws IOException {
-        return parseStats().parseForCareerStats();
-    }
-
-    private PlayerParser parseStats() throws IOException{
+    private PlayerStats parseStats(boolean trueFalse) throws IOException{
         playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
         Map<String, Integer> map = ListOfActiveSeasons.create().createListOfActiveSeasons(playerStream);
         playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
-        return PlayerParser.withStream(playerStream).andYear(map.get(season.getValue()));
+        return PlayerParser.isCareer(trueFalse).withStream(playerStream).andYear(map.get(season.getValue())).parseForStats();
     }
 
     private PlayerInfo parsePlayerInfo() throws IOException{

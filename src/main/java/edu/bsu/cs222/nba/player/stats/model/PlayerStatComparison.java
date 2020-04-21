@@ -3,7 +3,7 @@ package edu.bsu.cs222.nba.player.stats.model;
 import java.util.Arrays;
 import java.util.List;
 
-public class ComparePlayerStat {
+public class PlayerStatComparison {
 
     public static ComparePlayerStatBuilder withFirstPlayerStats(PlayerStats firstPlayerStats){
         return new ComparePlayerStatBuilder(firstPlayerStats);
@@ -18,9 +18,9 @@ public class ComparePlayerStat {
             this.firstPlayerStats = firstPlayerStats;
         }
 
-        public ComparePlayerStat andSecondPlayerStats(PlayerStats secondPlayerStats){
+        public PlayerStatComparison andSecondPlayerStats(PlayerStats secondPlayerStats){
             this.secondPlayerStats = secondPlayerStats;
-            return new ComparePlayerStat(this);
+            return new PlayerStatComparison(this);
         }
     }
 
@@ -31,7 +31,7 @@ public class ComparePlayerStat {
     public final int SECOND_PLAYER_IS_GREATER = 2;
     private int flag;
 
-    public ComparePlayerStat(ComparePlayerStatBuilder builder){
+    public PlayerStatComparison(ComparePlayerStatBuilder builder){
         this.firstPlayerStats = builder.firstPlayerStats;
         this.secondPlayerStats = builder.secondPlayerStats;
     }
@@ -79,8 +79,8 @@ public class ComparePlayerStat {
     }
 
     public float compareTOPG(){
-        float firstStat = checkForSeasonOrCareer(firstPlayerStats);
-        float secondStat = checkForSeasonOrCareer(secondPlayerStats);
+        float firstStat = firstPlayerStats.getTurnOversPerGame();
+        float secondStat = secondPlayerStats.getTurnOversPerGame();
         if (firstStat > secondStat){
             flag = FIRST_PLAYER_IS_GREATER;
             return firstStat - secondStat;
@@ -159,14 +159,6 @@ public class ComparePlayerStat {
             return secondStat - firstStat;
         } else {
             return PLAYER_STAT_IS_EQUAL;
-        }
-    }
-
-    private float checkForSeasonOrCareer(PlayerStats playerStats){
-        if(playerStats.getSeasonTurnOversPerGame() == 0){
-            return playerStats.getCareerTurnOversPerGame();
-        } else {
-            return playerStats.getSeasonTurnOversPerGame();
         }
     }
 
