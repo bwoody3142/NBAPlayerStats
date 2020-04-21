@@ -18,6 +18,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class NBAPlayerStatsApp extends Application {
 
@@ -134,6 +135,10 @@ public class NBAPlayerStatsApp extends Application {
     private Button makeSeasonOrCareerButton(StatView seasonStats, StatView careerStats, ControlPanel controlPanel, Label label) {
         Button button = new Button("See Career Stats!");
         button.setOnAction(event -> {
+            highlightLabelBlack(firstSeasonStatView.getListOfLabels());
+            highlightLabelBlack(secondSeasonStatView.getListOfLabels());
+            highlightLabelBlack(firstCareerStatView.getListOfLabels());
+            highlightLabelBlack(secondCareerStatView.getListOfLabels());
             if (!careerStats.isVisible()){
                 careerStats.setVisible(true);
                 seasonStats.setVisible(false);
@@ -159,22 +164,21 @@ public class NBAPlayerStatsApp extends Application {
             int index = 0;
             while(index < firstStatView.getListOfLabels().size()){
                 for (Statistic statistic : Statistic.values()){
-                    IndividualStatistic firstStat = IndividualStatistic
-                            .withPlayerStats(firstStatView.getPlayerStats()).andStatisticType(statistic);
-                    IndividualStatistic secondStat = IndividualStatistic
-                            .withPlayerStats(secondStatView.getPlayerStats()).andStatisticType(statistic);
-                    PlayerStatComparison playerStatComparison = PlayerStatComparison
-                            .withFirstIndividualStats(firstStat).andSecondPlayerStats(secondStat);
-                    Label firstLabel = firstStatView.getLabelFromListOfLabels(index);
-                    Label secondLabel = secondStatView.getLabelFromListOfLabels(index);
-                    if (playerStatComparison.getFlag() == 1){
-                        highlightLabelGreen(firstLabel);
-                        highlightLabelRed(secondLabel);
-                    } else if (playerStatComparison.getFlag() == 2){
-                        highlightLabelRed(firstLabel);
-                        highlightLabelGreen(secondLabel);
+                    if (!(statistic.index == 9)) {
+                        IndividualStatistic firstStat = IndividualStatistic.withPlayerStats(firstStatView.getPlayerStats()).andStatisticType(statistic);
+                        IndividualStatistic secondStat = IndividualStatistic.withPlayerStats(secondStatView.getPlayerStats()).andStatisticType(statistic);
+                        PlayerStatComparison playerStatComparison = PlayerStatComparison.withFirstIndividualStats(firstStat).andSecondPlayerStats(secondStat);
+                        Label firstLabel = firstStatView.getLabelFromListOfLabels(index);
+                        Label secondLabel = secondStatView.getLabelFromListOfLabels(index);
+                        if (playerStatComparison.getFlag() == 1) {
+                            highlightLabelGreen(firstLabel);
+                            highlightLabelRed(secondLabel);
+                        } else if (playerStatComparison.getFlag() == 2) {
+                            highlightLabelRed(firstLabel);
+                            highlightLabelGreen(secondLabel);
+                        }
+                        index++;
                     }
-                    index++;
                 }
             }
         });
@@ -229,7 +233,9 @@ public class NBAPlayerStatsApp extends Application {
         label.setTextFill(Color.RED);
     }
 
-    private void highlightLabelBlack(Label label){
-        label.setTextFill(Color.BLACK);
+    private void highlightLabelBlack(List<Label> list){
+        for (Label label : list){
+            label.setTextFill(Color.BLACK);
+        }
     }
 }
