@@ -12,6 +12,9 @@ import javafx.scene.layout.StackPane;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 public class HeadshotLogoView extends StackPane {
 
@@ -41,8 +44,8 @@ public class HeadshotLogoView extends StackPane {
     private final String player;
 
     public HeadshotLogoView(HeadshotLogoBuilder builder) {
-        this.team = builder.team;
-        this.player = builder.player;
+        this.team = requireNonNull(builder.team);
+        this.player = requireNonNull(builder.player);
         getChildren().addAll(logoView, headshotView);
     }
 
@@ -74,7 +77,9 @@ public class HeadshotLogoView extends StackPane {
 
     public void generateHeadshot() throws IOException {
         Map <String, String> fullPlayerList = ListOfPlayers.createEmptyListOfPlayers().createFullListOfPlayers();
-        InputStream headshotStream = url.createHeadshotStream(Integer.parseInt(fullPlayerList.get(player)));
+        String personIdAsString = fullPlayerList.get(player);
+        int personID = Integer.parseInt(personIdAsString);
+        InputStream headshotStream = url.createHeadshotStream(personID);
         Image headshot = new Image(headshotStream);
         headshotView.setImage(headshot);
     }
