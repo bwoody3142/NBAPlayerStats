@@ -16,12 +16,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.IOException;
 import java.util.List;
 
 public class NBAPlayerStatsApp extends Application {
 
+    private GridPane ui;
     private HeadshotLogoView firstHeadshotLogoView;
     private HeadshotLogoView secondHeadshotLogoView;
     private ControlPanel firstControlPanel;
@@ -30,11 +32,12 @@ public class NBAPlayerStatsApp extends Application {
     private StatView firstCareerStatView;
     private StatView secondSeasonStatView;
     private StatView secondCareerStatView;
-    private VBox firstPlayerResultArea;
-    private VBox secondPlayerResultArea;
+    private GridPane firstPlayerResultArea = new GridPane();
+    private GridPane secondPlayerResultArea = new GridPane();
     private Button differenceButton = new Button("See Difference");
     private boolean isSecondStatViewCreated = false;
     private boolean isFirstStatViewCreated = false;
+    private boolean isSecondPlayer = false;
 
 
     public NBAPlayerStatsApp() {
@@ -52,14 +55,12 @@ public class NBAPlayerStatsApp extends Application {
     }
 
     private VBox createUI() {
-        VBox firstContainer = buildFirstContainer();
-        VBox secondContainer = buildSecondContainer();
-        HBox ui = new HBox(50, firstContainer, secondContainer);
-        firstContainer.setPadding(new Insets(20, 0, 0, 10));
-        secondContainer.setPadding(new Insets(20, 0, 0, 0));
-        secondContainer.setAlignment(Pos.TOP_RIGHT);
+        firstControlPanel = new ControlPanel();
+        secondControlPanel = new ControlPanel();
+        ui = new GridPane();
         listenForFirstPlayerStats();
         listenForSecondPlayerStats();
+        setupContainers();
         VBox mainUI = new VBox(30, ui, differenceButton);
         mainUI.setAlignment(Pos.TOP_CENTER);
         differenceButton.setPrefSize(150, 30);
@@ -68,38 +69,18 @@ public class NBAPlayerStatsApp extends Application {
         return mainUI;
     }
 
-    private VBox buildFirstContainer(){
-        firstControlPanel = new ControlPanel();
-        firstPlayerResultArea = new VBox();
-        return new VBox(firstControlPanel, firstPlayerResultArea);
-    }
-
-    private VBox buildSecondContainer(){
-        secondControlPanel = new ControlPanel();
-        secondPlayerResultArea = new VBox();
-        return new VBox(secondControlPanel, secondPlayerResultArea);
+    private void setupContainers() {
+        ui.getChildren().addAll(firstControlPanel, firstPlayerResultArea, secondControlPanel, secondPlayerResultArea);
+        GridPane.setConstraints(firstControlPanel, 0, 0);
+        GridPane.setConstraints(firstPlayerResultArea, 0, 1);
+        GridPane.setConstraints(secondControlPanel, 1, 0);
+        GridPane.setConstraints(secondPlayerResultArea, 1, 1);
     }
 
     private void listenForFirstPlayerStats() {
         firstControlPanel.addListeners(resultGenerationEvent -> Platform.runLater(() -> {
-            firstPlayerResultArea.getChildren().clear();
-            firstSeasonStatView = new StatView(resultGenerationEvent.seasonPlayerStats, false);
-            firstCareerStatView = new StatView(resultGenerationEvent.careerPlayerStats, false);
-            Label label = new Label(firstControlPanel.getSeason());
-            label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 18));
-            StackPane statsPane = new StackPane(firstSeasonStatView, firstCareerStatView);
-            Button seasonOrCareerButton = makeSeasonOrCareerButton(firstSeasonStatView, firstCareerStatView, firstControlPanel, label);
-            VBox vbox = new VBox(label, statsPane);
-            HBox buttonStatsBox = new HBox(125, seasonOrCareerButton, vbox);
-            firstCareerStatView.setVisible(false);
-            PlayerInfoView playerInfoView = makePlayerInfoView(resultGenerationEvent);
-            getFirstHeadshotLogoView();
-            HBox hbox = new HBox(firstHeadshotLogoView, playerInfoView);
-            firstPlayerResultArea.getChildren().addAll(hbox, buttonStatsBox);
-            firstSeasonStatView.setAlignment(Pos.CENTER_RIGHT);
-            firstCareerStatView.setAlignment(Pos.CENTER_RIGHT);
-            buttonStatsBox.setAlignment(Pos.CENTER_RIGHT);
-            hbox.setAlignment(Pos.CENTER_RIGHT);
+            isSecondPlayer = false;
+            firstPlayerResultArea = makeResultArea(resultGenerationEvent);
             if (isSecondStatViewCreated){
                removeHighlightFromAllLabels();
             }
@@ -107,32 +88,10 @@ public class NBAPlayerStatsApp extends Application {
         }));
     }
 
-    private PlayerInfoView makePlayerInfoView(ResultGenerationEvent resultGenerationEvent){
-        PlayerInfoView playerInfoView = PlayerInfoView.create(resultGenerationEvent.playerInfo);
-        playerInfoView.setAlignment(Pos.CENTER_RIGHT);
-        playerInfoView.getNameJerseyPositionBox().setAlignment(Pos.CENTER_RIGHT);
-        return playerInfoView;
-    }
-
     private void listenForSecondPlayerStats() {
         secondControlPanel.addListeners(resultGenerationEvent -> Platform.runLater(() -> {
-            secondPlayerResultArea.getChildren().clear();
-            secondSeasonStatView = new StatView(resultGenerationEvent.seasonPlayerStats, true);
-            secondCareerStatView = new StatView(resultGenerationEvent.careerPlayerStats, true);
-            Label label = new Label(secondControlPanel.getSeason());
-            label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 18));
-            StackPane statsPane = new StackPane(secondSeasonStatView, secondCareerStatView);
-            Button button = makeSeasonOrCareerButton(secondSeasonStatView, secondCareerStatView, secondControlPanel, label);
-            VBox vbox = new VBox(label, statsPane);
-            HBox buttonStatsBox = new HBox(125, vbox, button);
-            secondCareerStatView.setVisible(false);
-            PlayerInfoView playerInfoView = PlayerInfoView.create(resultGenerationEvent.playerInfo);
-            getSecondHeadshotLogoView();
-            HBox hbox = new HBox(playerInfoView, secondHeadshotLogoView);
-            secondPlayerResultArea.getChildren().addAll(hbox, buttonStatsBox);
-            buttonStatsBox.setAlignment(Pos.CENTER_LEFT);
-            playerInfoView.setAlignment(Pos.CENTER_LEFT);
-            playerInfoView.getNameJerseyPositionBox().setAlignment(Pos.CENTER_LEFT);
+            isSecondPlayer = true;
+            secondPlayerResultArea = makeResultArea(resultGenerationEvent);
             differenceButton.setVisible(true);
             differenceButton = makeSeeDifferenceButton();
             if(isFirstStatViewCreated){
@@ -140,6 +99,82 @@ public class NBAPlayerStatsApp extends Application {
             }
             isSecondStatViewCreated = true;
             }));
+    }
+
+    private GridPane makeResultArea(ResultGenerationEvent resultGenerationEvent) {
+        if (isSecondPlayer) {
+            secondPlayerResultArea.getChildren().clear();
+            Label label = new Label(secondControlPanel.getSeason());
+            label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 18));
+            Button seasonOrCareerButton = makeSeasonOrCareerButton(secondSeasonStatView, secondCareerStatView, secondControlPanel, label);
+            makeStatView(resultGenerationEvent);
+            PlayerInfoView playerInfoView = makePlayerInfoView(resultGenerationEvent);
+            HeadshotLogoView headshotLogoView = makeHeadShotLogoView(secondControlPanel);
+            secondPlayerResultArea.getChildren().addAll(headshotLogoView,
+                    playerInfoView, label, seasonOrCareerButton, secondSeasonStatView);
+            GridPane.setConstraints(headshotLogoView, 1, 0);
+            GridPane.setConstraints(playerInfoView, 0, 0);
+            GridPane.setConstraints(label, 0, 1);
+            GridPane.setConstraints(seasonOrCareerButton, 1, 2);
+            GridPane.setConstraints(secondSeasonStatView, 0, 2);
+            seasonOrCareerButton.setAlignment(Pos.CENTER);
+            return secondPlayerResultArea;
+        } else {
+            firstPlayerResultArea.getChildren().clear();
+            Label label = new Label(firstControlPanel.getSeason());
+            label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 18));
+            Button seasonOrCareerButton = makeSeasonOrCareerButton(firstSeasonStatView, firstCareerStatView, firstControlPanel, label);
+            makeStatView(resultGenerationEvent);
+            PlayerInfoView playerInfoView = makePlayerInfoView(resultGenerationEvent);
+            HeadshotLogoView headshotLogoView = makeHeadShotLogoView(firstControlPanel);
+            firstPlayerResultArea.getChildren().addAll(headshotLogoView,
+                    playerInfoView, label, seasonOrCareerButton, firstSeasonStatView);
+            GridPane.setConstraints(headshotLogoView, 0, 0);
+            GridPane.setConstraints(playerInfoView, 1, 0);
+            GridPane.setConstraints(label, 1, 1);
+            GridPane.setConstraints(seasonOrCareerButton, 0, 2);
+            GridPane.setConstraints(firstSeasonStatView, 1, 2);
+            seasonOrCareerButton.setAlignment(Pos.CENTER);
+            return firstPlayerResultArea;
+        }
+    }
+
+    private StackPane makeStatView(ResultGenerationEvent resultGenerationEvent){
+        if (isSecondPlayer){
+            secondSeasonStatView = new StatView(resultGenerationEvent.seasonPlayerStats, true);
+            secondCareerStatView = new StatView(resultGenerationEvent.careerPlayerStats, true);
+            alignStatView();
+            secondCareerStatView.setVisible(false);
+            return new StackPane(secondSeasonStatView, secondCareerStatView);
+        } else {
+            firstSeasonStatView = new StatView(resultGenerationEvent.seasonPlayerStats, false);
+            firstCareerStatView = new StatView(resultGenerationEvent.careerPlayerStats, false);
+            alignStatView();
+            firstCareerStatView.setVisible(false);
+            return new StackPane(firstSeasonStatView, firstCareerStatView);
+        }
+    }
+
+    private void alignStatView() {
+        if (isSecondPlayer){
+            secondSeasonStatView.setAlignment(Pos.CENTER_LEFT);
+            secondCareerStatView.setAlignment(Pos.CENTER_LEFT);
+        } else {
+            firstSeasonStatView.setAlignment(Pos.CENTER_RIGHT);
+            firstCareerStatView.setAlignment(Pos.CENTER_RIGHT);
+        }
+    }
+
+    private PlayerInfoView makePlayerInfoView(ResultGenerationEvent resultGenerationEvent){
+        PlayerInfoView playerInfoView = PlayerInfoView.create(resultGenerationEvent.playerInfo);
+        if (isSecondPlayer){
+            playerInfoView.setAlignment(Pos.CENTER_LEFT);
+            playerInfoView.getNameJerseyPositionBox().setAlignment(Pos.CENTER_LEFT);
+        } else {
+            playerInfoView.setAlignment(Pos.CENTER_RIGHT);
+            playerInfoView.getNameJerseyPositionBox().setAlignment(Pos.CENTER_RIGHT);
+        }
+        return playerInfoView;
     }
 
     private Button makeSeasonOrCareerButton(StatView seasonStats, StatView careerStats, ControlPanel controlPanel, Label label) {
@@ -207,28 +242,17 @@ public class NBAPlayerStatsApp extends Application {
         }
     }
 
-    private void getFirstHeadshotLogoView() {
-        try {
-            firstHeadshotLogoView = HeadshotLogoView.withTeam(firstControlPanel.getTeam())
-                    .andPlayerName(firstControlPanel.getPlayer());
-            firstHeadshotLogoView.generateHeadshot();
-            firstHeadshotLogoView.generateLogo();
-            firstHeadshotLogoView.formatFirstPane();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void getSecondHeadshotLogoView() {
-        try {
-            secondHeadshotLogoView = HeadshotLogoView.withTeam(secondControlPanel.getTeam())
-                    .andPlayerName(secondControlPanel.getPlayer());
-            secondHeadshotLogoView.generateHeadshot();
-            secondHeadshotLogoView.generateLogo();
-            secondHeadshotLogoView.formatSecondPane();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private HeadshotLogoView makeHeadShotLogoView(ControlPanel controlPanel) {
+        HeadshotLogoView headshotLogoView = HeadshotLogoView.withTeam(controlPanel.getTeam())
+                .andPlayerName(controlPanel.getPlayer());
+            try {
+                headshotLogoView.generateHeadshot();
+                headshotLogoView.generateLogo();
+                headshotLogoView.formatFirstPane();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        return headshotLogoView;
     }
 
     private void highlightLabelGreen(Label label){
