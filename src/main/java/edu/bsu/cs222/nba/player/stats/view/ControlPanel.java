@@ -83,8 +83,8 @@ public class ControlPanel extends VBox {
     private void generateRoster() {
         loadingRosterLabel.setVisible(true);
         getChildren().removeAll(playerBox, seasonBox);
-        player.setDisable(true);
         executor.execute(() -> {
+            player.setDisable(true);
             try {
                 player.setItems(FXCollections.observableList(getValidRoster()));
                 player.setDisable(false);
@@ -125,7 +125,6 @@ public class ControlPanel extends VBox {
         Label teamLabel = new Label("Team ");
         teams.setPromptText("Select a Team");
         teams.setOnAction(event -> {
-            player.getItems().clear();
             generateRoster();
         });
         return new HBox(teamLabel, teams, loadingTeamsLabel);
@@ -162,7 +161,9 @@ public class ControlPanel extends VBox {
     }
 
     private List<String> getValidSeasons() throws IOException {
-        playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
+        String personIdAsString = fullPlayerList.get(player.getValue());
+        int personID = Integer.parseInt(personIdAsString);
+        playerStream = url.createPlayerProfileStream(personID);
         return ListOfActiveSeasons.create().getSeasonsAsList(playerStream);
     }
 

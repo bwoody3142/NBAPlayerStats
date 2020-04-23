@@ -131,7 +131,6 @@ public class UIController extends GridPane{
     private Button makeSeasonOrCareerButton() {
         Button button = new Button("See Career Stats!");
         button.setOnAction(event -> {
-            //removeHighlightFromAllLabels();
             if (!careerStatView.isVisible()){
                 careerStatView.setVisible(true);
                 seasonStatView.setVisible(false);
@@ -143,21 +142,46 @@ public class UIController extends GridPane{
                 seasonOrCareerLabel.setText(controlPanel.getSeason());
                 button.setText("See Career Stats!");
             }
-            //differenceButton = makeSeeDifferenceButton();
         });
         button.setAlignment(Pos.CENTER);
         return button;
     }
+
+    private Button makeDifferentPlayerButton(){
+        Button button = new Button("Find a different Player!");
+        button.setOnAction( event -> {
+            controlPanel.setVisible(true);
+
+        });
+        return button;
+    }
+
     private HeadshotLogoView makeHeadShotLogoView() {
         HeadshotLogoView headshotLogoView = HeadshotLogoView.withTeam(controlPanel.getTeam())
                 .andPlayerName(controlPanel.getPlayer());
+        generateHeadshotLogo(headshotLogoView);
+        if (isSecondPlayer) {
+            headshotLogoView.formatSecondPane();
+        } else {
+            headshotLogoView.formatFirstPane();
+        }
+        return headshotLogoView;
+    }
+
+    private void generateHeadshotLogo(HeadshotLogoView headshotLogoView) {
         try {
             headshotLogoView.generateHeadshot();
             headshotLogoView.generateLogo();
-            headshotLogoView.formatFirstPane();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return headshotLogoView;
+    }
+
+    public StatView grabVisibleStatView() {
+        if (seasonStatView.isVisible()){
+            return seasonStatView;
+        } else {
+            return careerStatView;
+        }
     }
 }

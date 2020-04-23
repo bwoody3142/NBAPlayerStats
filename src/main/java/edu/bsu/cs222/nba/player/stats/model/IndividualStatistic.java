@@ -1,6 +1,8 @@
 package edu.bsu.cs222.nba.player.stats.model;
 
-public class IndividualStatistic {
+import static java.lang.Float.*;
+
+public class IndividualStatistic implements Comparable<IndividualStatistic> {
 
     public static IndividualStatisticBuilder withPlayerStats(PlayerStats playerStats){
         return new IndividualStatisticBuilder(playerStats);
@@ -30,10 +32,18 @@ public class IndividualStatistic {
     }
 
     public float generateStatistic(){
-        return playerStats.getStatsList().get(statistic.getIndex());
+        int index = statistic.getIndex();
+        return playerStats.getStatsList().get(index);
     }
 
     public Statistic getStatistic() {
         return statistic;
+    }
+
+    @Override
+    public int compareTo(IndividualStatistic statistic) {
+        float firstStat = this.generateStatistic();
+        float secondStat = statistic.generateStatistic();
+        return compare(firstStat, secondStat);
     }
 }
