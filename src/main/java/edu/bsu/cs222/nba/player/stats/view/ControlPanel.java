@@ -37,6 +37,8 @@ public class ControlPanel extends VBox {
     private final Label loadingTeamsLabel = new Label(" Loading teams...");
     private final Label loadingRosterLabel = new Label(" Loading roster...");
     private final Label loadingInfoLabel = new Label(" Loading player's information...");
+    private final CurrentSeasonGenerator generator = new CurrentSeasonGenerator();
+    private final int currentSeason = generator.generateCurrentSeason();
 
     public ControlPanel() {
         setup();
@@ -148,11 +150,11 @@ public class ControlPanel extends VBox {
 
     private List<String> getValidTeams() throws IOException {
         ListOfTeams teamList = ListOfTeams.getNewListOfTeams();
-        return teamList.createFullListOfTeams(2019);
+        return teamList.createFullListOfTeams(currentSeason);
     }
 
     private ObservableList<String> getValidRoster() throws IOException {
-        TeamParser parser = TeamParser.withStream(url.createTeamListStream(2019)).andFullTeamName(teams.getValue());
+        TeamParser parser = TeamParser.withStream(url.createTeamListStream(currentSeason)).andFullTeamName(teams.getValue());
         Team team = parser.parse();
         TeamRoster roster = TeamRoster.createTeamRoster(team.getUrlName());
         Collection<String> collection = Collections.checkedCollection(roster.createRoster().values(), String.class);
@@ -173,7 +175,7 @@ public class ControlPanel extends VBox {
     }
 
     private PlayerInfo parsePlayerInfo() throws IOException{
-        InputStream playerListStream = url.createPlayerListStream(2019);
+        InputStream playerListStream = url.createPlayerListStream(currentSeason);
         int personID = fullPlayerMap.get(player.getValue());
         return PlayerInfoParser.withStream(playerListStream).andPersonID(personID).parseForPlayerInfo();
     }

@@ -21,8 +21,7 @@ public class NBAPlayerStatsApp extends Application {
         UIController leftContainer = new UIController(PLAYER_ONE);
         UIController rightContainer = new UIController(PLAYER_TWO);
         HBox containers = new HBox(leftContainer, rightContainer);
-        Button differenceButton = new DifferenceButton(leftContainer, rightContainer)
-                .makeSeeDifferenceButton();
+        Button differenceButton = new DifferenceButton(leftContainer, rightContainer).makeSeeDifferenceButton();
         VBox ui = new VBox(containers, differenceButton);
         ui.setBackground(new Background(new BackgroundFill(Color.GAINSBORO, CornerRadii.EMPTY, Insets.EMPTY)));
         stage.setScene(new Scene(ui, 1000, 700));

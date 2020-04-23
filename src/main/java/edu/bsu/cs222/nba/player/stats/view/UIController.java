@@ -24,8 +24,8 @@ public class UIController extends GridPane{
     private HeadshotLogoView headshotLogoView;
     private PlayerInfoView playerInfoView;
     private StackPane statsPane;
-    private Label seasonOrCareerLabel;
     private Button seasonOrCareerButton;
+    private Label seasonOrCareerLabel;
     private final boolean isSecondPlayer;
 
     public UIController(boolean isSecondPlayer){
@@ -134,7 +134,8 @@ public class UIController extends GridPane{
     private Button makeSeasonOrCareerButton() {
         Button button = new Button("See Career Stats!");
         button.setOnAction(event -> {
-            //highlightLabelBlack();
+            highlightLabelBlack(seasonStatView.getListOfLabels());
+            highlightLabelBlack(careerStatView.getListOfLabels());
             if (!careerStatView.isVisible()){
                 careerStatView.setVisible(true);
                 seasonStatView.setVisible(false);
@@ -153,10 +154,7 @@ public class UIController extends GridPane{
 
     private Button makeDifferentPlayerButton(){
         Button button = new Button("Find a different Player!");
-        button.setOnAction( event -> {
-            controlPanel.setVisible(true);
-
-        });
+        button.setOnAction( event -> controlPanel.setVisible(true));
         return button;
     }
 

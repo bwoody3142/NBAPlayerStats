@@ -1,9 +1,6 @@
 package edu.bsu.cs222.nba.player.stats.view;
 
-import edu.bsu.cs222.nba.player.stats.model.PlayerMap;
-import edu.bsu.cs222.nba.player.stats.model.Team;
-import edu.bsu.cs222.nba.player.stats.model.TeamParser;
-import edu.bsu.cs222.nba.player.stats.model.URLCreator;
+import edu.bsu.cs222.nba.player.stats.model.*;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,6 +38,8 @@ public class HeadshotLogoView extends StackPane {
     private final ImageView logoView = new ImageView();
     private final String team;
     private final String player;
+    private final CurrentSeasonGenerator generator = new CurrentSeasonGenerator();
+    private final int currentSeason = generator.generateCurrentSeason();
 
     public HeadshotLogoView(HeadshotLogoBuilder builder) {
         this.team = requireNonNull(builder.team);
@@ -67,7 +66,7 @@ public class HeadshotLogoView extends StackPane {
     }
 
     public void generateLogo() throws IOException {
-        TeamParser parser = TeamParser.withStream(url.createTeamListStream(2019)).andFullTeamName(team);
+        TeamParser parser = TeamParser.withStream(url.createTeamListStream(currentSeason)).andFullTeamName(team);
         Team teamObject = parser.parse();
         InputStream logoStream = url.createLogoStream(teamObject.getAbbreviation());
         Image image = new Image(logoStream);

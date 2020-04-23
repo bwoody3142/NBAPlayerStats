@@ -44,24 +44,31 @@ public class DifferenceButton extends Button {
 
     private void highlightLabels() {
         int flag = leftStat.compareTo(rightStat);
-        if (flag > 0) {
+        if (flag == 1) {
             highlightLabelGreen(leftLabel);
             highlightLabelRed(rightLabel);
-        } else if (flag < 0) {
+        } else if (flag == -1) {
             highlightLabelGreen(rightLabel);
             highlightLabelRed(leftLabel);
-        }
+        } else highlightBothLabelsBlack();
     }
 
     private void highlightLabelsForTurnovers() {
         int flag = leftStat.compareTo(rightStat);
-        if (flag > 0) {
+        if (flag == 1) {
             highlightLabelGreen(rightLabel);
             highlightLabelRed(leftLabel);
-        } else if (flag < 0) {
+        } else if (flag == -1) {
             highlightLabelGreen(leftLabel);
             highlightLabelRed(rightLabel);
+        } else {
+            highlightBothLabelsBlack();
         }
+    }
+
+    private void highlightBothLabelsBlack(){
+        highlightLabelBlack(rightLabel);
+        highlightLabelBlack(leftLabel);
     }
 
     private void makeLabels(Statistic statistic) {
@@ -84,5 +91,9 @@ public class DifferenceButton extends Button {
 
     private void highlightLabelRed(Label label){
         label.setTextFill(Color.RED);
+    }
+
+    private void highlightLabelBlack(Label label){
+        label.setTextFill(Color.BLACK);
     }
 }

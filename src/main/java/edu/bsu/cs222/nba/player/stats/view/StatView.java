@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -29,7 +30,7 @@ public class StatView extends VBox {
         this.playerStats = playerStats;
         this.isThisSecondPlayer = isThisSecondPlayer;
         makeStatLabels();
-        changeFont();
+        setupLabels();
         getChildren().addAll(getStatsList());
     }
 
@@ -59,9 +60,11 @@ public class StatView extends VBox {
     }
 
 
-    private void changeFont(){
+    private void setupLabels(){
         for (int i = 0; i < getStatsList().size(); i++){
-            getStatsList().get(i).setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
+            Label label = getStatsList().get(i);
+            label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
+            label.setTextFill(Color.BLACK);
         }
     }
 
