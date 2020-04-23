@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class DifferenceButton extends Button {
 
@@ -85,11 +84,5 @@ public class DifferenceButton extends Button {
 
     private void highlightLabelRed(Label label){
         label.setTextFill(Color.RED);
-    }
-
-    private void highlightLabelBlack(List<Label> list){
-        for (Label label : list){
-            label.setTextFill(Color.BLACK);
-        }
     }
 }

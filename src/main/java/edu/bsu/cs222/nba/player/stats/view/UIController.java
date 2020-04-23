@@ -7,10 +7,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.io.IOException;
+import java.util.List;
 
 public class UIController extends GridPane{
 
@@ -49,7 +51,8 @@ public class UIController extends GridPane{
 
     private void listenForPlayerStats() {
         controlPanel.addListeners(resultGenerationEvent -> Platform.runLater(() ->
-                playerResultArea = makeResultArea(resultGenerationEvent)));
+            playerResultArea = makeResultArea(resultGenerationEvent)));
+
     }
 
     private GridPane makeResultArea(ResultGenerationEvent resultGenerationEvent) {
@@ -131,6 +134,7 @@ public class UIController extends GridPane{
     private Button makeSeasonOrCareerButton() {
         Button button = new Button("See Career Stats!");
         button.setOnAction(event -> {
+            //highlightLabelBlack();
             if (!careerStatView.isVisible()){
                 careerStatView.setVisible(true);
                 seasonStatView.setVisible(false);
@@ -182,6 +186,12 @@ public class UIController extends GridPane{
             return seasonStatView;
         } else {
             return careerStatView;
+        }
+    }
+
+    private void highlightLabelBlack(List<Label> list){
+        for (Label label : list){
+            label.setTextFill(Color.BLACK);
         }
     }
 }

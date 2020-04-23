@@ -9,8 +9,8 @@ public class ListOfPlayersTest {
 
     @Test
     public void testCreateFullListOfPlayers() throws Exception {
-        ListOfPlayers listOfPlayers = ListOfPlayers.createEmptyListOfPlayers();
-        Map<String,String> playerMap = listOfPlayers.createFullListOfPlayers();
+        PlayerMap listOfPlayers = PlayerMap.createEmptyPlayerMap();
+        Map<String,Integer> playerMap = listOfPlayers.createMapOfPlayersWithID();
         Assertions.assertNotNull(playerMap);
     }
 }

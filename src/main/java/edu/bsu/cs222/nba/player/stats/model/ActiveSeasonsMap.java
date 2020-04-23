@@ -9,12 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ListOfActiveSeasons {
+public class ActiveSeasonsMap {
 
-    private ListOfActiveSeasons(){}
+    private ActiveSeasonsMap(){}
 
-    public static ListOfActiveSeasons create(){
-        return new ListOfActiveSeasons();
+    public static ActiveSeasonsMap create(){
+        return new ActiveSeasonsMap();
     }
 
     public JSONArray parseYears(InputStream stream){
@@ -44,7 +44,7 @@ public class ListOfActiveSeasons {
         return parseYears(stream).size();
     }
 
-    public Map<String, Integer> createListOfActiveSeasons(InputStream stream){
+    public Map<String, Integer> createActiveSeasonsMap(InputStream stream){
         Map<String, Integer> map = new HashMap<>();
         for(Object element : getYearsAsListForUrl(stream)){
             map.put(element.toString() + " - " + (Integer.parseInt(element.toString()) + 1), Integer.parseInt(element.toString()));

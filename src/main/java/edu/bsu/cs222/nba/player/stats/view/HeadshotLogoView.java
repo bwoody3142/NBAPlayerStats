@@ -1,6 +1,6 @@
 package edu.bsu.cs222.nba.player.stats.view;
 
-import edu.bsu.cs222.nba.player.stats.model.ListOfPlayers;
+import edu.bsu.cs222.nba.player.stats.model.PlayerMap;
 import edu.bsu.cs222.nba.player.stats.model.Team;
 import edu.bsu.cs222.nba.player.stats.model.TeamParser;
 import edu.bsu.cs222.nba.player.stats.model.URLCreator;
@@ -12,7 +12,6 @@ import javafx.scene.layout.StackPane;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
@@ -76,9 +75,8 @@ public class HeadshotLogoView extends StackPane {
     }
 
     public void generateHeadshot() throws IOException {
-        Map <String, String> fullPlayerList = ListOfPlayers.createEmptyListOfPlayers().createFullListOfPlayers();
-        String personIdAsString = fullPlayerList.get(player);
-        int personID = Integer.parseInt(personIdAsString);
+        Map <String, Integer> fullPlayerMap = PlayerMap.createEmptyPlayerMap().createMapOfPlayersWithID();
+        int personID = fullPlayerMap.get(player);
         InputStream headshotStream = url.createHeadshotStream(personID);
         Image headshot = new Image(headshotStream);
         headshotView.setImage(headshot);

@@ -5,9 +5,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 
-public class PlayerStatComparisonTest {
+public class IndividualStatisticTest {
 
-    private PlayerStatComparison playerStatComparison;
+    private IndividualStatistic secondIndividualStat;
+    private IndividualStatistic firstIndividualStat;
 
 
     public void setup(Statistic statistic){
@@ -15,9 +16,8 @@ public class PlayerStatComparisonTest {
         PlayerStats firstPlayerStats = PlayerParser.isCareer(true).withStream(lebronInputStream).andYear(2018).parseForStats();
         InputStream lebronInputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("LeBronJamesStats2018.json");
         PlayerStats secondPlayerStats = PlayerParser.isCareer(false).withStream(lebronInputStream2).andYear(2016).parseForStats();
-        IndividualStatistic firstIndividualStat = IndividualStatistic.withPlayerStats(firstPlayerStats).andStatisticType(statistic);
-        IndividualStatistic secondIndividualStat = IndividualStatistic.withPlayerStats(secondPlayerStats).andStatisticType(statistic);
-        playerStatComparison = PlayerStatComparison.withFirstIndividualStats(firstIndividualStat).andSecondPlayerStats(secondIndividualStat);
+        firstIndividualStat = IndividualStatistic.withPlayerStats(firstPlayerStats).andStatisticType(statistic);
+        secondIndividualStat = IndividualStatistic.withPlayerStats(secondPlayerStats).andStatisticType(statistic);
     }
 
     public void setupForEqualPlayerStatTest(Statistic statistic){
@@ -25,26 +25,28 @@ public class PlayerStatComparisonTest {
         PlayerStats firstPlayerStats = PlayerParser.isCareer(true).withStream(lebronInputStream).andYear(2018).parseForStats();
         InputStream lebronInputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("LeBronJamesStats2018.json");
         PlayerStats secondPlayerStats = PlayerParser.isCareer(true).withStream(lebronInputStream2).andYear(2018).parseForStats();
-        IndividualStatistic firstIndividualStat = IndividualStatistic.withPlayerStats(firstPlayerStats).andStatisticType(statistic);
-        IndividualStatistic secondIndividualStat = IndividualStatistic.withPlayerStats(secondPlayerStats).andStatisticType(statistic);
-        playerStatComparison = PlayerStatComparison.withFirstIndividualStats(firstIndividualStat).andSecondPlayerStats(secondIndividualStat);
+        firstIndividualStat = IndividualStatistic.withPlayerStats(firstPlayerStats).andStatisticType(statistic);
+        secondIndividualStat = IndividualStatistic.withPlayerStats(secondPlayerStats).andStatisticType(statistic);
     }
 
     @Test
-    public void testCompareStat_getFlag_playerOneIsBetter(){
+    public void testIndividualStatistic_compareTo_PlayerOneIsBetter(){
         setup(Statistic.PPG);
-        Assertions.assertEquals(1, playerStatComparison.getFlag());
+        int expected = firstIndividualStat.compareTo(secondIndividualStat);
+        Assertions.assertEquals(1, expected);
     }
 
     @Test
-    public void testCompareStat_getFlag_playerTwoIsBetter(){
+    public void testIndividualStatistic_compareTo_PlayerTwoIsBetter(){
         setup(Statistic.FGP);
-        Assertions.assertEquals(2, playerStatComparison.getFlag());
+        int expected = firstIndividualStat.compareTo(secondIndividualStat);
+        Assertions.assertEquals(-1, expected);
     }
 
     @Test
-    public void testCompareStat_getFlag_playerOneAndTwoAreEqual(){
+    public void testIndividualStatistic_compareTo_PlayerOneAndTwoAreEqual(){
         setupForEqualPlayerStatTest(Statistic.PPG);
-        Assertions.assertEquals(0, playerStatComparison.getFlag());
+        int expected = firstIndividualStat.compareTo(secondIndividualStat);
+        Assertions.assertEquals(0, expected);
     }
 }

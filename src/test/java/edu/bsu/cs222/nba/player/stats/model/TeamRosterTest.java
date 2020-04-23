@@ -30,8 +30,8 @@ public class TeamRosterTest {
     @Test
     public void testRoster_getRoster() throws Exception {
         TeamRoster roster = TeamRoster.createTeamRoster("lakers");
-        Map<String, String> rosterMap = roster.createRoster();
-        Assertions.assertEquals("LeBron James", rosterMap.get("2544"));
+        Map<Integer, String> rosterMap = roster.createRoster();
+        Assertions.assertEquals("LeBron James", rosterMap.get(2544));
 
     }
 }

@@ -10,14 +10,14 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ListOfPlayers {
+public class PlayerMap {
 
-    private final Map<String, String> playerMap = new HashMap<>();
+    private final Map<String, Integer> playerMap = new HashMap<>();
 
-    private ListOfPlayers() {}
+    private PlayerMap() {}
 
-    public static ListOfPlayers createEmptyListOfPlayers(){
-        return new ListOfPlayers();
+    public static PlayerMap createEmptyPlayerMap(){
+        return new PlayerMap();
     }
 
     private JSONArray getPlayerListArray() throws IOException {
@@ -37,11 +37,13 @@ public class ListOfPlayers {
         return object.toString();
     }
 
-    public Map<String, String> createFullListOfPlayers() throws IOException {
+    public Map<String, Integer> createMapOfPlayersWithID() throws IOException {
         for (Object unCastedMap : getPlayerListArray()) {
             //Had to suppress because the API returns a raw object, instead we want a Map<String, JSONObject>.
             @SuppressWarnings("unchecked") Map<String, JSONObject> map = (Map<String, JSONObject>) unCastedMap;
-            playerMap.put(getFullName(map), getPersonID(map));
+            String fullName = getFullName(map);
+            int personID = Integer.parseInt(getPersonID(map));
+            playerMap.put(fullName, personID);
         }
         return playerMap;
     }

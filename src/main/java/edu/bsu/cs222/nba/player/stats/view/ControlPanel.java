@@ -24,8 +24,8 @@ public class ControlPanel extends VBox {
     private final ComboBox<String> teams = new ComboBox<>();
     private final ComboBox<String> player = new ComboBox<>();
     private final ComboBox<String> season = new ComboBox<>();
-    private final ListOfPlayers emptyListOfPlayers = ListOfPlayers.createEmptyListOfPlayers();
-    private Map<String, String> fullPlayerList = new HashMap<>();
+    private final PlayerMap emptyPlayerMap = PlayerMap.createEmptyPlayerMap();
+    private Map<String, Integer> fullPlayerMap = new HashMap<>();
     private ResultGenerationEvent resultGenerationEvent;
     private final URLCreator url = URLCreator.createEmptyUrl();
     private InputStream playerStream;
@@ -82,6 +82,7 @@ public class ControlPanel extends VBox {
 
     private void generateRoster() {
         loadingRosterLabel.setVisible(true);
+        player.setItems(null);
         getChildren().removeAll(playerBox, seasonBox);
         executor.execute(() -> {
             player.setDisable(true);
@@ -100,7 +101,7 @@ public class ControlPanel extends VBox {
         getChildren().remove(seasonBox);
         season.setDisable(true);
         try {
-            fullPlayerList = emptyListOfPlayers.createFullListOfPlayers();
+            fullPlayerMap = emptyPlayerMap.createMapOfPlayersWithID();
             season.setItems(FXCollections.observableArrayList(getValidSeasons()));
             season.setDisable(false);
             getChildren().add(seasonBox);
@@ -124,9 +125,7 @@ public class ControlPanel extends VBox {
     private HBox createTeamBox(){
         Label teamLabel = new Label("Team ");
         teams.setPromptText("Select a Team");
-        teams.setOnAction(event -> {
-            generateRoster();
-        });
+        teams.setOnAction(event -> generateRoster());
         return new HBox(teamLabel, teams, loadingTeamsLabel);
     }
 
@@ -161,22 +160,21 @@ public class ControlPanel extends VBox {
     }
 
     private List<String> getValidSeasons() throws IOException {
-        String personIdAsString = fullPlayerList.get(player.getValue());
-        int personID = Integer.parseInt(personIdAsString);
+        int personID = fullPlayerMap.get(player.getValue());
         playerStream = url.createPlayerProfileStream(personID);
-        return ListOfActiveSeasons.create().getSeasonsAsList(playerStream);
+        return ActiveSeasonsMap.create().getSeasonsAsList(playerStream);
     }
 
     private PlayerStats parseStats(boolean trueFalse) throws IOException{
-        playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
-        Map<String, Integer> map = ListOfActiveSeasons.create().createListOfActiveSeasons(playerStream);
-        playerStream = url.createPlayerProfileStream(Integer.parseInt(fullPlayerList.get(player.getValue())));
+        playerStream = url.createPlayerProfileStream(fullPlayerMap.get(player.getValue()));
+        Map<String, Integer> map = ActiveSeasonsMap.create().createActiveSeasonsMap(playerStream);
+        playerStream = url.createPlayerProfileStream(fullPlayerMap.get(player.getValue()));
         return PlayerParser.isCareer(trueFalse).withStream(playerStream).andYear(map.get(season.getValue())).parseForStats();
     }
 
     private PlayerInfo parsePlayerInfo() throws IOException{
         InputStream playerListStream = url.createPlayerListStream(2019);
-        int personID = Integer.parseInt(fullPlayerList.get(player.getValue()));
+        int personID = fullPlayerMap.get(player.getValue());
         return PlayerInfoParser.withStream(playerListStream).andPersonID(personID).parseForPlayerInfo();
     }
 
