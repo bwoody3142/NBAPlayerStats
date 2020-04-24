@@ -36,10 +36,6 @@ public class IndividualStatistic implements Comparable<IndividualStatistic> {
         return playerStats.getStatsList().get(index);
     }
 
-    public Statistic getStatistic() {
-        return statistic;
-    }
-
     @Override
     public int compareTo(IndividualStatistic statistic) {
         float firstStat = this.generateStatistic();

@@ -1,9 +1,6 @@
 package edu.bsu.cs222.nba.player.stats.model;
 
 
-import java.util.Arrays;
-import java.util.List;
-
 public enum Statistic {
     PPG(0, "ppg"),
     APG(1, "apg"),
@@ -30,18 +27,6 @@ public enum Statistic {
 
     String getDataSourceKey(){
         return dataSourceKey;
-    }
-
-    public List<Statistic> getListOfUsedStatistics(){
-        return Arrays.asList(PPG,
-                APG,
-                RPG,
-                TURNOVERS,
-                SPG,
-                BPG,
-                FGP,
-                FTP,
-                TPM);
     }
 }
 

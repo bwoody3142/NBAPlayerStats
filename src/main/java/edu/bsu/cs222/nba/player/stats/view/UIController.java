@@ -12,9 +12,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class UIController extends GridPane{
+public class UIController extends GridPane {
+
+    public interface StatViewProductionListener {
+        void onStatViewsProduced(StatView statView);
+    }
 
     private GridPane ui;
     private ControlPanel controlPanel;
@@ -27,6 +32,7 @@ public class UIController extends GridPane{
     private Button seasonOrCareerButton;
     private Label seasonOrCareerLabel;
     private final boolean isSecondPlayer;
+    private final List<StatViewProductionListener> listeners = new ArrayList<>();
 
     public UIController(boolean isSecondPlayer){
         this.isSecondPlayer = isSecondPlayer;
@@ -50,9 +56,10 @@ public class UIController extends GridPane{
     }
 
     private void listenForPlayerStats() {
-        controlPanel.addListeners(resultGenerationEvent -> Platform.runLater(() ->
-            playerResultArea = makeResultArea(resultGenerationEvent)));
-
+        controlPanel.addListeners(resultGenerationEvent -> Platform.runLater(() -> {
+            playerResultArea = makeResultArea(resultGenerationEvent);
+            fireEvent();
+        }));
     }
 
     private GridPane makeResultArea(ResultGenerationEvent resultGenerationEvent) {
@@ -152,12 +159,6 @@ public class UIController extends GridPane{
         return button;
     }
 
-    private Button makeDifferentPlayerButton(){
-        Button button = new Button("Find a different Player!");
-        button.setOnAction( event -> controlPanel.setVisible(true));
-        return button;
-    }
-
     private HeadshotLogoView makeHeadShotLogoView() {
         HeadshotLogoView headshotLogoView = HeadshotLogoView.withTeam(controlPanel.getTeam())
                 .andPlayerName(controlPanel.getPlayer());
@@ -190,6 +191,17 @@ public class UIController extends GridPane{
     private void highlightLabelBlack(List<Label> list){
         for (Label label : list){
             label.setTextFill(Color.BLACK);
+        }
+    }
+
+    public void addListeners(StatViewProductionListener listener){
+        listeners.add(listener);
+    }
+
+    public void fireEvent(){
+        StatView statView = grabVisibleStatView();
+        for (StatViewProductionListener listener : listeners) {
+            listener.onStatViewsProduced(statView);
         }
     }
 }
