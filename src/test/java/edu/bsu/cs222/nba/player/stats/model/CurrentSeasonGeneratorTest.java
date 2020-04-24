@@ -12,6 +12,4 @@ public class CurrentSeasonGeneratorTest {
         String currentSeasonAsString = String.valueOf(currentSeason);
         Assertions.assertEquals("2019", currentSeasonAsString);
     }
-
-
 }

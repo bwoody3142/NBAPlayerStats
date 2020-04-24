@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-public class ListOfPlayersTest {
+public class PlayerMapTest {
 
     @Test
-    public void testCreateFullListOfPlayers() throws Exception {
+    public void testCreateMapOfPlayersWithID() throws Exception {
         PlayerMap listOfPlayers = PlayerMap.createEmptyPlayerMap();
         Map<String,Integer> playerMap = listOfPlayers.createMapOfPlayersWithID();
         Assertions.assertNotNull(playerMap);

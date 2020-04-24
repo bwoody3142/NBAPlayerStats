@@ -41,7 +41,7 @@ public class NBAPlayerStatsApp extends Application {
         rightContainer = new UIController(SECOND_PLAYER);
         rightContainer.setVisible(false);
         leftContainer.setPadding(new Insets(0,0,0,28));
-        return new HBox(20, leftContainer, rightContainer);
+        return new HBox(30, leftContainer, rightContainer);
     }
 
     private VBox createMainUI() {

@@ -3,6 +3,7 @@ package edu.bsu.cs222.nba.player.stats.view;
 import edu.bsu.cs222.nba.player.stats.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -32,6 +33,7 @@ public class ControlPanel extends VBox {
     private final List<PlayerStatsProductionListener> listeners = new ArrayList<>();
     private ResultGenerationEvent generationEvent;
     private final Executor executor = Executors.newCachedThreadPool();
+    private final HBox teamBox;
     private final HBox playerBox;
     private final HBox seasonBox;
     private final Label loadingTeamsLabel = new Label(" Loading teams...");
@@ -39,11 +41,13 @@ public class ControlPanel extends VBox {
     private final Label loadingInfoLabel = new Label(" Loading player's information...");
     private final CurrentSeasonGenerator generator = new CurrentSeasonGenerator();
     private final int currentSeason = generator.generateCurrentSeason();
+    private Button getSeasonsButton;
+    private Button getStatsButton;
 
     public ControlPanel() {
         setup();
         generateTeams();
-        HBox teamBox = createTeamBox();
+        teamBox = createTeamBox();
         playerBox = createPlayerBox();
         seasonBox = createSeasonBox();
         getChildren().add(teamBox);
@@ -108,7 +112,9 @@ public class ControlPanel extends VBox {
             season.setDisable(false);
             getChildren().add(seasonBox);
         } catch (IOException e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Please select a player!");
+            alert.showAndWait();
         }
     }
 
@@ -132,19 +138,56 @@ public class ControlPanel extends VBox {
     }
 
     private HBox createPlayerBox(){
+        getSeasonsButton = new Button("Get Seasons!");
         Label playerLabel = new Label("Player ");
         player.setPromptText("Select a Player");
-        player.setOnAction(event -> generateSeasons());
+        playerComboBoxOnMouseClick();
         return new HBox(playerLabel, player, loadingRosterLabel);
+    }
+
+    private void playerComboBoxOnMouseClick() {
+        player.setOnMouseClicked(event -> {
+            teamBox.setDisable(true);
+            seasonBox.setDisable(true);
+            if (!(playerBox.getChildren().contains(getSeasonsButton))) playerBox.getChildren().add(2, getSeasonsButton);
+            getSeasonsButtonOnAction();
+        });
+    }
+
+    private void getSeasonsButtonOnAction() {
+        getSeasonsButton.setOnAction(e -> {
+            generateSeasons();
+            playerBox.getChildren().remove(getSeasonsButton);
+            teamBox.setDisable(false);
+            seasonBox.setDisable(false);
+        });
     }
 
     private HBox createSeasonBox(){
         loadingInfoLabel.setVisible(false);
-        Button getStatsButton = new Button("Get Stats!");
+        getStatsButton = new Button("Get Stats!");
         Label seasonLabel = new Label("Active Seasons ");
         season.setPromptText("Select a season");
-        getStatsButton.setOnAction(event -> fireEvent());
-        return new HBox(seasonLabel, season, getStatsButton, loadingInfoLabel);
+        seasonComboBoxOnMouseClick();
+        return new HBox(seasonLabel, season, loadingInfoLabel);
+    }
+
+    private void seasonComboBoxOnMouseClick() {
+        season.setOnMouseClicked(event -> {
+            teamBox.setDisable(true);
+            playerBox.setDisable(true);
+            if (!(seasonBox.getChildren().contains(getStatsButton))) seasonBox.getChildren().add(2, getStatsButton);
+            getStatsButtonOnAction();
+        });
+    }
+
+    private void getStatsButtonOnAction() {
+        getStatsButton.setOnAction(e -> {
+            fireEvent();
+            seasonBox.getChildren().remove(getStatsButton);
+            teamBox.setDisable(false);
+            playerBox.setDisable(false);
+        });
     }
 
 
@@ -161,9 +204,15 @@ public class ControlPanel extends VBox {
         return FXCollections.observableArrayList(collection);
     }
 
-    private List<String> getValidSeasons() throws IOException {
-        int personID = fullPlayerMap.get(player.getValue());
-        playerStream = url.createPlayerProfileStream(personID);
+    private List<String> getValidSeasons() {
+        try {
+            int personID = fullPlayerMap.get(player.getValue());
+            playerStream = url.createPlayerProfileStream(personID);
+        } catch (NullPointerException | IOException e){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Please make sure you have selected a player!");
+            alert.showAndWait();
+        }
         return ActiveSeasonsMap.create().getSeasonsAsList(playerStream);
     }
 
