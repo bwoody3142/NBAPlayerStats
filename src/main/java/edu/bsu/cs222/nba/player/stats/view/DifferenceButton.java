@@ -10,11 +10,8 @@ import javafx.scene.text.TextAlignment;
 
 public class DifferenceButton extends Button {
 
-    private final Button differenceButton = new Button("See Difference");
     private StatView leftStatView;
     private StatView rightStatView;
-    private final UIController leftContainer;
-    private final UIController rightContainer;
     private PlayerStats rightPlayerStats;
     private PlayerStats leftPlayerStats;
     private IndividualStatistic leftStat;
@@ -23,17 +20,11 @@ public class DifferenceButton extends Button {
     private Label rightLabel;
 
     public DifferenceButton(UIController leftContainer, UIController rightContainer){
-        this.leftContainer = leftContainer;
-        this.rightContainer = rightContainer;
-        differenceButton.setTextAlignment(TextAlignment.CENTER);
-    }
-
-    public Button makeSeeDifferenceButton(){
-        differenceButton.setOnAction(event -> {
-            setupButton();
+        setupButton();
+        setOnAction(event -> {
+            assignStats(leftContainer, rightContainer);
             highlightVisibleStats();
         });
-        return differenceButton;
     }
 
     private void highlightVisibleStats() {
@@ -82,11 +73,18 @@ public class DifferenceButton extends Button {
         rightLabel = rightStatView.getLabelFromListOfLabels(statistic.index);
     }
 
-    private void setupButton() {
+    private void assignStats(UIController leftContainer, UIController rightContainer) {
         leftStatView = leftContainer.grabVisibleStatView();
         rightStatView = rightContainer.grabVisibleStatView();
         leftPlayerStats = leftStatView.getPlayerStats();
         rightPlayerStats = rightStatView.getPlayerStats();
+    }
+
+    private void setupButton(){
+        setText("See Difference!");
+        setTextAlignment(TextAlignment.CENTER);
+        setPrefSize(220,30);
+        setVisible(false);
     }
 
     private void highlightLabelGreen(Label label){

@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -29,7 +28,7 @@ public class NBAPlayerStatsApp extends Application {
     public void start(Stage stage) {
         stage.setTitle("NBA Player Stats");
         containers = makeContainers();
-        makeDifferenceButton();
+        differenceButton = new DifferenceButton(leftContainer, rightContainer);
         listenForStatView();
         VBox ui = createMainUI();
         stage.setScene(new Scene(ui, 925, 700));
@@ -55,12 +54,5 @@ public class NBAPlayerStatsApp extends Application {
     private void listenForStatView(){
         leftContainer.addListeners(statView -> Platform.runLater(() -> rightContainer.setVisible(true)));
         rightContainer.addListeners(statView -> Platform.runLater(() -> differenceButton.setVisible(true)));
-    }
-
-    private void makeDifferenceButton(){
-        differenceButton = new DifferenceButton(leftContainer, rightContainer).makeSeeDifferenceButton();
-        differenceButton.setPrefSize(220,30);
-        differenceButton.setTextAlignment(TextAlignment.CENTER);
-        differenceButton.setVisible(false);
     }
 }
