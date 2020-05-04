@@ -149,13 +149,15 @@ public class ControlPanel extends VBox {
         player.setOnMouseClicked(event -> {
             teamBox.setDisable(true);
             seasonBox.setDisable(true);
-            if (!(playerBox.getChildren().contains(getSeasonsButton))) playerBox.getChildren().add(2, getSeasonsButton);
+            if (!(playerBox.getChildren().contains(getSeasonsButton))) {
+                playerBox.getChildren().add(2, getSeasonsButton);
+            }
             getSeasonsButtonOnAction();
         });
     }
 
     private void getSeasonsButtonOnAction() {
-        getSeasonsButton.setOnAction(e -> {
+        getSeasonsButton.setOnAction(event -> {
             generateSeasons();
             playerBox.getChildren().remove(getSeasonsButton);
             teamBox.setDisable(false);

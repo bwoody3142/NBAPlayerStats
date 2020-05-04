@@ -140,23 +140,27 @@ public class UIController extends GridPane {
 
     private Button makeSeasonOrCareerButton() {
         Button button = new Button("See Career Stats!");
+        button.setAlignment(Pos.CENTER);
         button.setOnAction(event -> {
             highlightLabelBlack(seasonStatView.getListOfLabels());
             highlightLabelBlack(careerStatView.getListOfLabels());
-            if (!careerStatView.isVisible()){
-                careerStatView.setVisible(true);
-                seasonStatView.setVisible(false);
-                seasonOrCareerLabel.setText("Career Stats");
-                button.setText("See Season Stats!");
-            } else {
-                careerStatView.setVisible(false);
-                seasonStatView.setVisible(true);
-                seasonOrCareerLabel.setText(controlPanel.getSeason());
-                button.setText("See Career Stats!");
-            }
+            showProperStatView(button);
         });
-        button.setAlignment(Pos.CENTER);
         return button;
+    }
+
+    private void showProperStatView(Button button) {
+        if (!careerStatView.isVisible()){
+            careerStatView.setVisible(true);
+            seasonStatView.setVisible(false);
+            seasonOrCareerLabel.setText("Career Stats");
+            button.setText("See Season Stats!");
+        } else {
+            careerStatView.setVisible(false);
+            seasonStatView.setVisible(true);
+            seasonOrCareerLabel.setText(controlPanel.getSeason());
+            button.setText("See Career Stats!");
+        }
     }
 
     private HeadshotLogoView makeHeadShotLogoView() {

@@ -6,8 +6,7 @@ import edu.bsu.cs222.nba.player.stats.model.Statistic;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
-
-import java.util.Arrays;
+import javafx.scene.text.TextAlignment;
 
 public class DifferenceButton extends Button {
 
@@ -26,20 +25,25 @@ public class DifferenceButton extends Button {
     public DifferenceButton(UIController leftContainer, UIController rightContainer){
         this.leftContainer = leftContainer;
         this.rightContainer = rightContainer;
+        differenceButton.setTextAlignment(TextAlignment.CENTER);
     }
 
     public Button makeSeeDifferenceButton(){
         differenceButton.setOnAction(event -> {
             setupButton();
-            Arrays.asList(Statistic.values()).forEach(statistic -> {
-                if(statistic != Statistic.GAMES_PLAYED) {
-                    makeLabels(statistic);
-                    if (statistic != Statistic.TURNOVERS) highlightLabels();
-                    else highlightLabelsForTurnovers();
-                }
-            });
+            highlightVisibleStats();
         });
         return differenceButton;
+    }
+
+    private void highlightVisibleStats() {
+        for (Statistic statistic : Statistic.values()) {
+            if (statistic != Statistic.GAMES_PLAYED) {
+                makeLabels(statistic);
+                if (statistic != Statistic.TURNOVERS) highlightLabels();
+                else highlightLabelsForTurnovers();
+            }
+        }
     }
 
     private void highlightLabels() {
