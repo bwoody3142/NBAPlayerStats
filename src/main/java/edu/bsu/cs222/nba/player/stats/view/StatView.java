@@ -34,7 +34,7 @@ public class StatView extends VBox {
         getChildren().addAll(getStatsList());
     }
 
-    private void makeStatLabels() {
+    public void makeStatLabels() {
         ppgLabel = new Label(formatLabelText("PPG", playerStats.getPointsPerGame()));
         apgLabel = new Label(formatLabelText("APG", playerStats.getAssistsPerGame()));
         rpgLabel = new Label(formatLabelText("RPG", playerStats.getReboundsPerGame()));
@@ -59,7 +59,6 @@ public class StatView extends VBox {
                 spgLabel, bpgLabel, fgpLabel, ftpLabel, tpmLabel);
     }
 
-
     private void setupLabels(){
         for (int i = 0; i < getStatsList().size(); i++){
             Label label = getStatsList().get(i);
@@ -70,14 +69,14 @@ public class StatView extends VBox {
 
     public List<Label> getListOfLabels(){
         return Arrays.asList(ppgLabel,
-            apgLabel,
-            rpgLabel,
-            topgLabel,
-            spgLabel,
-            bpgLabel,
-            fgpLabel,
-            ftpLabel,
-            tpmLabel);
+                             apgLabel,
+                             rpgLabel,
+                             topgLabel,
+                             spgLabel,
+                             bpgLabel,
+                             fgpLabel,
+                             ftpLabel,
+                             tpmLabel);
     }
 
     public Label getLabelFromListOfLabels(int index){

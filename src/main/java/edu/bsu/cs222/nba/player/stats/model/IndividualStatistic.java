@@ -1,5 +1,7 @@
 package edu.bsu.cs222.nba.player.stats.model;
 
+import java.text.DecimalFormat;
+
 import static java.lang.Float.*;
 
 public class IndividualStatistic implements Comparable<IndividualStatistic> {
@@ -41,5 +43,16 @@ public class IndividualStatistic implements Comparable<IndividualStatistic> {
         float firstStat = this.generateStatistic();
         float secondStat = statistic.generateStatistic();
         return compare(firstStat, secondStat);
+    }
+
+    public float generateDifference(IndividualStatistic statistic){
+        float difference = this.generateStatistic() - statistic.generateStatistic();
+        difference = roundFloat(difference);
+        return Math.abs(difference);
+    }
+
+    private float roundFloat(float stat){
+        DecimalFormat decimalFormat = new DecimalFormat("0.0");
+        return Float.parseFloat(decimalFormat.format(stat));
     }
 }

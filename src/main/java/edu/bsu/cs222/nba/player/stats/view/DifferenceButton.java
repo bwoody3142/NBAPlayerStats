@@ -19,9 +19,10 @@ public class DifferenceButton extends Button {
     private Label leftLabel;
     private Label rightLabel;
 
-    public DifferenceButton(UIController leftContainer, UIController rightContainer){
+    public DifferenceButton(PlayerContainer leftContainer, PlayerContainer rightContainer){
         setupButton();
         setOnAction(event -> {
+            setDisable(true);
             assignStats(leftContainer, rightContainer);
             highlightVisibleStats();
         });
@@ -40,40 +41,42 @@ public class DifferenceButton extends Button {
     private void highlightLabels() {
         int flag = leftStat.compareTo(rightStat);
         if (flag == 1) {
-            highlightLabelGreen(leftLabel);
-            highlightLabelRed(rightLabel);
+            leftLabel.setTextFill(Color.LIMEGREEN);
+            rightLabel.setTextFill(Color.RED);
+            showDifferenceForLeftContainer(leftLabel);
         } else if (flag == -1) {
-            highlightLabelGreen(rightLabel);
-            highlightLabelRed(leftLabel);
-        } else highlightBothLabelsBlack();
+            rightLabel.setTextFill(Color.LIMEGREEN);
+            leftLabel.setTextFill(Color.RED);
+            showDifferenceForRightContainer(rightLabel);
+        } else resetLabelHighlights();
     }
 
     private void highlightLabelsForTurnovers() {
         int flag = leftStat.compareTo(rightStat);
         if (flag == 1) {
-            highlightLabelGreen(rightLabel);
-            highlightLabelRed(leftLabel);
+            rightLabel.setTextFill(Color.LIMEGREEN);
+            leftLabel.setTextFill(Color.RED);
+            showDifferenceForRightContainer(rightLabel);
         } else if (flag == -1) {
-            highlightLabelGreen(leftLabel);
-            highlightLabelRed(rightLabel);
-        } else {
-            highlightBothLabelsBlack();
-        }
+            leftLabel.setTextFill(Color.LIMEGREEN);
+            rightLabel.setTextFill(Color.RED);
+            showDifferenceForLeftContainer(leftLabel);
+        } else resetLabelHighlights();
     }
 
-    private void highlightBothLabelsBlack(){
-        highlightLabelBlack(rightLabel);
-        highlightLabelBlack(leftLabel);
+    private void resetLabelHighlights(){
+        rightLabel.setTextFill(Color.BLACK);
+        leftLabel.setTextFill(Color.BLACK);
     }
 
     private void makeLabels(Statistic statistic) {
         leftStat = IndividualStatistic.withPlayerStats(leftPlayerStats).andStatisticType(statistic);
         rightStat = IndividualStatistic.withPlayerStats(rightPlayerStats).andStatisticType(statistic);
-        leftLabel = leftStatView.getLabelFromListOfLabels(statistic.index);
-        rightLabel = rightStatView.getLabelFromListOfLabels(statistic.index);
+        leftLabel = leftStatView.getLabelFromListOfLabels(statistic.getIndex());
+        rightLabel = rightStatView.getLabelFromListOfLabels(statistic.getIndex());
     }
 
-    private void assignStats(UIController leftContainer, UIController rightContainer) {
+    private void assignStats(PlayerContainer leftContainer, PlayerContainer rightContainer) {
         leftStatView = leftContainer.grabVisibleStatView();
         rightStatView = rightContainer.grabVisibleStatView();
         leftPlayerStats = leftStatView.getPlayerStats();
@@ -83,19 +86,19 @@ public class DifferenceButton extends Button {
     private void setupButton(){
         setText("See Difference!");
         setTextAlignment(TextAlignment.CENTER);
-        setPrefSize(220,30);
+        setPrefSize(220, 30);
         setVisible(false);
     }
 
-    private void highlightLabelGreen(Label label){
-        label.setTextFill(Color.LIMEGREEN);
+    public void showDifferenceForLeftContainer(Label label){
+        float difference = leftStat.generateDifference(rightStat);
+        String oldLabelText = label.getText();
+        label.setText("+ " + difference + "  " + oldLabelText);
     }
 
-    private void highlightLabelRed(Label label){
-        label.setTextFill(Color.RED);
-    }
-
-    private void highlightLabelBlack(Label label){
-        label.setTextFill(Color.BLACK);
+    public void showDifferenceForRightContainer(Label label){
+        float difference = leftStat.generateDifference(rightStat);
+        String oldLabelText = label.getText();
+        label.setText(oldLabelText + "  + " + difference);
     }
 }

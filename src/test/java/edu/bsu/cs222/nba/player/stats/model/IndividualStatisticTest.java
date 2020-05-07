@@ -49,4 +49,11 @@ public class IndividualStatisticTest {
         int expected = firstIndividualStat.compareTo(secondIndividualStat);
         Assertions.assertEquals(0, expected);
     }
+
+    @Test
+    public void testIndividualStatistic_generateDifference(){
+        setup(Statistic.PPG);
+        float expected = firstIndividualStat.generateDifference(secondIndividualStat);
+        Assertions.assertEquals( 0.8f, expected);
+    }
 }

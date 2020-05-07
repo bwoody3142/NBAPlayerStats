@@ -17,10 +17,8 @@ public class NBAPlayerStatsApp extends Application {
     private Button differenceButton;
     private final boolean FIRST_PLAYER = false;
     private final boolean SECOND_PLAYER = true;
-    private UIController leftContainer;
-    private UIController rightContainer;
-
-
+    private PlayerContainer leftContainer;
+    private PlayerContainer rightContainer;
 
     public static void main(String[] args) { launch(args); }
 
@@ -30,14 +28,15 @@ public class NBAPlayerStatsApp extends Application {
         containers = makeContainers();
         differenceButton = new DifferenceButton(leftContainer, rightContainer);
         listenForStatView();
+        listenForChangeInStatView();
         VBox ui = createMainUI();
         stage.setScene(new Scene(ui, 925, 700));
         stage.show();
     }
 
     private HBox makeContainers() {
-        leftContainer = new UIController(FIRST_PLAYER);
-        rightContainer = new UIController(SECOND_PLAYER);
+        leftContainer = new PlayerContainer(FIRST_PLAYER);
+        rightContainer = new PlayerContainer(SECOND_PLAYER);
         rightContainer.setVisible(false);
         leftContainer.setPadding(new Insets(0,0,0,28));
         return new HBox(30, leftContainer, rightContainer);
@@ -52,7 +51,11 @@ public class NBAPlayerStatsApp extends Application {
     }
 
     private void listenForStatView(){
-        leftContainer.addListeners(statView -> Platform.runLater(() -> rightContainer.setVisible(true)));
-        rightContainer.addListeners(statView -> Platform.runLater(() -> differenceButton.setVisible(true)));
+        leftContainer.addListenersForStatViewProduction(statView -> Platform.runLater(() -> rightContainer.setVisible(true)));
+        rightContainer.addListenersForStatViewProduction(statView -> Platform.runLater(() -> differenceButton.setVisible(true)));
+    }
+    private void listenForChangeInStatView(){
+        leftContainer.addListenersForStatViewChange(event -> Platform.runLater(() -> differenceButton.setDisable(false)));
+        rightContainer.addListenersForStatViewChange(event -> Platform.runLater(() -> differenceButton.setDisable(false)));
     }
 }

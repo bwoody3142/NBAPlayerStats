@@ -1,6 +1,8 @@
 package edu.bsu.cs222.nba.player.stats.view;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -15,10 +17,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UIController extends GridPane {
+public class PlayerContainer extends GridPane {
 
     public interface StatViewProductionListener {
         void onStatViewsProduced(StatView statView);
+    }
+
+    public interface StatViewChangeListener {
+        void onStatViewChanged(EventHandler<ActionEvent> event);
     }
 
     private GridPane ui;
@@ -32,9 +38,10 @@ public class UIController extends GridPane {
     private Button seasonOrCareerButton;
     private Label seasonOrCareerLabel;
     private final boolean isSecondPlayer;
-    private final List<StatViewProductionListener> listeners = new ArrayList<>();
+    private final List<StatViewProductionListener> statViewProductionListeners = new ArrayList<>();
+    private final List<StatViewChangeListener> statViewChangeListeners = new ArrayList<>();
 
-    public UIController(boolean isSecondPlayer){
+    public PlayerContainer(boolean isSecondPlayer){
         this.isSecondPlayer = isSecondPlayer;
         GridPane pane = createUI();
         getChildren().add(pane);
@@ -58,7 +65,7 @@ public class UIController extends GridPane {
     private void listenForPlayerStats() {
         controlPanel.addListeners(resultGenerationEvent -> Platform.runLater(() -> {
             playerResultArea = makeResultArea(resultGenerationEvent);
-            fireEvent();
+            fireOnStatsViewProduced();
         }));
     }
 
@@ -145,6 +152,7 @@ public class UIController extends GridPane {
             highlightLabelBlack(seasonStatView.getListOfLabels());
             highlightLabelBlack(careerStatView.getListOfLabels());
             showProperStatView(button);
+            fireOnStatViewChanged();
         });
         return button;
     }
@@ -198,14 +206,24 @@ public class UIController extends GridPane {
         }
     }
 
-    public void addListeners(StatViewProductionListener listener){
-        listeners.add(listener);
+    public void addListenersForStatViewProduction(StatViewProductionListener listener){
+        statViewProductionListeners.add(listener);
     }
 
-    public void fireEvent(){
+    public void addListenersForStatViewChange(StatViewChangeListener listener){
+        statViewChangeListeners.add(listener);
+    }
+
+    public void fireOnStatsViewProduced(){
         StatView statView = grabVisibleStatView();
-        for (StatViewProductionListener listener : listeners) {
+        for (StatViewProductionListener listener : statViewProductionListeners) {
             listener.onStatViewsProduced(statView);
+        }
+    }
+
+    public void fireOnStatViewChanged(){
+        for (StatViewChangeListener listener : statViewChangeListeners) {
+            listener.onStatViewChanged(seasonOrCareerButton.getOnAction());
         }
     }
 }

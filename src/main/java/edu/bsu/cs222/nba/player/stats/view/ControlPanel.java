@@ -63,7 +63,7 @@ public class ControlPanel extends VBox {
         listeners.add(listener);
     }
 
-    public void fireEvent() {
+    public void generateAllPlayerInfo() {
         executor.execute(() -> {
             loadingInfoLabel.setVisible(true);
             generationEvent = generatePlayerStats();
@@ -185,7 +185,7 @@ public class ControlPanel extends VBox {
 
     private void getStatsButtonOnAction() {
         getStatsButton.setOnAction(e -> {
-            fireEvent();
+            generateAllPlayerInfo();
             seasonBox.getChildren().remove(getStatsButton);
             teamBox.setDisable(false);
             playerBox.setDisable(false);

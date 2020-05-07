@@ -13,19 +13,19 @@ public enum Statistic {
     TPM(8, "tpm"),
     GAMES_PLAYED(9, "gamesPlayed");
 
-    public final int index;
-    public final String dataSourceKey;
+    private final int index;
+    private final String dataSourceKey;
 
     Statistic(int index, String dataSourceKey) {
         this.index = index;
         this.dataSourceKey = dataSourceKey;
     }
 
-    int getIndex(){
+    public int getIndex(){
         return index;
     }
 
-    String getDataSourceKey(){
+    public String getDataSourceKey(){
         return dataSourceKey;
     }
 }
