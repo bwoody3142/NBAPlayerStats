@@ -9,15 +9,17 @@ public class IndividualStatisticTest {
 
     private IndividualStatistic secondIndividualStat;
     private IndividualStatistic firstIndividualStat;
+    private final InputStream lebronInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("LeBronJamesStats2018.json");
+    private final InputStream lebronInputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("LeBronJamesStats2018.json");
+    private final PlayerStats firstPlayerStats = PlayerParser.isCareer(true).withStream(lebronInputStream).andYear(2018).parseForStats();
+    private final PlayerStats secondPlayerStats = PlayerParser.isCareer(false).withStream(lebronInputStream2).andYear(2016).parseForStats();
 
 
     public void setup(Statistic statistic){
-        InputStream lebronInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("LeBronJamesStats2018.json");
-        PlayerStats firstPlayerStats = PlayerParser.isCareer(true).withStream(lebronInputStream).andYear(2018).parseForStats();
-        InputStream lebronInputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("LeBronJamesStats2018.json");
-        PlayerStats secondPlayerStats = PlayerParser.isCareer(false).withStream(lebronInputStream2).andYear(2016).parseForStats();
-        firstIndividualStat = IndividualStatistic.withPlayerStats(firstPlayerStats).andStatisticType(statistic);
-        secondIndividualStat = IndividualStatistic.withPlayerStats(secondPlayerStats).andStatisticType(statistic);
+        float firstStat = firstPlayerStats.getStatsList().get(statistic.getIndex()).getStatisticValue();
+        float secondStat = secondPlayerStats.getStatsList().get(statistic.getIndex()).getStatisticValue();
+        firstIndividualStat = IndividualStatistic.withStatisticType(statistic).andStatisticValue(firstStat);
+        secondIndividualStat = IndividualStatistic.withStatisticType(statistic).andStatisticValue(secondStat);
     }
 
     public void setupForEqualPlayerStatTest(Statistic statistic){
@@ -25,8 +27,8 @@ public class IndividualStatisticTest {
         PlayerStats firstPlayerStats = PlayerParser.isCareer(true).withStream(lebronInputStream).andYear(2018).parseForStats();
         InputStream lebronInputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("LeBronJamesStats2018.json");
         PlayerStats secondPlayerStats = PlayerParser.isCareer(true).withStream(lebronInputStream2).andYear(2018).parseForStats();
-        firstIndividualStat = IndividualStatistic.withPlayerStats(firstPlayerStats).andStatisticType(statistic);
-        secondIndividualStat = IndividualStatistic.withPlayerStats(secondPlayerStats).andStatisticType(statistic);
+        firstIndividualStat = IndividualStatistic.withStatisticType(statistic).andStatisticValue(firstPlayerStats.getStatsList().get(statistic.getIndex()).getStatisticValue());
+        secondIndividualStat = IndividualStatistic.withStatisticType(statistic).andStatisticValue(secondPlayerStats.getStatsList().get(statistic.getIndex()).getStatisticValue());
     }
 
     @Test

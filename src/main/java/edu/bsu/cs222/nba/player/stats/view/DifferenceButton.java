@@ -32,7 +32,7 @@ public class DifferenceButton extends Button {
         for (Statistic statistic : Statistic.values()) {
             if (statistic != Statistic.GAMES_PLAYED) {
                 makeLabels(statistic);
-                if (statistic != Statistic.TURNOVERS) highlightLabels();
+                if (statistic != Statistic.TOPG) highlightLabels();
                 else highlightLabelsForTurnovers();
             }
         }
@@ -43,11 +43,9 @@ public class DifferenceButton extends Button {
         if (flag == 1) {
             leftLabel.setTextFill(Color.LIMEGREEN);
             rightLabel.setTextFill(Color.RED);
-            showDifferenceForLeftContainer(leftLabel);
         } else if (flag == -1) {
             rightLabel.setTextFill(Color.LIMEGREEN);
             leftLabel.setTextFill(Color.RED);
-            showDifferenceForRightContainer(rightLabel);
         } else resetLabelHighlights();
     }
 
@@ -56,11 +54,9 @@ public class DifferenceButton extends Button {
         if (flag == 1) {
             rightLabel.setTextFill(Color.LIMEGREEN);
             leftLabel.setTextFill(Color.RED);
-            showDifferenceForRightContainer(rightLabel);
         } else if (flag == -1) {
             leftLabel.setTextFill(Color.LIMEGREEN);
             rightLabel.setTextFill(Color.RED);
-            showDifferenceForLeftContainer(leftLabel);
         } else resetLabelHighlights();
     }
 
@@ -70,8 +66,10 @@ public class DifferenceButton extends Button {
     }
 
     private void makeLabels(Statistic statistic) {
-        leftStat = IndividualStatistic.withPlayerStats(leftPlayerStats).andStatisticType(statistic);
-        rightStat = IndividualStatistic.withPlayerStats(rightPlayerStats).andStatisticType(statistic);
+        float leftStatAsFloat = leftPlayerStats.getStatsList().get(statistic.getIndex()).getStatisticValue();
+        float rightStatAsFloat = rightPlayerStats.getStatsList().get(statistic.getIndex()).getStatisticValue();
+        leftStat = IndividualStatistic.withStatisticType(statistic).andStatisticValue(leftStatAsFloat);
+        rightStat = IndividualStatistic.withStatisticType(statistic).andStatisticValue(rightStatAsFloat);
         leftLabel = leftStatView.getLabelFromListOfLabels(statistic.getIndex());
         rightLabel = rightStatView.getLabelFromListOfLabels(statistic.getIndex());
     }

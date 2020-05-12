@@ -1,28 +1,21 @@
 package edu.bsu.cs222.nba.player.stats.view;
 
+import edu.bsu.cs222.nba.player.stats.model.IndividualStatistic;
 import edu.bsu.cs222.nba.player.stats.model.PlayerStats;
-import javafx.collections.FXCollections;
+import edu.bsu.cs222.nba.player.stats.model.Statistic;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StatView extends VBox {
 
-    private Label ppgLabel;
-    private Label apgLabel;
-    private Label rpgLabel;
-    private Label topgLabel;
-    private Label spgLabel;
-    private Label bpgLabel;
-    private Label fgpLabel;
-    private Label ftpLabel;
-    private Label tpmLabel;
+    private final List<Label> statList = new ArrayList<>();
     private final PlayerStats playerStats;
     private final boolean isThisSecondPlayer;
 
@@ -30,58 +23,31 @@ public class StatView extends VBox {
         this.playerStats = playerStats;
         this.isThisSecondPlayer = isThisSecondPlayer;
         makeStatLabels();
-        setupLabels();
-        getChildren().addAll(getStatsList());
+        statList.forEach(label -> getChildren().add(label));
     }
 
     public void makeStatLabels() {
-        ppgLabel = new Label(formatLabelText("PPG", playerStats.getPointsPerGame()));
-        apgLabel = new Label(formatLabelText("APG", playerStats.getAssistsPerGame()));
-        rpgLabel = new Label(formatLabelText("RPG", playerStats.getReboundsPerGame()));
-        topgLabel = new Label(formatLabelText("TOPG", playerStats.getTurnOversPerGame()));
-        spgLabel = new Label(formatLabelText("SPG", playerStats.getStealsPerGame()));
-        bpgLabel = new Label(formatLabelText("BPG", playerStats.getBlocksPerGame()));
-        fgpLabel = new Label(formatLabelText("FGP", playerStats.getFieldGoalPercentage()));
-        ftpLabel = new Label(formatLabelText("FTP", playerStats.getFreeThrowPercentage()));
-        tpmLabel = new Label(formatLabelText("TPM", playerStats.getThreePointers()));
-    }
-
-    private String formatLabelText(String stat, float value) {
-        if (isThisSecondPlayer) {
-            return value + " " + stat;
-        } else {
-            return stat + " " + value;
-        }
-    }
-
-    private ObservableList<Label> getStatsList(){
-        return FXCollections.observableArrayList(ppgLabel, apgLabel, rpgLabel, topgLabel,
-                spgLabel, bpgLabel, fgpLabel, ftpLabel, tpmLabel);
-    }
-
-    private void setupLabels(){
-        for (int i = 0; i < getStatsList().size(); i++){
-            Label label = getStatsList().get(i);
+        Statistic[] statistics = Statistic.values();
+        List<IndividualStatistic> individualStatistics = playerStats.getStatsList();
+        for (int i = 0; i < Statistic.values().length - 1; i++){
+            float statValue = individualStatistics.get(i).getStatisticValue();
+            Label label = new Label(formatLabelText(statistics[i], statValue));
             label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
-            label.setTextFill(Color.BLACK);
+            statList.add(label);
         }
     }
 
-    public List<Label> getListOfLabels(){
-        return Arrays.asList(ppgLabel,
-                             apgLabel,
-                             rpgLabel,
-                             topgLabel,
-                             spgLabel,
-                             bpgLabel,
-                             fgpLabel,
-                             ftpLabel,
-                             tpmLabel);
+    private String formatLabelText(Statistic statistic, float value) {
+        if (isThisSecondPlayer) {
+            return value + " " + statistic;
+        } else {
+            return statistic + " " + value;
+        }
     }
 
     public Label getLabelFromListOfLabels(int index){
-        List<Label> list = getListOfLabels();
-        return list.get(index);
+        ObservableList<Node> list = getChildren();
+        return (Label) list.get(index);
     }
 
     public PlayerStats getPlayerStats() {

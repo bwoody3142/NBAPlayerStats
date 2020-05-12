@@ -5,7 +5,7 @@ public enum Statistic {
     PPG(0, "ppg"),
     APG(1, "apg"),
     RPG(2, "rpg"),
-    TURNOVERS(3, "turnovers"),
+    TOPG(3, "turnovers"),
     SPG(4, "spg"),
     BPG(5, "bpg"),
     FGP(6, "fgp"),

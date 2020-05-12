@@ -6,47 +6,50 @@ import static java.lang.Float.*;
 
 public class IndividualStatistic implements Comparable<IndividualStatistic> {
 
-    public static IndividualStatisticBuilder withPlayerStats(PlayerStats playerStats){
-        return new IndividualStatisticBuilder(playerStats);
+    public static IndividualStatisticBuilder withStatisticType(Statistic statistic){
+        return new IndividualStatisticBuilder(statistic);
     }
 
     public static final class IndividualStatisticBuilder {
 
-        private final PlayerStats playerStats;
-        private Statistic statistic;
+        private final Statistic statisticType;
+        private float statisticValue;
 
-        public IndividualStatisticBuilder(PlayerStats playerStats){
-            this.playerStats = playerStats;
+        public IndividualStatisticBuilder(Statistic statisticType){
+            this.statisticType = statisticType;
         }
 
-        public IndividualStatistic andStatisticType(Statistic statistic){
-            this.statistic = statistic;
+        public IndividualStatistic andStatisticValue(float statValue){
+            this.statisticValue = statValue;
             return new IndividualStatistic(this);
         }
     }
 
-    private final PlayerStats playerStats;
-    private final Statistic statistic;
+    private final float statisticValue;
+    private final Statistic statisticType;
 
     public IndividualStatistic(IndividualStatisticBuilder builder) {
-        this.playerStats = builder.playerStats;
-        this.statistic = builder.statistic;
+        this.statisticType = builder.statisticType;
+        this.statisticValue = builder.statisticValue;
     }
 
-    public float generateStatistic(){
-        int index = statistic.getIndex();
-        return playerStats.getStatsList().get(index);
+    public float getStatisticValue() {
+        return roundFloat(statisticValue);
+    }
+
+    public Statistic getStatisticType() {
+        return statisticType;
     }
 
     @Override
-    public int compareTo(IndividualStatistic statistic) {
-        float firstStat = this.generateStatistic();
-        float secondStat = statistic.generateStatistic();
+    public int compareTo(IndividualStatistic statistic){
+        float firstStat = this.getStatisticValue();
+        float secondStat = statistic.getStatisticValue();
         return compare(firstStat, secondStat);
     }
 
     public float generateDifference(IndividualStatistic statistic){
-        float difference = this.generateStatistic() - statistic.generateStatistic();
+        float difference = this.getStatisticValue() - statistic.getStatisticValue();
         difference = roundFloat(difference);
         return Math.abs(difference);
     }

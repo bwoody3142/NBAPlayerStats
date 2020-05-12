@@ -51,15 +51,15 @@ public class PlayerParser {
     }
 
     private PlayerStats buildStats() {
-        return PlayerStats.withPoints(getFloat(Statistic.PPG.getIndex()))
-                .assists(getFloat(Statistic.APG.getIndex()))
-                .rebounds(getFloat(Statistic.RPG.getIndex()))
-                .turnovers(getFloat(Statistic.TURNOVERS.getIndex()) / getFloat(Statistic.GAMES_PLAYED.getIndex()))
-                .steals(getFloat(Statistic.SPG.getIndex()))
-                .blocks(getFloat(Statistic.BPG.getIndex()))
-                .fieldGoalPercentage(getFloat(Statistic.FGP.getIndex()))
-                .freeThrowPercentage(getFloat(Statistic.FTP.getIndex()))
-                .andThreePointers(getFloat(Statistic.TPM.getIndex()) / getFloat(Statistic.GAMES_PLAYED.getIndex()));
+        return PlayerStats.withPoints(accessIndividualStatistic(Statistic.PPG.getIndex()))
+                .assists(accessIndividualStatistic(Statistic.APG.getIndex()))
+                .rebounds(accessIndividualStatistic(Statistic.RPG.getIndex()))
+                .turnovers(divideByGamesPlayed(accessIndividualStatistic(Statistic.TOPG.getIndex())))
+                .steals(accessIndividualStatistic(Statistic.SPG.getIndex()))
+                .blocks(accessIndividualStatistic(Statistic.BPG.getIndex()))
+                .fieldGoalPercentage(accessIndividualStatistic(Statistic.FGP.getIndex()))
+                .freeThrowPercentage(accessIndividualStatistic(Statistic.FTP.getIndex()))
+                .andThreePointers(divideByGamesPlayed(accessIndividualStatistic(Statistic.TPM.getIndex())));
     }
 
     private String makeStatsQuery(String stat){
@@ -70,7 +70,17 @@ public class PlayerParser {
         }
     }
 
-    private float getFloat(Integer index){
-        return Float.parseFloat(((JSONArray) array.get(index)).get(0).toString());
+    private IndividualStatistic accessIndividualStatistic(Integer index){
+        float statValue = Float.parseFloat(((JSONArray) array.get(index)).get(0).toString());
+        Statistic[] statisticType = Statistic.values();
+        return IndividualStatistic.withStatisticType(statisticType[index]).andStatisticValue(statValue);
+    }
+
+    private IndividualStatistic divideByGamesPlayed(IndividualStatistic individualStatistic){
+        Statistic statisticType = individualStatistic.getStatisticType();
+        float statAsFloat = individualStatistic.getStatisticValue();
+        float gamesPlayedAsFloat = accessIndividualStatistic(Statistic.GAMES_PLAYED.getIndex()).getStatisticValue();
+        float resultAsFloat = statAsFloat / gamesPlayedAsFloat;
+        return IndividualStatistic.withStatisticType(statisticType).andStatisticValue(resultAsFloat);
     }
 }

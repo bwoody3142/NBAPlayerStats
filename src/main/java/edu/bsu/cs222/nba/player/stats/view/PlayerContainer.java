@@ -149,8 +149,8 @@ public class PlayerContainer extends GridPane {
         Button button = new Button("See Career Stats!");
         button.setAlignment(Pos.CENTER);
         button.setOnAction(event -> {
-            highlightLabelBlack(seasonStatView.getListOfLabels());
-            highlightLabelBlack(careerStatView.getListOfLabels());
+            highlightLabelsBlack(seasonStatView);
+            highlightLabelsBlack(careerStatView);
             showProperStatView(button);
             fireOnStatViewChanged();
         });
@@ -175,11 +175,8 @@ public class PlayerContainer extends GridPane {
         HeadshotLogoView headshotLogoView = HeadshotLogoView.withTeam(controlPanel.getTeam())
                 .andPlayerName(controlPanel.getPlayer());
         generateHeadshotLogo(headshotLogoView);
-        if (isSecondPlayer) {
-            headshotLogoView.formatSecondPane();
-        } else {
-            headshotLogoView.formatFirstPane();
-        }
+        if (isSecondPlayer) headshotLogoView.formatSecondPane();
+        else headshotLogoView.formatFirstPane();
         return headshotLogoView;
     }
 
@@ -200,10 +197,11 @@ public class PlayerContainer extends GridPane {
         }
     }
 
-    private void highlightLabelBlack(List<Label> list){
-        for (Label label : list){
+    private void highlightLabelsBlack(StatView statView){
+        statView.getChildren().forEach( node -> {
+            Label label = (Label) node;
             label.setTextFill(Color.BLACK);
-        }
+        });
     }
 
     public void addListenersForStatViewProduction(StatViewProductionListener listener){

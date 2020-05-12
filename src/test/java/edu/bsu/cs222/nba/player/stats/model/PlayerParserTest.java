@@ -4,16 +4,22 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class PlayerParserTest {
 
+    private final boolean SEASON = false;
+    private final boolean CAREER = true;
+    private final List<Float> actualStatisticList = new ArrayList<>();
 
-    private List<Float> getStats(boolean isCareer){
+    private void getStats(boolean isCareer){
         InputStream lebronInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("LeBronJamesStats2018.json");
         PlayerParser parser = PlayerParser.isCareer(isCareer).withStream(lebronInputStream).andYear(2018);
-        return parser.parseForStats().getStatsList();
+        List<IndividualStatistic> individualStatisticList = new ArrayList<>(parser.parseForStats().getStatsList());
+        individualStatisticList.forEach(statistic -> actualStatisticList.add(statistic.getStatisticValue()));
     }
 
     private List<Float> getActualSeasonStatsList(){
@@ -26,11 +32,13 @@ public class PlayerParserTest {
 
     @Test
     public void testParseForSeasonStats(){
-        Assertions.assertEquals(getActualSeasonStatsList(), getStats(false));
+        getStats(SEASON);
+        Assertions.assertEquals(getActualSeasonStatsList(), actualStatisticList);
     }
 
     @Test
     public void testParseForCareerStats(){
-        Assertions.assertEquals(getActualCareerStatsList(), getStats(true));
+        getStats(CAREER);
+        Assertions.assertEquals(getActualCareerStatsList(), actualStatisticList);
     }
 }

@@ -13,4 +13,6 @@ public class ListOfTeamsTest {
         List<String> teamList = listOfTeams.createFullListOfTeams(2018);
         Assertions.assertNotNull(teamList);
     }
+
+
 }
