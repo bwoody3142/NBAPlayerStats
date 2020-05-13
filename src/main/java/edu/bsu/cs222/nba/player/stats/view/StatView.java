@@ -26,7 +26,7 @@ public class StatView extends VBox {
         statList.forEach(label -> getChildren().add(label));
     }
 
-    public void makeStatLabels() {
+    private void makeStatLabels() {
         Statistic[] statistics = Statistic.values();
         List<IndividualStatistic> individualStatistics = playerStats.getStatsList();
         for (int i = 0; i < Statistic.values().length - 1; i++){
